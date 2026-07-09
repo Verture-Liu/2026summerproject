@@ -1,0 +1,42 @@
+{
+  "tool": "FastQC",
+  "official_url": "https://www.bioinformatics.babraham.ac.uk/projects/fastqc/",
+  "reviewed_skill_source": "https://github.com/ubcd-ibfg/fastq-qc-skill",
+  "inputs": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/7a0446baab73411eac8df563436c64de/inputs/SRR29088443_1.fastq.gz",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/7a0446baab73411eac8df563436c64de/inputs/SRR29088443_2.fastq.gz"
+  ],
+  "input_metrics": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/7a0446baab73411eac8df563436c64de/inputs/SRR29088443_1.fastq.gz",
+      "name": "SRR29088443_1.fastq.gz",
+      "records": 53571,
+      "total_bases": 13071324,
+      "min_length": 244,
+      "max_length": 244,
+      "mean_length": 244.0,
+      "gc_percent": 54.043,
+      "n_fraction": 4e-06,
+      "malformed_records": 0
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/7a0446baab73411eac8df563436c64de/inputs/SRR29088443_2.fastq.gz",
+      "name": "SRR29088443_2.fastq.gz",
+      "records": 53571,
+      "total_bases": 13446321,
+      "min_length": 251,
+      "max_length": 251,
+      "mean_length": 251.0,
+      "gc_percent": 53.573,
+      "n_fraction": 2e-06,
+      "malformed_records": 0
+    }
+  ],
+  "threads": 2,
+  "reports": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/7a0446baab73411eac8df563436c64de/steps/step_03/fastqc/SRR29088443_1_fastqc.html",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/7a0446baab73411eac8df563436c64de/steps/step_03/fastqc/SRR29088443_2_fastqc.html",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/7a0446baab73411eac8df563436c64de/steps/step_03/fastqc/SRR29088443_1_fastqc.zip",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/7a0446baab73411eac8df563436c64de/steps/step_03/fastqc/SRR29088443_2_fastqc.zip"
+  ]
+}

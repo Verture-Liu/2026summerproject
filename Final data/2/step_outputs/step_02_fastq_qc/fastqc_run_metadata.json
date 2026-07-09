@@ -1,0 +1,13 @@
+{
+  "tool": "FastQC",
+  "official_url": "https://www.bioinformatics.babraham.ac.uk/projects/fastqc/",
+  "reviewed_skill_source": "https://github.com/ubcd-ibfg/fastq-qc-skill",
+  "inputs": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/04b4b64cca1b4fa0b6f49c2527210b29/inputs/ERR15682270_1.fastq.gz"
+  ],
+  "threads": 2,
+  "reports": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/04b4b64cca1b4fa0b6f49c2527210b29/steps/step_02/fastqc/ERR15682270_1_fastqc.html",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/04b4b64cca1b4fa0b6f49c2527210b29/steps/step_02/fastqc/ERR15682270_1_fastqc.zip"
+  ]
+}

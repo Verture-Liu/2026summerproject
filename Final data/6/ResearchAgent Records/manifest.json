@@ -1,0 +1,271 @@
+{
+  "workflow_schema_version": "1.0",
+  "status": "succeeded",
+  "workflow": {
+    "schema_version": "1.0",
+    "task_summary": "Perform raw quality control on single-end FASTQ file: file type detection, FastQC, MultiQC summary, and data quality gate check.",
+    "steps": [
+      {
+        "id": "step_01",
+        "skill": "file_type_detect",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "ERR3250149.fastq"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "file_type_result",
+            "format": "json"
+          }
+        ],
+        "reason": "Confirm uploaded file format is FASTQ before running processing tools."
+      },
+      {
+        "id": "step_02",
+        "skill": "fastq_qc",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "ERR3250149.fastq"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "fastqc_html",
+            "format": "html"
+          },
+          {
+            "name": "fastqc_json",
+            "format": "json"
+          },
+          {
+            "name": "fastqc_zip",
+            "format": "zip"
+          }
+        ],
+        "reason": "Run FastQC to evaluate raw read quality, including per-base quality, adapter content, and N base proportions."
+      },
+      {
+        "id": "step_03",
+        "skill": "multiqc_summary",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "fastqc_zip"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "multiqc_html",
+            "format": "html"
+          },
+          {
+            "name": "multiqc_json",
+            "format": "json"
+          }
+        ],
+        "reason": "Aggregate FastQC outputs into a single MultiQC HTML report for a consolidated quality overview."
+      },
+      {
+        "id": "step_04",
+        "skill": "data_quality_gate",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "ERR3250149.fastq"
+          }
+        ],
+        "parameters": {
+          "min_records": 1,
+          "fail_on_error": false
+        },
+        "outputs": [
+          {
+            "name": "quality_gate_report",
+            "format": "json"
+          }
+        ],
+        "reason": "Check that the FASTQ file contains reads, has valid format, and meets a minimum record threshold before proceeding further."
+      }
+    ]
+  },
+  "inputs": [
+    {
+      "ref": "ERR3250149.fastq",
+      "path": "workspace/tasks/4c59ce9b6e9b4d57a9def9c42783beff/inputs/ERR3250149.fastq.gz",
+      "sha256": "76050f648ae02855efcdfe36e3db3ed9993692e79d3c25346fe5bcd4dabae139"
+    }
+  ],
+  "steps": [
+    {
+      "id": "step_01",
+      "skill": "file_type_detect",
+      "status": "succeeded",
+      "parameters": {},
+      "metrics": {
+        "files": 1,
+        "formats": [
+          "fastq"
+        ]
+      },
+      "warnings": [],
+      "error": null,
+      "started_at": "2026-06-30T02:33:14.910503+00:00",
+      "ended_at": "2026-06-30T02:33:14.911396+00:00",
+      "outputs": [
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/4c59ce9b6e9b4d57a9def9c42783beff/steps/step_01/file_type_report.json",
+          "sha256": "9c67e45146da1ddb27fb3b848417650af2e05f97ae088e4b08d3bb3b7d97810e"
+        }
+      ]
+    },
+    {
+      "id": "step_02",
+      "skill": "fastq_qc",
+      "status": "succeeded",
+      "parameters": {},
+      "metrics": {
+        "input_files": 1,
+        "report_files": 2
+      },
+      "warnings": [],
+      "error": null,
+      "started_at": "2026-06-30T02:33:14.911986+00:00",
+      "ended_at": "2026-06-30T02:33:24.478006+00:00",
+      "outputs": [
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/4c59ce9b6e9b4d57a9def9c42783beff/steps/step_02/fastqc/ERR3250149_fastqc.html",
+          "sha256": "b0a73edb1306dbadf2c6c1cab91503260fb68453f47b50e79f522817aa28806f"
+        },
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/4c59ce9b6e9b4d57a9def9c42783beff/steps/step_02/fastqc_run_metadata.json",
+          "sha256": "38ebd6d35371e0eefc618950662bcb3ca54d84efc7e764259df5d072d5037485"
+        },
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/4c59ce9b6e9b4d57a9def9c42783beff/steps/step_02/fastqc/ERR3250149_fastqc.zip",
+          "sha256": "7d8a94f5f081fcf844b753e88ac06b75255170193a5cf897662dbafd4b9d27aa"
+        }
+      ]
+    },
+    {
+      "id": "step_03",
+      "skill": "multiqc_summary",
+      "status": "succeeded",
+      "parameters": {},
+      "metrics": {
+        "reports": 1
+      },
+      "warnings": [],
+      "error": null,
+      "started_at": "2026-06-30T02:33:24.479542+00:00",
+      "ended_at": "2026-06-30T02:33:27.635056+00:00",
+      "outputs": [
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/4c59ce9b6e9b4d57a9def9c42783beff/steps/step_03/multiqc/multiqc_report.html",
+          "sha256": "bc08016938cce8c2f6e47a2af1bd508af0c53d83af2d875d119f6de0c7ac4244"
+        },
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/4c59ce9b6e9b4d57a9def9c42783beff/steps/step_03/multiqc_run_metadata.json",
+          "sha256": "db895be4b2ee93e81a3028332a903f3c060038199bec60e194411e6b74c64d10"
+        }
+      ]
+    },
+    {
+      "id": "step_04",
+      "skill": "data_quality_gate",
+      "status": "succeeded",
+      "parameters": {
+        "min_records": 1,
+        "fail_on_error": false
+      },
+      "metrics": {
+        "gate_passed": true,
+        "files": 1,
+        "warnings": 0
+      },
+      "warnings": [],
+      "error": null,
+      "started_at": "2026-06-30T02:33:27.636284+00:00",
+      "ended_at": "2026-06-30T02:33:31.091274+00:00",
+      "outputs": [
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/4c59ce9b6e9b4d57a9def9c42783beff/steps/step_04/data_quality_gate_report.json",
+          "sha256": "8f485fe576f02cc293cd52194920ba63f9a185f343ccc426ce354623fbc58e1a"
+        }
+      ]
+    }
+  ],
+  "environment": {
+    "python": "3.13.9",
+    "platform": "macOS-15.7.7-arm64-arm-64bit-Mach-O"
+  },
+  "settings": {
+    "api_key": ""
+  },
+  "exported_final_files": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/ResearchAgent_Result_20260630_103331_4c59ce9b/final_outputs/file_type_report.json",
+      "sha256": "9c67e45146da1ddb27fb3b848417650af2e05f97ae088e4b08d3bb3b7d97810e"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/ResearchAgent_Result_20260630_103331_4c59ce9b/final_outputs/ERR3250149_fastqc.html",
+      "sha256": "b0a73edb1306dbadf2c6c1cab91503260fb68453f47b50e79f522817aa28806f"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/ResearchAgent_Result_20260630_103331_4c59ce9b/final_outputs/fastqc_run_metadata.json",
+      "sha256": "38ebd6d35371e0eefc618950662bcb3ca54d84efc7e764259df5d072d5037485"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/ResearchAgent_Result_20260630_103331_4c59ce9b/final_outputs/ERR3250149_fastqc.zip",
+      "sha256": "7d8a94f5f081fcf844b753e88ac06b75255170193a5cf897662dbafd4b9d27aa"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/ResearchAgent_Result_20260630_103331_4c59ce9b/final_outputs/multiqc_report.html",
+      "sha256": "bc08016938cce8c2f6e47a2af1bd508af0c53d83af2d875d119f6de0c7ac4244"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/ResearchAgent_Result_20260630_103331_4c59ce9b/final_outputs/multiqc_run_metadata.json",
+      "sha256": "db895be4b2ee93e81a3028332a903f3c060038199bec60e194411e6b74c64d10"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/ResearchAgent_Result_20260630_103331_4c59ce9b/final_outputs/data_quality_gate_report.json",
+      "sha256": "8f485fe576f02cc293cd52194920ba63f9a185f343ccc426ce354623fbc58e1a"
+    }
+  ],
+  "exported_step_files": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/ResearchAgent_Result_20260630_103331_4c59ce9b/step_outputs/step_01_file_type_detect/file_type_report.json",
+      "sha256": "9c67e45146da1ddb27fb3b848417650af2e05f97ae088e4b08d3bb3b7d97810e"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/ResearchAgent_Result_20260630_103331_4c59ce9b/step_outputs/step_02_fastq_qc/ERR3250149_fastqc.html",
+      "sha256": "b0a73edb1306dbadf2c6c1cab91503260fb68453f47b50e79f522817aa28806f"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/ResearchAgent_Result_20260630_103331_4c59ce9b/step_outputs/step_02_fastq_qc/fastqc_run_metadata.json",
+      "sha256": "38ebd6d35371e0eefc618950662bcb3ca54d84efc7e764259df5d072d5037485"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/ResearchAgent_Result_20260630_103331_4c59ce9b/step_outputs/step_02_fastq_qc/ERR3250149_fastqc.zip",
+      "sha256": "7d8a94f5f081fcf844b753e88ac06b75255170193a5cf897662dbafd4b9d27aa"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/ResearchAgent_Result_20260630_103331_4c59ce9b/step_outputs/step_03_multiqc_summary/multiqc_report.html",
+      "sha256": "bc08016938cce8c2f6e47a2af1bd508af0c53d83af2d875d119f6de0c7ac4244"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/ResearchAgent_Result_20260630_103331_4c59ce9b/step_outputs/step_03_multiqc_summary/multiqc_run_metadata.json",
+      "sha256": "db895be4b2ee93e81a3028332a903f3c060038199bec60e194411e6b74c64d10"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/ResearchAgent_Result_20260630_103331_4c59ce9b/step_outputs/step_04_data_quality_gate/data_quality_gate_report.json",
+      "sha256": "8f485fe576f02cc293cd52194920ba63f9a185f343ccc426ce354623fbc58e1a"
+    }
+  ],
+  "export_result_directory": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/ResearchAgent_Result_20260630_103331_4c59ce9b"
+}

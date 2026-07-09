@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="820" viewBox="0 0 1600 820">
+  <rect x="0" y="0" width="1600" height="820" fill="white"/>
+
+  <!-- Title notes: delete these two lines in the final paper figure if not needed. -->
+  <text x="70" y="78" font-family="Arial" font-size="42" font-weight="700" fill="#26313d">Plain usage scenario</text>
+  <text x="70" y="118" font-family="Arial" font-size="26" fill="#65717f">Editable SVG guide: researcher, local web interface, local tools, and result folder.</text>
+
+  <!-- Simple researcher icon: circle + lines, each object is directly editable. -->
+  <circle cx="190" cy="205" r="38" fill="#ffffff" stroke="#26313d" stroke-width="4"/>
+  <line x1="190" y1="243" x2="190" y2="295" stroke="#26313d" stroke-width="4" stroke-linecap="round"/>
+  <line x1="150" y1="270" x2="230" y2="270" stroke="#26313d" stroke-width="4" stroke-linecap="round"/>
+
+  <!-- Researcher box -->
+  <rect x="80" y="300" width="320" height="190" rx="22" ry="22" fill="#ffffff" stroke="#9aa7b3" stroke-width="4"/>
+  <text x="140" y="360" font-family="Arial" font-size="30" font-weight="700" fill="#2f6f8f">Researcher</text>
+  <text x="140" y="398" font-family="Arial" font-size="23" fill="#65717f">asks an analysis</text>
+  <text x="140" y="430" font-family="Arial" font-size="23" fill="#65717f">question and uploads</text>
+  <text x="140" y="462" font-family="Arial" font-size="23" fill="#65717f">ancient-data files</text>
+
+  <!-- Local web interface box -->
+  <rect x="580" y="275" width="470" height="260" rx="22" ry="22" fill="#ffffff" stroke="#9aa7b3" stroke-width="4"/>
+  <text x="640" y="345" font-family="Arial" font-size="30" font-weight="700" fill="#26313d">Local web interface</text>
+
+  <rect x="640" y="370" width="350" height="34" fill="#ffffff" stroke="#d5dce3" stroke-width="3"/>
+  <text x="665" y="394" font-family="Arial" font-size="22" fill="#65717f">1. review workflow</text>
+
+  <rect x="640" y="425" width="350" height="34" fill="#ffffff" stroke="#d5dce3" stroke-width="3"/>
+  <text x="665" y="449" font-family="Arial" font-size="22" fill="#65717f">2. approve local run</text>
+
+  <rect x="640" y="480" width="350" height="34" fill="#ffffff" stroke="#d5dce3" stroke-width="3"/>
+  <text x="665" y="504" font-family="Arial" font-size="22" fill="#65717f">3. inspect report</text>
+
+  <!-- Local tools box -->
+  <rect x="1240" y="285" width="285" height="145" rx="22" ry="22" fill="#ffffff" stroke="#9aa7b3" stroke-width="4"/>
+  <text x="1300" y="345" font-family="Arial" font-size="30" font-weight="700" fill="#26313d">Local tools</text>
+  <text x="1300" y="385" font-family="Arial" font-size="23" fill="#65717f">FastQC / MultiQC</text>
+  <text x="1300" y="417" font-family="Arial" font-size="23" fill="#65717f">seqkit / CSV skills</text>
+
+  <!-- Result folder box -->
+  <rect x="1240" y="520" width="285" height="155" rx="22" ry="22" fill="#ffffff" stroke="#9aa7b3" stroke-width="4"/>
+  <text x="1300" y="580" font-family="Arial" font-size="30" font-weight="700" fill="#2f6f8f">Result folder</text>
+  <text x="1300" y="620" font-family="Arial" font-size="23" fill="#65717f">final outputs</text>
+  <text x="1300" y="650" font-family="Arial" font-size="23" fill="#65717f">step outputs</text>
+  <text x="1300" y="680" font-family="Arial" font-size="23" fill="#65717f">records</text>
+
+  <!-- Arrows: line plus editable triangle -->
+  <line x1="400" y1="395" x2="565" y2="395" stroke="#9aa7b3" stroke-width="4" stroke-linecap="round"/>
+  <polygon points="565,395 543,382 543,408" fill="#9aa7b3"/>
+
+  <line x1="1050" y1="390" x2="1225" y2="355" stroke="#9aa7b3" stroke-width="4" stroke-linecap="round"/>
+  <polygon points="1225,355 1200,346 1205,372" fill="#9aa7b3"/>
+
+  <line x1="1382" y1="430" x2="1382" y2="505" stroke="#9aa7b3" stroke-width="4" stroke-linecap="round"/>
+  <polygon points="1382,505 1369,483 1395,483" fill="#9aa7b3"/>
+
+  <line x1="1240" y1="595" x2="1065" y2="485" stroke="#9aa7b3" stroke-width="4" stroke-linecap="round"/>
+  <polygon points="1065,485 1090,489 1076,511" fill="#9aa7b3"/>
+
+  <!-- Optional blank area for user-added SVG icons or manuscript-specific labels. -->
+  <rect x="110" y="720" width="1380" height="55" fill="#ffffff" stroke="#d5dce3" stroke-width="3" stroke-dasharray="12 8"/>
+  <text x="800" y="755" text-anchor="middle" font-family="Arial" font-size="22" fill="#65717f">
+    Optional space: add simple SVG icons or manuscript-specific labels in Illustrator
+  </text>
+</svg>

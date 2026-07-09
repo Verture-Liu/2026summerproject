@@ -1,0 +1,17 @@
+{
+  "figures": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/task_grouped_figures/task1_peptide_csv_curation.png",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/task_grouped_figures/task1_peptide_csv_curation.pdf",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/task_grouped_figures/task1_peptide_csv_curation.svg",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/task_grouped_figures/task2_fastq_source_qc.png",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/task_grouped_figures/task2_fastq_source_qc.pdf",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/task_grouped_figures/task2_fastq_source_qc.svg",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/task_grouped_figures/task3_audit_interpretation.png",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/task_grouped_figures/task3_audit_interpretation.pdf",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/task_grouped_figures/task3_audit_interpretation.svg"
+  ],
+  "tables": {
+    "peptide": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/task_grouped_figures/task1_peptide_summary.csv",
+    "fastq": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/task_grouped_figures/task2_fastq_summary.csv"
+  }
+}

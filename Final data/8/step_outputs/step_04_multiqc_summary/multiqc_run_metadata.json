@@ -1,0 +1,10 @@
+{
+  "tool": "MultiQC",
+  "official_url": "https://multiqc.info/",
+  "tool_source": "conda:multiqc_env",
+  "inputs": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/4a5648617a96493f9d94a9389297bf0c/steps/step_03/fastqc/ERR10114861_1_fastqc.zip",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/4a5648617a96493f9d94a9389297bf0c/steps/step_03/fastqc/ERR10114861_2_fastqc.zip"
+  ],
+  "report": "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/4a5648617a96493f9d94a9389297bf0c/steps/step_04/multiqc/multiqc_report.html"
+}

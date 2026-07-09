@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Research Agent User Guide</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.72;
+    color: #2C2C2A;
+    background: #FAFAF8;
+  }
+  .page-wrapper { max-width: 980px; margin: 0 auto; padding: 42px 34px 80px; }
+  .doc-header { border-bottom: 2px solid #E8E7E0; padding-bottom: 24px; margin-bottom: 32px; }
+  .doc-header h1 { font-size: 25px; font-weight: 620; color: #22342D; margin-bottom: 8px; }
+  .doc-header p { font-size: 13px; color: #5F5E5A; max-width: 860px; }
+  .badge {
+    display: inline-block;
+    margin: 14px 6px 0 0;
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 620;
+  }
+  .badge-core { background: #E1F5EE; color: #0F6E56; }
+  .badge-qc { background: #E6F1FB; color: #185FA5; }
+  .badge-local { background: #FAEEDA; color: #854F0B; }
+  .badge-repro { background: #EEEDFE; color: #534AB7; }
+  .toc, .note, .quick-card {
+    background: #FFFFFF;
+    border: 0.5px solid #D3D1C7;
+    border-radius: 12px;
+    padding: 18px 20px;
+  }
+  .toc { background: #F1EFE8; margin-bottom: 36px; }
+  .toc h2 { font-size: 14px; color: #22342D; margin-bottom: 8px; }
+  .toc ol { padding-left: 20px; columns: 2; column-gap: 28px; }
+  .toc li { font-size: 13px; line-height: 2; break-inside: avoid; }
+  .toc a { color: #185FA5; text-decoration: none; }
+  .module {
+    margin-bottom: 36px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 0.5px solid #D3D1C7;
+  }
+  .module-header { padding: 16px 24px; display: flex; align-items: center; gap: 12px; }
+  .module-number {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #FFFFFF; font-size: 13px; font-weight: 620; flex-shrink: 0;
+  }
+  .module-header h2 { font-size: 16px; font-weight: 620; }
+  .module-body { padding: 21px 24px; background: #FFFFFF; }
+  .m1 .module-header { background: #E6F1FB; } .m1 .module-number { background: #185FA5; } .m1 h2 { color: #0C447C; }
+  .m2 .module-header { background: #EAF3DE; } .m2 .module-number { background: #3B6D11; } .m2 h2 { color: #27500A; }
+  .m3 .module-header { background: #FAEEDA; } .m3 .module-number { background: #854F0B; } .m3 h2 { color: #633806; }
+  .m4 .module-header { background: #FCEBEB; } .m4 .module-number { background: #A32D2D; } .m4 h2 { color: #791F1F; }
+  .m5 .module-header { background: #E1F5EE; } .m5 .module-number { background: #0F6E56; } .m5 h2 { color: #085041; }
+  .m6 .module-header { background: #EEEDFE; } .m6 .module-number { background: #534AB7; } .m6 h2 { color: #3C3489; }
+  .m7 .module-header { background: #FBEAF0; } .m7 .module-number { background: #993556; } .m7 h2 { color: #72243E; }
+  .sub-section { margin-bottom: 20px; }
+  .sub-section h3 { font-size: 13px; color: #444441; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 0.5px solid #E8E7E0; }
+  .sub-section p, .sub-section li { font-size: 13px; color: #444441; }
+  .sub-section ul, .sub-section ol { padding-left: 20px; }
+  .sub-section li { margin-bottom: 5px; }
+  .flow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 14px 0 10px; }
+  .flow-step { background: #FFFFFF; border: 0.5px solid #D3D1C7; border-radius: 999px; padding: 6px 10px; font-size: 12px; color: #444441; }
+  .flow-arrow { color: #888780; font-size: 14px; }
+  code { font-family: "SF Mono", "Consolas", monospace; background: #F1EFE8; border-radius: 4px; padding: 1px 5px; font-size: 12px; }
+  pre { background: #F1EFE8; border-radius: 8px; padding: 14px 16px; font-family: "SF Mono", "Consolas", monospace; font-size: 12px; line-height: 1.6; overflow-x: auto; margin: 10px 0; border: 0.5px solid #D3D1C7; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+  th, td { border: 0.5px solid #D3D1C7; padding: 9px 10px; text-align: left; vertical-align: top; }
+  th { background: #F1EFE8; color: #444441; font-weight: 620; }
+  tr:nth-child(even) td { background: #FCFCFA; }
+  .warning { background: #FFF8EA; border-left: 4px solid #D79622; border-radius: 8px; padding: 13px 15px; font-size: 13px; color: #4B3A17; margin: 12px 0; }
+  .gate { background: #FCEBEB; border-left: 4px solid #A32D2D; border-radius: 8px; padding: 13px 15px; font-size: 13px; color: #5F1D1D; margin: 12px 0; }
+  .footer { margin-top: 40px; padding-top: 20px; border-top: 2px solid #E8E7E0; font-size: 12px; color: #77766F; }
+  @media (max-width: 820px) { .toc ol { columns: 1; } .page-wrapper { padding: 28px 18px 60px; } }
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+  <header class="doc-header">
+    <h1>Research Agent User Guide</h1>
+    <p>
+      This guide explains how to use the local Research Agent to convert natural-language research requests into reviewable, reproducible, locally executed workflows.
+    </p>
+    <span class="badge badge-core">User Manual</span>
+    <span class="badge badge-qc">QC-first</span>
+    <span class="badge badge-local">Local / Conda-aware</span>
+    <span class="badge badge-repro">Reproducible</span>
+  </header>
+
+  <nav class="toc">
+    <h2>Contents</h2>
+    <ol>
+      <li><a href="#principle">Core principle</a></li>
+      <li><a href="#start">How to start</a></li>
+      <li><a href="#workflow">Basic workflow</a></li>
+      <li><a href="#prompts">Example prompts</a></li>
+      <li><a href="#skills">Available capabilities</a></li>
+      <li><a href="#env">Environment and tools</a></li>
+      <li><a href="#validation">Validation datasets</a></li>
+      <li><a href="#outputs">Outputs</a></li>
+      <li><a href="#trouble">Troubleshooting</a></li>
+    </ol>
+  </nav>
+
+  <section class="module m1" id="principle">
+    <div class="module-header"><div class="module-number">1</div><h2>Core principle</h2></div>
+    <div class="module-body">
+      <div class="flow">
+        <span class="flow-step">Upload data</span><span class="flow-arrow">→</span>
+        <span class="flow-step">Detect file type</span><span class="flow-arrow">→</span>
+        <span class="flow-step">Raw QC</span><span class="flow-arrow">→</span>
+        <span class="flow-step">Clean / filter</span><span class="flow-arrow">→</span>
+        <span class="flow-step">Data Quality Gate</span><span class="flow-arrow">→</span>
+        <span class="flow-step">Application analysis</span><span class="flow-arrow">→</span>
+        <span class="flow-step">Report / export</span>
+      </div>
+      <p>
+        The agent should not jump directly from raw data to downstream analysis. A rigorous workflow should inspect the input data, perform raw quality control, clean or filter data when needed, run a post-cleaning quality gate, and then proceed to peptide, ancient-DNA, or microbiome applications.
+      </p>
+      <div class="gate"><strong>Key rule:</strong> raw data → QC → cleaning/filtering → post-cleaning quality gate → downstream analysis.</div>
+    </div>
+  </section>
+
+  <section class="module m2" id="start">
+    <div class="module-header"><div class="module-number">2</div><h2>How to start</h2></div>
+    <div class="module-body">
+      <div class="sub-section">
+        <h3>Steps</h3>
+        <ol>
+          <li>Open the project folder <code>2026summerproject</code> in VS Code.</li>
+          <li>Run the command below in the VS Code Terminal.</li>
+          <li>Open the local web page printed by the terminal. By default, the app opens the browser automatically.</li>
+          <li>Upload files, enter a natural-language request, and generate a workflow.</li>
+          <li>Review the workflow, select an output folder, approve local execution, and run it.</li>
+        </ol>
+      </div>
+      <div class="sub-section">
+        <h3>VS Code Terminal commands</h3>
+        <p>First-time setup:</p>
+        <pre>cd /Users/tianaoliu/Documents/vscode/2026summerproject
+python3 -m venv .venv
+.venv/bin/python -m pip install -e '.[dev]'
+.venv/bin/research-agent</pre>
+        <p>Later launches after the environment has already been installed:</p>
+        <pre>cd /Users/tianaoliu/Documents/vscode/2026summerproject
+.venv/bin/research-agent</pre>
+        <p>Fixed port without automatically opening a browser:</p>
+        <pre>cd /Users/tianaoliu/Documents/vscode/2026summerproject
+.venv/bin/research-agent --no-browser --port 8000</pre>
+      </div>
+      <div class="warning">
+        If the page opens but workflow generation fails, check the API key, model configuration, and network. If the workflow is generated but execution fails, check whether the required local tools are installed.
+      </div>
+    </div>
+  </section>
+
+  <section class="module m3" id="workflow">
+    <div class="module-header"><div class="module-number">3</div><h2>Basic workflow</h2></div>
+    <div class="module-body">
+      <table>
+        <thead><tr><th>Stage</th><th>What the user sees</th><th>What the agent does</th></tr></thead>
+        <tbody>
+          <tr><td>Upload</td><td>File list</td><td>Saves uploaded files and inspects file formats.</td></tr>
+          <tr><td>Plan</td><td>JSON workflow</td><td>Converts the request into registered local skill steps.</td></tr>
+          <tr><td>Review</td><td>Pending workflow</td><td>Waits for user approval before local execution.</td></tr>
+          <tr><td>Run</td><td>Step status and output list</td><td>Executes each skill and records logs, metrics, and outputs.</td></tr>
+          <tr><td>Export</td><td>HTML, CSV, JSON, ZIP, FASTQ, or other deliverables</td><td>Copies final outputs to the selected results folder.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="module m4" id="prompts">
+    <div class="module-header"><div class="module-number">4</div><h2>Example prompts</h2></div>
+    <div class="module-body">
+      <pre>Detect whether this CSV has a header and normalize it to label and sequence columns.</pre>
+      <pre>Process the AMPLiT Validation.csv: validate peptide sequences, compute length statistics, remove duplicates, and export a clean CSV.</pre>
+      <pre>Run FastQC on this FASTQ file and generate a MultiQC summary report.</pre>
+      <pre>For this paired FASTQ dataset, run raw QC, then a post-cleaning quality gate, and prepare it for microbiome composition analysis.</pre>
+      <pre>Check whether these local tools are available: fastqc, multiqc, seqkit, seqtk, bowtie2, samtools, kraken2.</pre>
+    </div>
+  </section>
+
+  <section class="module m5" id="skills">
+    <div class="module-header"><div class="module-number">5</div><h2>Available capabilities</h2></div>
+    <div class="module-body">
+      <table>
+        <thead><tr><th>Category</th><th>Skills</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td>File inspection</td><td><code>file_type_detect</code>, <code>fastq_pair_match</code>, <code>sample_sheet_prepare</code>, <code>sample_sheet_validate</code></td><td>Detect file formats, pair FASTQ files, and validate sample sheets.</td></tr>
+          <tr><td>Raw QC</td><td><code>fastq_qc</code>, <code>multiqc_summary</code>, <code>seqkit_stats</code></td><td>Inspect raw sequencing data and generate QC reports.</td></tr>
+          <tr><td>CSV and peptide tables</td><td><code>peptide_csv_normalize</code>, <code>peptide_validate</code>, <code>peptide_label_filter</code>, <code>peptide_length_filter</code>, <code>peptide_deduplicate</code>, <code>peptide_statistics</code>, <code>peptide_chart</code>, <code>peptide_csv_export</code></td><td>Normalize headerless CSV files, validate peptide sequences, filter, deduplicate, summarize, plot, and export.</td></tr>
+          <tr><td>Quality gate</td><td><code>data_quality_gate</code></td><td>Check cleaned CSV, FASTA, or FASTQ outputs before downstream analysis.</td></tr>
+          <tr><td>Ancient DNA</td><td><code>host_dna_removal</code>, <code>bwa_align</code>, <code>bowtie2_align</code>, <code>samtools_sort_index</code>, <code>samtools_stats</code>, <code>damageprofiler_profile</code>, <code>ancient_dna_authentication</code></td><td>Perform host removal, alignment, BAM processing, statistics, and damage authentication.</td></tr>
+          <tr><td>Microbiome</td><td><code>kraken2_profile</code>, <code>metaphlan_profile</code>, <code>bracken_abundance</code>, <code>humann_profile</code>, <code>megahit_assembly</code>, <code>metaspades_assembly</code></td><td>Run taxonomy profiling, abundance estimation, functional profiling, and metagenome assembly.</td></tr>
+          <tr><td>Peptide applications</td><td><code>amp_prediction</code>, <code>peptide_properties</code>, <code>peptide_candidate_rank</code>, <code>amplify_prediction</code>, <code>amp_scanner_prediction</code>, <code>modlamp_descriptor</code></td><td>Run AMP prediction, peptide property calculation, and candidate ranking.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="module m6" id="env">
+    <div class="module-header"><div class="module-number">6</div><h2>Environment and tools</h2></div>
+    <div class="module-body">
+      <p>
+        The agent does not automatically install heavy bioinformatics tools. It first checks PATH and then falls back to <code>conda run -n environment tool</code> using <code>config/tool_envs.json</code>. If a tool is still missing, it reports what needs to be installed.
+      </p>
+      <table>
+        <thead><tr><th>Tool</th><th>Suggested environment</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td>FastQC</td><td>PATH or FastQC environment</td><td>Raw FASTQ quality control</td></tr>
+          <tr><td>MultiQC</td><td><code>multiqc_env</code></td><td>Aggregate QC reports</td></tr>
+          <tr><td>seqkit</td><td>PATH or seqkit environment</td><td>FASTA/FASTQ statistics, filtering, and deduplication</td></tr>
+          <tr><td>seqtk</td><td>seqtk environment</td><td>FASTQ sampling</td></tr>
+          <tr><td>Bowtie2</td><td><code>bowtie2_env</code></td><td>Host removal or short-read alignment</td></tr>
+          <tr><td>BWA</td><td><code>bwa_env</code></td><td>Ancient-DNA alignment</td></tr>
+          <tr><td>Samtools</td><td><code>samtools_env</code></td><td>BAM/SAM processing</td></tr>
+          <tr><td>Kraken2</td><td><code>kraken2_env</code></td><td>Taxonomic profiling</td></tr>
+          <tr><td>mapDamage / DamageProfiler</td><td><code>mapdamage_env</code></td><td>Ancient-DNA damage profiling</td></tr>
+        </tbody>
+      </table>
+      <pre>conda env list
+conda activate multiqc_env
+multiqc --version</pre>
+    </div>
+  </section>
+
+  <section class="module m7" id="validation">
+    <div class="module-header"><div class="module-number">7</div><h2>Validation datasets</h2></div>
+    <div class="module-body">
+      <table>
+        <thead><tr><th>Case</th><th>Local path</th><th>Suggested test</th></tr></thead>
+        <tbody>
+          <tr><td>1. AMPLiT peptide validation</td><td><code>data/raw/reproducibility_cases/case1_amplit_validation/Validation.csv</code></td><td>CSV normalization, peptide validation, length statistics, deduplication, and export.</td></tr>
+          <tr><td>2. PRJEB94382 / ERR15682270</td><td><code>data/raw/reproducibility_cases/case2_prjeb94382_err15682270/</code></td><td>Paired FASTQ detection, FastQC, MultiQC, read-count checks, and quality gate.</td></tr>
+          <tr><td>3. PRJEB55583 / ERR10114877</td><td><code>data/raw/reproducibility_cases/case3_prjeb55583_err10114877/</code></td><td>Paired FASTQ QC, sequence statistics, and microbiome workflow preparation.</td></tr>
+          <tr><td>4. PRJEB30280 / ERR3250149</td><td><code>data/raw/reproducibility_cases/case4_prjeb30280_err3250149/</code></td><td>Single FASTQ QC, large-file handling, and report export.</td></tr>
+        </tbody>
+      </table>
+      <div class="warning">Start with the smallest dataset before scaling to larger files.</div>
+    </div>
+  </section>
+
+  <section class="module m1" id="outputs">
+    <div class="module-header"><div class="module-number">8</div><h2>Outputs</h2></div>
+    <div class="module-body">
+      <table>
+        <thead><tr><th>Output</th><th>Meaning</th></tr></thead>
+        <tbody>
+          <tr><td><code>run_report.html</code></td><td>Human-readable run report.</td></tr>
+          <tr><td><code>execution_summary.json</code></td><td>Workflow, step status, errors, and output paths.</td></tr>
+          <tr><td><code>*_fastqc.html</code>, <code>*_fastqc.zip</code></td><td>FastQC reports.</td></tr>
+          <tr><td><code>multiqc_report.html</code></td><td>Aggregated MultiQC report.</td></tr>
+          <tr><td><code>data_quality_gate_report.json</code></td><td>Post-cleaning quality gate report.</td></tr>
+          <tr><td><code>*.csv</code>, <code>*.fasta</code>, <code>*.fastq.gz</code></td><td>Cleaned, filtered, or exported data.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="module m2" id="trouble">
+    <div class="module-header"><div class="module-number">9</div><h2>Troubleshooting</h2></div>
+    <div class="module-body">
+      <table>
+        <thead><tr><th>Problem</th><th>Likely cause</th><th>Fix</th></tr></thead>
+        <tbody>
+          <tr><td>A tool is reported as missing</td><td>The tool is not on PATH or its conda environment is not configured.</td><td>Check <code>conda env list</code> and <code>config/tool_envs.json</code>.</td></tr>
+          <tr><td>Workflow generation fails</td><td>API key, model configuration, or network issue.</td><td>Check the API configuration and retry with a simpler request.</td></tr>
+          <tr><td>The workflow skips QC</td><td>The user requested a narrow single-tool action.</td><td>For full analysis, explicitly ask for QC, post-cleaning quality check, and downstream analysis.</td></tr>
+          <tr><td>Data Quality Gate reports warnings</td><td>Possible empty sequences, duplicates, invalid characters, malformed FASTQ records, or paired-read mismatch.</td><td>Inspect <code>data_quality_gate_report.json</code> before continuing.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>Research Agent English User Guide. This document is intended for demonstration, validation, and daily use.</p>
+  </footer>
+</div>
+</body>
+</html>

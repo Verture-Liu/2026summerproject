@@ -1,0 +1,24 @@
+{
+  "paper_framework": "Scheme B: reproducibility-validation paper",
+  "figures": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/manuscript_figures_schemeB/figure1_agent_architecture.png",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/manuscript_figures_schemeB/figure1_agent_architecture.pdf",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/manuscript_figures_schemeB/figure1_agent_architecture.svg",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/manuscript_figures_schemeB/figure2_validation_dataset_map.png",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/manuscript_figures_schemeB/figure2_validation_dataset_map.pdf",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/manuscript_figures_schemeB/figure2_validation_dataset_map.svg",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/manuscript_figures_schemeB/figure3_reproducibility_overview.png",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/manuscript_figures_schemeB/figure3_reproducibility_overview.pdf",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/manuscript_figures_schemeB/figure3_reproducibility_overview.svg",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/manuscript_figures_schemeB/figure4_representative_task_validation.png",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/manuscript_figures_schemeB/figure4_representative_task_validation.pdf",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/manuscript_figures_schemeB/figure4_representative_task_validation.svg",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/manuscript_figures_schemeB/figure5_audit_discrepancy_summary.png",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/manuscript_figures_schemeB/figure5_audit_discrepancy_summary.pdf",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/manuscript_figures_schemeB/figure5_audit_discrepancy_summary.svg"
+  ],
+  "tables": {
+    "matched": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/manuscript_figures_schemeB/table_matched_datasets_summary.csv",
+    "audit": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/manuscript_figures_schemeB/table_audit_differences_summary.csv"
+  }
+}

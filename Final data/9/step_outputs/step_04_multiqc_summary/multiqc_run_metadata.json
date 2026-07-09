@@ -1,0 +1,9 @@
+{
+  "tool": "MultiQC",
+  "official_url": "https://multiqc.info/",
+  "tool_source": "conda:multiqc_env",
+  "inputs": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/1345b067371e4d48b133da6ebc6db5cc/steps/step_03"
+  ],
+  "report": "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/1345b067371e4d48b133da6ebc6db5cc/steps/step_04/multiqc/multiqc_report.html"
+}

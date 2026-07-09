@@ -1,0 +1,32 @@
+{
+  "gate_passed": true,
+  "files": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/1345b067371e4d48b133da6ebc6db5cc/inputs/ERR15682267_1.fastq.gz",
+      "name": "ERR15682267_1.fastq.gz",
+      "size_bytes": 4102323,
+      "format": "fastq",
+      "records": 29629,
+      "total_bases": 8918329,
+      "min_length": 301,
+      "max_length": 301,
+      "mean_length": 301.0,
+      "n_fraction": 0.001962,
+      "malformed_records": 0
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/1345b067371e4d48b133da6ebc6db5cc/inputs/ERR15682267_2.fastq.gz",
+      "name": "ERR15682267_2.fastq.gz",
+      "size_bytes": 5787702,
+      "format": "fastq",
+      "records": 29629,
+      "total_bases": 8918329,
+      "min_length": 301,
+      "max_length": 301,
+      "mean_length": 301.0,
+      "n_fraction": 0.014022,
+      "malformed_records": 0
+    }
+  ],
+  "warnings": []
+}

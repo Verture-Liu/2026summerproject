@@ -1,0 +1,9 @@
+{
+  "tool": "seqkit",
+  "tool_source": "path",
+  "official_url": "https://bioinf.shenwei.me/seqkit/",
+  "inputs": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/7a0446baab73411eac8df563436c64de/inputs/SRR29088443_1.fastq.gz",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/7a0446baab73411eac8df563436c64de/inputs/SRR29088443_2.fastq.gz"
+  ]
+}

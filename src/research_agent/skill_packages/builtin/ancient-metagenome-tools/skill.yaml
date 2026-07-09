@@ -1,0 +1,6 @@
+protocol_version: "1.0"
+package_id: ancient-metagenome-tools
+package_version: "1.0.0"
+factory: adapter.py:create_skills
+enabled: true
+

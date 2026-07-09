@@ -1,0 +1,16 @@
+{
+  "tool": "FastQC",
+  "official_url": "https://www.bioinformatics.babraham.ac.uk/projects/fastqc/",
+  "reviewed_skill_source": "https://github.com/ubcd-ibfg/fastq-qc-skill",
+  "inputs": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/1345b067371e4d48b133da6ebc6db5cc/inputs/ERR15682267_1.fastq.gz",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/1345b067371e4d48b133da6ebc6db5cc/inputs/ERR15682267_2.fastq.gz"
+  ],
+  "threads": 4,
+  "reports": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/1345b067371e4d48b133da6ebc6db5cc/steps/step_03/fastqc/ERR15682267_1_fastqc.html",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/1345b067371e4d48b133da6ebc6db5cc/steps/step_03/fastqc/ERR15682267_2_fastqc.html",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/1345b067371e4d48b133da6ebc6db5cc/steps/step_03/fastqc/ERR15682267_1_fastqc.zip",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/1345b067371e4d48b133da6ebc6db5cc/steps/step_03/fastqc/ERR15682267_2_fastqc.zip"
+  ]
+}

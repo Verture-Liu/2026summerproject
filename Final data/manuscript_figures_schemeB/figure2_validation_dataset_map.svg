@@ -1,0 +1,263 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="541.377467pt" height="325.19952pt" viewBox="0 0 541.377467 325.19952" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-06-30T15:35:21.628870</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.0, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 325.19952 
+L 541.377467 325.19952 
+L 541.377467 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 12.1492 317.99952 
+L 136.898603 317.99952 
+L 136.898603 7.2 
+L 12.1492 7.2 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 15.517434 146.438185 
+L 118.560441 146.438185 
+Q 121.679176 146.438185 121.679176 138.668197 
+L 121.679176 87.075477 
+Q 121.679176 79.305489 118.560441 79.305489 
+L 15.517434 79.305489 
+Q 12.398699 79.305489 12.398699 87.075477 
+L 12.398699 138.668197 
+Q 12.398699 146.438185 15.517434 146.438185 
+z
+" clip-path="url(#pc1b3fdb7bd)" style="fill: #eef5f7; stroke: #e5e7eb; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 15.517434 230.354055 
+L 118.560441 230.354055 
+Q 121.679176 230.354055 121.679176 222.584067 
+L 121.679176 164.775357 
+Q 121.679176 157.005369 118.560441 157.005369 
+L 15.517434 157.005369 
+Q 12.398699 157.005369 12.398699 164.775357 
+L 12.398699 222.584067 
+Q 12.398699 230.354055 15.517434 230.354055 
+z
+" clip-path="url(#pc1b3fdb7bd)" style="fill: #f7f2e8; stroke: #e5e7eb; stroke-linejoin: miter"/>
+   </g>
+   <g id="matplotlib.axis_1"/>
+   <g id="matplotlib.axis_2"/>
+   <g id="text_1">
+    <text style="font-weight: 700; font-size: 12px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #1f2933" x="12.1492" y="15.936328" transform="rotate(-0 12.1492 15.936328)">Figure 2 | Validation datasets and task coverage</text>
+   </g>
+   <g id="text_2">
+    <text style="font-size: 8.5px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #6b7280" x="12.1492" y="50.711933" transform="rotate(-0 12.1492 50.711933)">Seven validation groups cover two task families:</text>
+   </g>
+   <g id="text_3">
+    <text style="font-weight: 700; font-size: 8.5px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #2f6f8f" x="67.038938" y="108.358274" transform="rotate(-0 67.038938 108.358274)">Peptide-table curation</text>
+   </g>
+   <g id="text_4">
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #6b7280" transform="translate(54.754844 121.871438)">Group 1</text>
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #6b7280" transform="translate(8.325187 129.817145)">5,810 raw rows; 114 duplicates audited</text>
+   </g>
+   <g id="text_5">
+    <text style="font-weight: 700; font-size: 8.5px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: middle; fill: #d8a24a" x="67.038938" y="188.420231" transform="rotate(-0 67.038938 188.420231)">FASTQ source-data QC</text>
+   </g>
+   <g id="text_6">
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #6b7280" transform="translate(49.273406 203.922511)">Groups 2–9</text>
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #6b7280" transform="translate(7.2 211.901687)">6 public run accessions; 11 FASTQ files</text>
+   </g>
+   <g id="text_7">
+    <text style="font-size: 8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #6b7280" x="14.644188" y="280.703578" transform="rotate(-0 14.644188 280.703578)">Each dataset was processed by the same local Agent interface but through task-specific skills.</text>
+   </g>
+  </g>
+  <g id="axes_2">
+   <g id="patch_5">
+    <path d="M 353.290833 317.99952 
+L 534.177467 317.99952 
+L 534.177467 7.2 
+L 353.290833 7.2 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 353.290833 52.52493 
+L 534.177467 52.52493 
+L 534.177467 26.62497 
+L 353.290833 26.62497 
+z
+" clip-path="url(#p185a6a2d32)" style="fill: #f7f8fa"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 353.290833 83.281132 
+L 534.177467 83.281132 
+L 534.177467 57.381172 
+L 353.290833 57.381172 
+z
+" clip-path="url(#p185a6a2d32)" style="fill: #fafafa"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 353.290833 144.793537 
+L 534.177467 144.793537 
+L 534.177467 118.893577 
+L 353.290833 118.893577 
+z
+" clip-path="url(#p185a6a2d32)" style="fill: #fafafa"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 353.290833 206.305942 
+L 534.177467 206.305942 
+L 534.177467 180.405982 
+L 353.290833 180.405982 
+z
+" clip-path="url(#p185a6a2d32)" style="fill: #fafafa"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 353.290833 267.818347 
+L 534.177467 267.818347 
+L 534.177467 241.918387 
+L 353.290833 241.918387 
+z
+" clip-path="url(#p185a6a2d32)" style="fill: #fafafa"/>
+   </g>
+   <g id="matplotlib.axis_3"/>
+   <g id="matplotlib.axis_4"/>
+   <g id="text_8">
+    <text style="font-weight: 700; font-size: 7.4px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #1f2933" x="356.908565" y="41.489989" transform="rotate(-0 356.908565 41.489989)">Group</text>
+   </g>
+   <g id="text_9">
+    <text style="font-weight: 700; font-size: 7.4px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #1f2933" x="387.659293" y="41.489989" transform="rotate(-0 387.659293 41.489989)">Dataset</text>
+   </g>
+   <g id="text_10">
+    <text style="font-weight: 700; font-size: 7.4px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #1f2933" x="445.543016" y="41.489917" transform="rotate(-0 445.543016 41.489917)">Data type</text>
+   </g>
+   <g id="text_11">
+    <text style="font-weight: 700; font-size: 7.4px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #1f2933" x="488.955808" y="41.489917" transform="rotate(-0 488.955808 41.489917)">Agent task</text>
+   </g>
+   <g id="text_12">
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #2f6f8f" x="356.908565" y="72.774902" transform="rotate(-0 356.908565 72.774902)">1</text>
+   </g>
+   <g id="text_13">
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #2f6f8f" x="387.659293" y="72.724965" transform="rotate(-0 387.659293 72.724965)">Validation.csv</text>
+   </g>
+   <g id="text_14">
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #2f6f8f" transform="translate(445.543016 68.738697)">peptide</text>
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #2f6f8f" transform="translate(445.543016 76.11517)">CSV</text>
+   </g>
+   <g id="text_15">
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #2f6f8f" transform="translate(488.955808 69.374604)">curation</text>
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #2f6f8f" transform="translate(488.955808 76.020608)">+ stats</text>
+   </g>
+   <g id="text_16">
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #1f2933" x="356.908565" y="103.488074" transform="rotate(-0 356.908565 103.488074)">2–3</text>
+   </g>
+   <g id="text_17">
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #1f2933" x="387.659293" y="103.489667" transform="rotate(-0 387.659293 103.489667)">ERR15682270</text>
+   </g>
+   <g id="text_18">
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #1f2933" transform="translate(445.543016 100.025087)">FASTQ</text>
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #1f2933" transform="translate(445.543016 106.195623)">paired</text>
+   </g>
+   <g id="text_19">
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #1f2933" transform="translate(488.955808 100.025087)">FastQC</text>
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #1f2933" transform="translate(488.955808 106.72581)">+ MultiQC</text>
+   </g>
+   <g id="text_20">
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #1f2933" x="356.908565" y="134.235776" transform="rotate(-0 356.908565 134.235776)">4–5</text>
+   </g>
+   <g id="text_21">
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #1f2933" x="387.659293" y="134.24587" transform="rotate(-0 387.659293 134.24587)">ERR10114877</text>
+   </g>
+   <g id="text_22">
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #1f2933" transform="translate(445.543016 130.78129)">FASTQ</text>
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #1f2933" transform="translate(445.543016 136.951825)">paired</text>
+   </g>
+   <g id="text_23">
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #1f2933" transform="translate(488.955808 130.78129)">FastQC</text>
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #1f2933" transform="translate(488.955808 137.482013)">+ MultiQC</text>
+   </g>
+   <g id="text_24">
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #1f2933" x="356.908565" y="165.002072" transform="rotate(-0 356.908565 165.002072)">6</text>
+   </g>
+   <g id="text_25">
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #1f2933" x="387.659293" y="165.000479" transform="rotate(-0 387.659293 165.000479)">ERR3250149</text>
+   </g>
+   <g id="text_26">
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #1f2933" transform="translate(445.543016 161.537492)">FASTQ</text>
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #1f2933" transform="translate(445.543016 167.668184)">single</text>
+   </g>
+   <g id="text_27">
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #1f2933" transform="translate(488.955808 161.537492)">FastQC</text>
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #1f2933" transform="translate(488.955808 168.238215)">+ MultiQC</text>
+   </g>
+   <g id="text_28">
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #1f2933" x="356.908565" y="195.758275" transform="rotate(-0 356.908565 195.758275)">7</text>
+   </g>
+   <g id="text_29">
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #1f2933" x="387.659293" y="195.758275" transform="rotate(-0 387.659293 195.758275)">ERR10114867</text>
+   </g>
+   <g id="text_30">
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #1f2933" transform="translate(445.543016 192.293695)">FASTQ</text>
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #1f2933" transform="translate(445.543016 198.46423)">paired</text>
+   </g>
+   <g id="text_31">
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #1f2933" transform="translate(488.955808 192.293695)">FastQC</text>
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #1f2933" transform="translate(488.955808 198.994418)">+ MultiQC</text>
+   </g>
+   <g id="text_32">
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #1f2933" x="356.908565" y="226.514477" transform="rotate(-0 356.908565 226.514477)">8</text>
+   </g>
+   <g id="text_33">
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #1f2933" x="387.659293" y="226.514477" transform="rotate(-0 387.659293 226.514477)">ERR10114861</text>
+   </g>
+   <g id="text_34">
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #1f2933" transform="translate(445.543016 223.049897)">FASTQ</text>
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #1f2933" transform="translate(445.543016 229.220433)">paired</text>
+   </g>
+   <g id="text_35">
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #1f2933" transform="translate(488.955808 223.049897)">FastQC</text>
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #1f2933" transform="translate(488.955808 229.75062)">+ MultiQC</text>
+   </g>
+   <g id="text_36">
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #1f2933" x="356.908565" y="257.27068" transform="rotate(-0 356.908565 257.27068)">9</text>
+   </g>
+   <g id="text_37">
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #1f2933" x="387.659293" y="257.27068" transform="rotate(-0 387.659293 257.27068)">ERR15682267</text>
+   </g>
+   <g id="text_38">
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #1f2933" transform="translate(445.543016 253.8061)">FASTQ</text>
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #1f2933" transform="translate(445.543016 259.976635)">paired</text>
+   </g>
+   <g id="text_39">
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #1f2933" transform="translate(488.955808 253.8061)">FastQC</text>
+    <text style="font-size: 6.8px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #1f2933" transform="translate(488.955808 260.506823)">+ MultiQC</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pc1b3fdb7bd">
+   <rect x="12.1492" y="7.2" width="124.749403" height="310.79952"/>
+  </clipPath>
+  <clipPath id="p185a6a2d32">
+   <rect x="353.290833" y="7.2" width="180.886634" height="310.79952"/>
+  </clipPath>
+ </defs>
+</svg>

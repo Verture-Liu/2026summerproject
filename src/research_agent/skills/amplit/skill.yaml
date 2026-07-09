@@ -1,0 +1,6 @@
+name: amp_prediction
+version: 1.0.0
+official_repository: https://github.com/ChenSizhe13893461199/AMPLiT
+input_formats: [csv, fasta]
+output_formats: [csv, json]
+resource_class: heavy

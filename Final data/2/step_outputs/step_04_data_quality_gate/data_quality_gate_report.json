@@ -1,0 +1,19 @@
+{
+  "gate_passed": true,
+  "files": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/04b4b64cca1b4fa0b6f49c2527210b29/inputs/ERR15682270_1.fastq.gz",
+      "name": "ERR15682270_1.fastq.gz",
+      "size_bytes": 3644307,
+      "format": "fastq",
+      "records": 28061,
+      "total_bases": 8446361,
+      "min_length": 301,
+      "max_length": 301,
+      "mean_length": 301.0,
+      "n_fraction": 0.001913,
+      "malformed_records": 0
+    }
+  ],
+  "warnings": []
+}

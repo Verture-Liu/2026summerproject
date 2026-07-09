@@ -1,0 +1,13 @@
+fastapi<1,>=0.115
+uvicorn<1,>=0.34
+pydantic<3,>=2.10
+httpx<1,>=0.28
+python-multipart<1,>=0.0.20
+pandas<3,>=2.2
+openpyxl<4,>=3.1
+matplotlib<4,>=3.9
+pyyaml<7,>=6.0
+
+[dev]
+pytest<9,>=8.3
+pytest-asyncio<1,>=0.25

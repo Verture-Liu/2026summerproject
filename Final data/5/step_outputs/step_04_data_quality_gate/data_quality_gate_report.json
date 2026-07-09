@@ -1,0 +1,19 @@
+{
+  "gate_passed": true,
+  "files": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/2332c96476fe4bcdabb756eddcf10f06/inputs/ERR10114877_2.fastq.gz",
+      "name": "ERR10114877_2.fastq.gz",
+      "size_bytes": 7169255,
+      "format": "fastq",
+      "records": 263035,
+      "total_bases": 16918115,
+      "min_length": 15,
+      "max_length": 76,
+      "mean_length": 64.319,
+      "n_fraction": 1.5e-05,
+      "malformed_records": 0
+    }
+  ],
+  "warnings": []
+}

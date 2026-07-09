@@ -1,0 +1,5 @@
+protocol_version: "1.0"
+package_id: legacy-core
+package_version: "1.0.0"
+factory: adapter.py:create_skills
+enabled: true

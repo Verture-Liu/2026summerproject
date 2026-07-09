@@ -1,0 +1,5 @@
+name: table_filter
+version: 1.0.0
+input_formats: [csv, tsv, xlsx]
+output_formats: [csv, tsv, xlsx]
+resource_class: light

@@ -1,0 +1,76 @@
+{
+  "workflow_schema_version": "1.0",
+  "status": "succeeded",
+  "workflow": {
+    "schema_version": "1.0",
+    "task_summary": "筛选长度在20及以下的多肽并输出",
+    "steps": [
+      {
+        "id": "step_01",
+        "skill": "peptide_filter",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "peptides"
+          }
+        ],
+        "parameters": {
+          "min_length": 1,
+          "max_length": 20
+        },
+        "outputs": [
+          {
+            "name": "filtered",
+            "format": "fasta"
+          }
+        ],
+        "reason": "保留长度不超过20个氨基酸的多肽。"
+      }
+    ]
+  },
+  "inputs": [
+    {
+      "ref": "peptides",
+      "path": "workspace/tasks/4196de353a65456fa7632c4fd5d63e23/inputs/peptides.fasta",
+      "sha256": "f9f5c2f2004297a332088773a5e2487ffde2479be44df738c3aea6d3b0da555e"
+    }
+  ],
+  "steps": [
+    {
+      "id": "step_01",
+      "skill": "peptide_filter",
+      "status": "succeeded",
+      "parameters": {
+        "min_length": 1,
+        "max_length": 20
+      },
+      "metrics": {
+        "input": 4,
+        "kept": 2
+      },
+      "warnings": [],
+      "error": null,
+      "started_at": "2026-06-18T05:46:28.266479+00:00",
+      "ended_at": "2026-06-18T05:46:28.267169+00:00",
+      "outputs": [
+        {
+          "path": "workspace/tasks/4196de353a65456fa7632c4fd5d63e23/steps/step_01/filtered_peptides.fasta",
+          "sha256": "e26841cb292ecfa36660af985f8772e8ceccfbec4d8957e41f440b45484158ea"
+        }
+      ]
+    }
+  ],
+  "environment": {
+    "python": "3.13.9",
+    "platform": "macOS-15.6.1-arm64-arm-64bit-Mach-O"
+  },
+  "settings": {
+    "api_key": ""
+  },
+  "exported_final_files": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/examples/filtered_peptides.fasta",
+      "sha256": "e26841cb292ecfa36660af985f8772e8ceccfbec4d8957e41f440b45484158ea"
+    }
+  ]
+}

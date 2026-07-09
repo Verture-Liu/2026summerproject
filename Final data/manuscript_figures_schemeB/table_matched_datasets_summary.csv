@@ -1,0 +1,7 @@
+validation_type,group,run,paper,source,layout,scientific_name,ena_read_count,agent_total_sequences,read_count_delta,ena_fastq_bytes,local_fastq_bytes,bytes_ratio,match_status
+FASTQ source-data reproducibility,2–3,ERR15682270,Iceman microbiome,PRJEB94382,PAIRED,metagenome,56122,56122,0,9007551,9007551,1.0,matched
+FASTQ source-data reproducibility,4–5,ERR10114877,Paleofuran study,PRJEB55583,PAIRED,blank sample,526070,526070,0,14871088,14871088,1.0,matched
+FASTQ source-data reproducibility,6,ERR3250149,Birch pitch genome,PRJEB30280,SINGLE,Betula pendula,4380359,4380359,0,172890455,172890455,1.0,matched
+FASTQ source-data reproducibility,7,ERR10114867,Paleofuran study,PRJEB55583,PAIRED,blank sample,847520,847520,0,30647534,30647534,1.0,matched
+FASTQ source-data reproducibility,8,ERR10114861,Paleofuran study,PRJEB55583,PAIRED,Neanderthal sample,4068862,4068862,0,71435361,71435361,1.0,matched
+FASTQ source-data reproducibility,9,ERR15682267,Iceman microbiome,PRJEB94382,PAIRED,metagenome,59258,59258,0,9890025,9890025,1.0,matched

@@ -1,0 +1,92 @@
+{
+  "schema_version": "1.0",
+  "task_summary": "复现古代肠道宏基因组抗菌肽筛选的纯计算流程",
+  "steps": [
+    {
+      "id": "step_01",
+      "skill": "environmental_decontamination",
+      "inputs": [
+        {"source": "uploaded", "ref": "stool_reads"},
+        {"source": "uploaded", "ref": "environment_reads"}
+      ],
+      "parameters": {},
+      "outputs": [{"name": "decontaminated_reads", "format": "fastq"}],
+      "reason": "移除同时出现在古粪便样本和环境对照中的序列"
+    },
+    {
+      "id": "step_02",
+      "skill": "host_dna_removal",
+      "inputs": [{"source": "step", "ref": "step_01.decontaminated_reads"}],
+      "parameters": {"reference": "hg19"},
+      "outputs": [{"name": "non_host_reads", "format": "fastq"}],
+      "reason": "移除人类宿主 DNA"
+    },
+    {
+      "id": "step_03",
+      "skill": "fastq_quality_filter",
+      "inputs": [{"source": "step", "ref": "step_02.non_host_reads"}],
+      "parameters": {"min_length": 30},
+      "outputs": [{"name": "filtered_reads", "format": "fastq"}],
+      "reason": "移除长度小于 30 bp 的序列"
+    },
+    {
+      "id": "step_04",
+      "skill": "metagenome_assembly",
+      "inputs": [{"source": "step", "ref": "step_03.filtered_reads"}],
+      "parameters": {"mode": "meta"},
+      "outputs": [{"name": "contigs", "format": "fasta"}],
+      "reason": "组装宏基因组 contigs"
+    },
+    {
+      "id": "step_05",
+      "skill": "orf_extraction",
+      "inputs": [{"source": "step", "ref": "step_04.contigs"}],
+      "parameters": {"min_nt": 33, "max_nt": 150},
+      "outputs": [{"name": "peptides", "format": "fasta"}],
+      "reason": "提取 ORF 并转换为氨基酸序列"
+    },
+    {
+      "id": "step_06",
+      "skill": "amp_prediction",
+      "inputs": [{"source": "step", "ref": "step_05.peptides"}],
+      "parameters": {"score_threshold": 0.9},
+      "outputs": [
+        {"name": "amp_candidates", "format": "csv"},
+        {"name": "run_metadata", "format": "json"}
+      ],
+      "reason": "筛选高置信度 AMP 候选"
+    },
+    {
+      "id": "step_07",
+      "skill": "peptide_length_filter",
+      "inputs": [{"source": "step", "ref": "step_06.amp_candidates"}],
+      "parameters": {"min_length": 13, "max_length": 26},
+      "outputs": [{"name": "length_filtered", "format": "csv"}],
+      "reason": "保留适合化学合成的肽长度"
+    },
+    {
+      "id": "step_08",
+      "skill": "cross_sample_presence_filter",
+      "inputs": [{"source": "step", "ref": "step_07.length_filtered"}],
+      "parameters": {"min_samples": 5},
+      "outputs": [{"name": "shared_candidates", "format": "csv"}],
+      "reason": "保留至少五个古粪便样本中出现的序列"
+    },
+    {
+      "id": "step_09",
+      "skill": "sequence_deduplicate",
+      "inputs": [{"source": "step", "ref": "step_08.shared_candidates"}],
+      "parameters": {},
+      "outputs": [{"name": "non_redundant", "format": "csv"}],
+      "reason": "生成非冗余候选集合"
+    },
+    {
+      "id": "step_10",
+      "skill": "cytotoxicity_prediction",
+      "inputs": [{"source": "step", "ref": "step_09.non_redundant"}],
+      "parameters": {},
+      "outputs": [{"name": "final_candidates", "format": "csv"}],
+      "reason": "移除潜在细胞毒性候选"
+    }
+  ]
+}

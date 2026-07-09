@@ -1,0 +1,19 @@
+{
+  "adapterremoval": "adapterremoval_env",
+  "AdapterRemoval": "adapterremoval_env",
+  "bowtie2": "bowtie2_env",
+  "bwa": "bwa_env",
+  "checkm2": "checkm2_env",
+  "cutadapt": "cutadapt_env",
+  "fastp": "fastp_env",
+  "kraken2": "kraken2_env",
+  "mapDamage": "mapdamage_env",
+  "mapDamage2": "mapdamage_env",
+  "megahit": "megahit_env",
+  "metaspades.py": "spades_env",
+  "metabat2": "metabat2_env",
+  "metaphlan": "metaphlan_env",
+  "multiqc": "multiqc_env",
+  "samtools": "samtools_env",
+  "spades.py": "spades_env"
+}

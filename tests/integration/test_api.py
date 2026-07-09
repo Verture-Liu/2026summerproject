@@ -1,0 +1,102 @@
+from fastapi.testclient import TestClient
+
+from research_agent.main import create_app
+
+
+def test_create_task(tmp_path):
+    client = TestClient(create_app(task_root=tmp_path))
+    response = client.post("/api/tasks")
+    assert response.status_code == 201
+    assert response.json()["task_id"]
+
+
+def test_list_skills_reports_loaded_packages(tmp_path):
+    client = TestClient(create_app(task_root=tmp_path))
+    response = client.get("/api/skills")
+    assert response.status_code == 200
+    data = response.json()
+    assert {"peptide-table", "amplit", "legacy-core"}.issubset(
+        {item["package_id"] for item in data["packages"]}
+    )
+    assert "amp_prediction" in {item["name"] for item in data["skills"]}
+    assert isinstance(data["diagnostics"], list)
+
+
+def test_execute_requires_approval(tmp_path):
+    client = TestClient(create_app(task_root=tmp_path))
+    task_id = client.post("/api/tasks").json()["task_id"]
+    workflow = {
+        "schema_version": "1.0",
+        "task_summary": "filter",
+        "steps": [
+            {
+                "id": "step_01",
+                "skill": "peptide_filter",
+                "inputs": [{"source": "uploaded", "ref": "peptides"}],
+                "parameters": {"min_length": 13, "max_length": 26},
+                "outputs": [{"name": "filtered", "format": "fasta"}],
+                "reason": "filter",
+            }
+        ],
+    }
+    response = client.post(
+        f"/api/tasks/{task_id}/execute",
+        json={"approved": False, "workflow": workflow},
+    )
+    assert response.status_code == 400
+
+
+def test_select_output_directory_saves_backend_chosen_path(tmp_path):
+    destination = tmp_path / "chosen"
+    destination.mkdir()
+    client = TestClient(
+        create_app(
+            task_root=tmp_path / "tasks",
+            directory_chooser=lambda: str(destination),
+        )
+    )
+    task_id = client.post("/api/tasks").json()["task_id"]
+    response = client.post(f"/api/tasks/{task_id}/select-output-directory")
+    assert response.status_code == 200
+    assert response.json()["path"] == str(destination.resolve())
+
+
+def test_select_output_directory_reports_chooser_failure(tmp_path):
+    def broken_chooser():
+        raise RuntimeError("native dialog failed")
+
+    client = TestClient(
+        create_app(
+            task_root=tmp_path / "tasks",
+            directory_chooser=broken_chooser,
+        )
+    )
+    task_id = client.post("/api/tasks").json()["task_id"]
+    response = client.post(f"/api/tasks/{task_id}/select-output-directory")
+    assert response.status_code == 500
+    assert response.json()["detail"]["error"] == "output_directory_dialog_failed"
+
+
+def test_execute_requires_output_directory(tmp_path):
+    client = TestClient(create_app(task_root=tmp_path))
+    task_id = client.post("/api/tasks").json()["task_id"]
+    workflow = {
+        "schema_version": "1.0",
+        "task_summary": "filter",
+        "steps": [
+            {
+                "id": "step_01",
+                "skill": "peptide_filter",
+                "inputs": [{"source": "uploaded", "ref": "peptides"}],
+                "parameters": {"min_length": 13, "max_length": 26},
+                "outputs": [{"name": "filtered", "format": "fasta"}],
+                "reason": "filter",
+            }
+        ],
+    }
+    response = client.post(
+        f"/api/tasks/{task_id}/execute",
+        json={"approved": True, "workflow": workflow},
+    )
+    assert response.status_code == 400
+    assert response.json()["detail"]["error"] == "output_directory_required"

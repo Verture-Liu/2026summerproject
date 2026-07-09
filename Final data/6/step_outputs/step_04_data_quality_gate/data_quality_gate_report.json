@@ -1,0 +1,19 @@
+{
+  "gate_passed": true,
+  "files": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/4c59ce9b6e9b4d57a9def9c42783beff/inputs/ERR3250149.fastq.gz",
+      "name": "ERR3250149.fastq.gz",
+      "size_bytes": 172890455,
+      "format": "fastq",
+      "records": 4380359,
+      "total_bases": 354809079,
+      "min_length": 81,
+      "max_length": 81,
+      "mean_length": 81.0,
+      "n_fraction": 0.00019,
+      "malformed_records": 0
+    }
+  ],
+  "warnings": []
+}

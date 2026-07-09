@@ -1,0 +1,14 @@
+{
+  "style": "publication-style multi-panel figures; no large bar charts",
+  "figures_png": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/comparison_figures/group1_peptide_publication_comparison.png",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/comparison_figures/group2_3_ERR15682270_publication_comparison.png",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/comparison_figures/group4_5_ERR10114877_publication_comparison.png",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/comparison_figures/group6_ERR3250149_publication_comparison.png",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/comparison_figures/group7_ERR10114867_publication_comparison.png",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/comparison_figures/group8_ERR10114861_publication_comparison.png",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/comparison_figures/group9_ERR15682267_publication_comparison.png",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/comparison_figures/overview_publication_comparison.png"
+  ],
+  "source_data": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/comparison_figures/comparison_source_data.csv"
+}

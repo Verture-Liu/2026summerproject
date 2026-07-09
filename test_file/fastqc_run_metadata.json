@@ -1,0 +1,13 @@
+{
+  "tool": "FastQC",
+  "official_url": "https://www.bioinformatics.babraham.ac.uk/projects/fastqc/",
+  "reviewed_skill_source": "https://github.com/ubcd-ibfg/fastq-qc-skill",
+  "inputs": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/6b0ac65e30144010aceaae9bef2dc7bb/inputs/minimal_reads.fastq"
+  ],
+  "threads": 1,
+  "reports": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/6b0ac65e30144010aceaae9bef2dc7bb/steps/step_01/fastqc/minimal_reads_fastqc.html",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/6b0ac65e30144010aceaae9bef2dc7bb/steps/step_01/fastqc/minimal_reads_fastqc.zip"
+  ]
+}

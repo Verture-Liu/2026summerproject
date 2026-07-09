@@ -1,0 +1,5 @@
+group,item,observed_difference,interpretation,severity
+1,Peptide Validation.csv row count,"5,810 raw rows -> 5,696 cleaned rows","Expected change caused by duplicate peptide removal, not a source-data mismatch.",audited_expected_change
+1,Duplicate peptide sequences,114 duplicate rows removed,The agent records the curation step and exports a non-redundant peptide table.,audited_expected_change
+2-9,GC% and read-length values,Reported by Agent FastQC rather than used as direct paper-reported targets,These are derived QC metrics for auditability; they should not be treated as paper mismatches unless the paper reports the same metric.,derived_metric
+paired FASTQ,R1/R2 file-size and GC differences,Mate-specific values differ in several paired-end runs,Expected paired-end behavior; reproducibility is judged by source file identity and total read count.,expected_paired_end_difference

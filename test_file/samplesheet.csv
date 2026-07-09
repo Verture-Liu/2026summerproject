@@ -1,0 +1,2 @@
+sample_id,run_accession,layout,fastq_1,fastq_2,organism
+SAMN12619384,SRR12557702,paired,SRR12557702_1.fastq.gz,SRR12557702_2.fastq.gz,soil metagenome

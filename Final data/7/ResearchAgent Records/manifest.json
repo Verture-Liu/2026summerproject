@@ -1,0 +1,392 @@
+{
+  "workflow_schema_version": "1.0",
+  "status": "succeeded",
+  "workflow": {
+    "schema_version": "1.0",
+    "task_summary": "Perform raw data quality control on paired-end FASTQ files: file type detection, pair matching, FastQC, MultiQC summary, and data quality gate.",
+    "steps": [
+      {
+        "id": "step_01",
+        "skill": "file_type_detect",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "ERR10114867_1.fastq"
+          },
+          {
+            "source": "uploaded",
+            "ref": "ERR10114867_2.fastq"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "file_type_report",
+            "format": "json"
+          }
+        ],
+        "reason": "Confirm that both uploaded files are recognized as valid FASTQ format before downstream processing."
+      },
+      {
+        "id": "step_02",
+        "skill": "fastq_pair_match",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "ERR10114867_1.fastq"
+          },
+          {
+            "source": "uploaded",
+            "ref": "ERR10114867_2.fastq"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "pairing_csv",
+            "format": "csv"
+          },
+          {
+            "name": "pairing_json",
+            "format": "json"
+          }
+        ],
+        "reason": "Ensure the two FASTQ files correspond to a valid paired-end sample and obtain pairing information."
+      },
+      {
+        "id": "step_03",
+        "skill": "fastq_qc",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "ERR10114867_1.fastq"
+          },
+          {
+            "source": "uploaded",
+            "ref": "ERR10114867_2.fastq"
+          }
+        ],
+        "parameters": {
+          "threads": 4
+        },
+        "outputs": [
+          {
+            "name": "fastqc_html",
+            "format": "html"
+          },
+          {
+            "name": "fastqc_json",
+            "format": "json"
+          },
+          {
+            "name": "fastqc_zip",
+            "format": "zip"
+          }
+        ],
+        "reason": "Run FastQC on both FASTQ files to generate per-file quality reports before any cleaning or downstream analysis."
+      },
+      {
+        "id": "step_04",
+        "skill": "multiqc_summary",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "fastqc_html"
+          },
+          {
+            "source": "step",
+            "ref": "fastqc_json"
+          },
+          {
+            "source": "step",
+            "ref": "fastqc_zip"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "multiqc_html",
+            "format": "html"
+          },
+          {
+            "name": "multiqc_json",
+            "format": "json"
+          }
+        ],
+        "reason": "Aggregate individual FastQC reports into a single MultiQC HTML summary for convenient visual inspection."
+      },
+      {
+        "id": "step_05",
+        "skill": "data_quality_gate",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "ERR10114867_1.fastq"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "quality_gate_json",
+            "format": "json"
+          }
+        ],
+        "reason": "Perform a final quality check on the raw FASTQ data (exemplified by read 1) to confirm it meets minimum quality criteria before any potential downstream analysis."
+      }
+    ]
+  },
+  "inputs": [
+    {
+      "ref": "ERR10114867_1.fastq",
+      "path": "workspace/tasks/982befbe34534e66a0ab1d041d6cecff/inputs/ERR10114867_1.fastq.gz",
+      "sha256": "effdf492393d412694b597472359ed400ba20d7bc029fe32dd6f278cac0dcf95"
+    },
+    {
+      "ref": "ERR10114867_2.fastq",
+      "path": "workspace/tasks/982befbe34534e66a0ab1d041d6cecff/inputs/ERR10114867_2.fastq.gz",
+      "sha256": "f304dfec101761e55f6de2074aff55a62bfbd01e1c2e53d807be82e6bfb32244"
+    }
+  ],
+  "steps": [
+    {
+      "id": "step_01",
+      "skill": "file_type_detect",
+      "status": "succeeded",
+      "parameters": {},
+      "metrics": {
+        "files": 2,
+        "formats": [
+          "fastq"
+        ]
+      },
+      "warnings": [],
+      "error": null,
+      "started_at": "2026-06-30T03:18:39.038545+00:00",
+      "ended_at": "2026-06-30T03:18:39.039446+00:00",
+      "inputs": [
+        "workspace/tasks/982befbe34534e66a0ab1d041d6cecff/inputs/ERR10114867_1.fastq.gz",
+        "workspace/tasks/982befbe34534e66a0ab1d041d6cecff/inputs/ERR10114867_2.fastq.gz"
+      ],
+      "outputs": [
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/982befbe34534e66a0ab1d041d6cecff/steps/step_01/file_type_report.json",
+          "sha256": "a7a2fd1afc874e8efd5d234d15761a415e49ce316b1858ef2259489252d510d6"
+        }
+      ]
+    },
+    {
+      "id": "step_02",
+      "skill": "fastq_pair_match",
+      "status": "succeeded",
+      "parameters": {},
+      "metrics": {
+        "samples": 1,
+        "warnings": 0
+      },
+      "warnings": [],
+      "error": null,
+      "started_at": "2026-06-30T03:18:39.040488+00:00",
+      "ended_at": "2026-06-30T03:18:39.043197+00:00",
+      "inputs": [
+        "workspace/tasks/982befbe34534e66a0ab1d041d6cecff/inputs/ERR10114867_1.fastq.gz",
+        "workspace/tasks/982befbe34534e66a0ab1d041d6cecff/inputs/ERR10114867_2.fastq.gz"
+      ],
+      "outputs": [
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/982befbe34534e66a0ab1d041d6cecff/steps/step_02/fastq_sample_sheet.csv",
+          "sha256": "6767000fef41da73b299b6ff4892db7d6fbffc9ebd306e70933ac602bd8a1b41"
+        },
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/982befbe34534e66a0ab1d041d6cecff/steps/step_02/fastq_pair_report.json",
+          "sha256": "9743bb17130897d7640606e68def78ce4b639580814c0b4d1d17e572dea8d7c8"
+        }
+      ]
+    },
+    {
+      "id": "step_03",
+      "skill": "fastq_qc",
+      "status": "succeeded",
+      "parameters": {
+        "threads": 4
+      },
+      "metrics": {
+        "input_files": 2,
+        "report_files": 4
+      },
+      "warnings": [],
+      "error": null,
+      "started_at": "2026-06-30T03:18:39.044308+00:00",
+      "ended_at": "2026-06-30T03:18:41.589012+00:00",
+      "inputs": [
+        "workspace/tasks/982befbe34534e66a0ab1d041d6cecff/inputs/ERR10114867_1.fastq.gz",
+        "workspace/tasks/982befbe34534e66a0ab1d041d6cecff/inputs/ERR10114867_2.fastq.gz"
+      ],
+      "outputs": [
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/982befbe34534e66a0ab1d041d6cecff/steps/step_03/fastqc/ERR10114867_1_fastqc.html",
+          "sha256": "1ff524d00689d4b81c1cd152b99c800dafbbfb8ad19de1589c492c9e01d79327"
+        },
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/982befbe34534e66a0ab1d041d6cecff/steps/step_03/fastqc/ERR10114867_2_fastqc.html",
+          "sha256": "b0913d352fa9d90f9d99b18ce3489584b22af0f9523558eccbf6c8c0260f3dff"
+        },
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/982befbe34534e66a0ab1d041d6cecff/steps/step_03/fastqc_run_metadata.json",
+          "sha256": "45ef36397c81e9ec813fdc543c82b4d4ab3ff99a68f6841c00090021eadae291"
+        },
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/982befbe34534e66a0ab1d041d6cecff/steps/step_03/fastqc/ERR10114867_1_fastqc.zip",
+          "sha256": "54d55f2df232b4e1275fb48580b73d5e8217a0128add7b839a4c025ff7038d87"
+        },
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/982befbe34534e66a0ab1d041d6cecff/steps/step_03/fastqc/ERR10114867_2_fastqc.zip",
+          "sha256": "437e40cc14e48e29f68f94a1cca242b1dfcaa05ab12188c477e8167ea25a5afd"
+        }
+      ]
+    },
+    {
+      "id": "step_04",
+      "skill": "multiqc_summary",
+      "status": "succeeded",
+      "parameters": {},
+      "metrics": {
+        "reports": 1
+      },
+      "warnings": [],
+      "error": null,
+      "started_at": "2026-06-30T03:18:41.591241+00:00",
+      "ended_at": "2026-06-30T03:18:44.728650+00:00",
+      "inputs": [
+        "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/982befbe34534e66a0ab1d041d6cecff/steps/step_03/fastqc/ERR10114867_1_fastqc.html",
+        "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/982befbe34534e66a0ab1d041d6cecff/steps/step_03/fastqc_run_metadata.json",
+        "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/982befbe34534e66a0ab1d041d6cecff/steps/step_03/fastqc/ERR10114867_1_fastqc.zip"
+      ],
+      "outputs": [
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/982befbe34534e66a0ab1d041d6cecff/steps/step_04/multiqc/multiqc_report.html",
+          "sha256": "678d903b157a36e81b466f914446d254dcab3563df125e62786fe2e47c942334"
+        },
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/982befbe34534e66a0ab1d041d6cecff/steps/step_04/multiqc_run_metadata.json",
+          "sha256": "a285acef048ed43c9673770824b56c978a366b2a1176059abf3b915d2440fcc6"
+        }
+      ]
+    },
+    {
+      "id": "step_05",
+      "skill": "data_quality_gate",
+      "status": "succeeded",
+      "parameters": {},
+      "metrics": {
+        "gate_passed": true,
+        "files": 1,
+        "warnings": 0
+      },
+      "warnings": [],
+      "error": null,
+      "started_at": "2026-06-30T03:18:44.729912+00:00",
+      "ended_at": "2026-06-30T03:18:45.048955+00:00",
+      "inputs": [
+        "workspace/tasks/982befbe34534e66a0ab1d041d6cecff/inputs/ERR10114867_1.fastq.gz"
+      ],
+      "outputs": [
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/982befbe34534e66a0ab1d041d6cecff/steps/step_05/data_quality_gate_report.json",
+          "sha256": "1fc7baaf207c816bea65ba9368abbe52c5a851d6e0e909aab2629365ac6c6476"
+        }
+      ]
+    }
+  ],
+  "environment": {
+    "python": "3.13.9",
+    "platform": "macOS-15.7.7-arm64-arm-64bit-Mach-O"
+  },
+  "settings": {
+    "api_key": ""
+  },
+  "exported_final_files": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/ResearchAgent_Result_20260630_111845_982befbe/final_outputs/file_type_report.json",
+      "sha256": "a7a2fd1afc874e8efd5d234d15761a415e49ce316b1858ef2259489252d510d6"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/ResearchAgent_Result_20260630_111845_982befbe/final_outputs/ERR10114867_1_fastqc.html",
+      "sha256": "1ff524d00689d4b81c1cd152b99c800dafbbfb8ad19de1589c492c9e01d79327"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/ResearchAgent_Result_20260630_111845_982befbe/final_outputs/ERR10114867_2_fastqc.html",
+      "sha256": "b0913d352fa9d90f9d99b18ce3489584b22af0f9523558eccbf6c8c0260f3dff"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/ResearchAgent_Result_20260630_111845_982befbe/final_outputs/fastqc_run_metadata.json",
+      "sha256": "45ef36397c81e9ec813fdc543c82b4d4ab3ff99a68f6841c00090021eadae291"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/ResearchAgent_Result_20260630_111845_982befbe/final_outputs/ERR10114867_1_fastqc.zip",
+      "sha256": "54d55f2df232b4e1275fb48580b73d5e8217a0128add7b839a4c025ff7038d87"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/ResearchAgent_Result_20260630_111845_982befbe/final_outputs/ERR10114867_2_fastqc.zip",
+      "sha256": "437e40cc14e48e29f68f94a1cca242b1dfcaa05ab12188c477e8167ea25a5afd"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/ResearchAgent_Result_20260630_111845_982befbe/final_outputs/multiqc_report.html",
+      "sha256": "678d903b157a36e81b466f914446d254dcab3563df125e62786fe2e47c942334"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/ResearchAgent_Result_20260630_111845_982befbe/final_outputs/multiqc_run_metadata.json",
+      "sha256": "a285acef048ed43c9673770824b56c978a366b2a1176059abf3b915d2440fcc6"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/ResearchAgent_Result_20260630_111845_982befbe/final_outputs/data_quality_gate_report.json",
+      "sha256": "1fc7baaf207c816bea65ba9368abbe52c5a851d6e0e909aab2629365ac6c6476"
+    }
+  ],
+  "exported_step_files": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/ResearchAgent_Result_20260630_111845_982befbe/step_outputs/step_01_file_type_detect/file_type_report.json",
+      "sha256": "a7a2fd1afc874e8efd5d234d15761a415e49ce316b1858ef2259489252d510d6"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/ResearchAgent_Result_20260630_111845_982befbe/step_outputs/step_02_fastq_pair_match/fastq_sample_sheet.csv",
+      "sha256": "6767000fef41da73b299b6ff4892db7d6fbffc9ebd306e70933ac602bd8a1b41"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/ResearchAgent_Result_20260630_111845_982befbe/step_outputs/step_02_fastq_pair_match/fastq_pair_report.json",
+      "sha256": "9743bb17130897d7640606e68def78ce4b639580814c0b4d1d17e572dea8d7c8"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/ResearchAgent_Result_20260630_111845_982befbe/step_outputs/step_03_fastq_qc/ERR10114867_1_fastqc.html",
+      "sha256": "1ff524d00689d4b81c1cd152b99c800dafbbfb8ad19de1589c492c9e01d79327"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/ResearchAgent_Result_20260630_111845_982befbe/step_outputs/step_03_fastq_qc/ERR10114867_2_fastqc.html",
+      "sha256": "b0913d352fa9d90f9d99b18ce3489584b22af0f9523558eccbf6c8c0260f3dff"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/ResearchAgent_Result_20260630_111845_982befbe/step_outputs/step_03_fastq_qc/fastqc_run_metadata.json",
+      "sha256": "45ef36397c81e9ec813fdc543c82b4d4ab3ff99a68f6841c00090021eadae291"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/ResearchAgent_Result_20260630_111845_982befbe/step_outputs/step_03_fastq_qc/ERR10114867_1_fastqc.zip",
+      "sha256": "54d55f2df232b4e1275fb48580b73d5e8217a0128add7b839a4c025ff7038d87"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/ResearchAgent_Result_20260630_111845_982befbe/step_outputs/step_03_fastq_qc/ERR10114867_2_fastqc.zip",
+      "sha256": "437e40cc14e48e29f68f94a1cca242b1dfcaa05ab12188c477e8167ea25a5afd"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/ResearchAgent_Result_20260630_111845_982befbe/step_outputs/step_04_multiqc_summary/multiqc_report.html",
+      "sha256": "678d903b157a36e81b466f914446d254dcab3563df125e62786fe2e47c942334"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/ResearchAgent_Result_20260630_111845_982befbe/step_outputs/step_04_multiqc_summary/multiqc_run_metadata.json",
+      "sha256": "a285acef048ed43c9673770824b56c978a366b2a1176059abf3b915d2440fcc6"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/ResearchAgent_Result_20260630_111845_982befbe/step_outputs/step_05_data_quality_gate/data_quality_gate_report.json",
+      "sha256": "1fc7baaf207c816bea65ba9368abbe52c5a851d6e0e909aab2629365ac6c6476"
+    }
+  ],
+  "export_result_directory": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/ResearchAgent_Result_20260630_111845_982befbe"
+}

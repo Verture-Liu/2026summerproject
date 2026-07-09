@@ -1,0 +1,10 @@
+{
+  "samples": [
+    {
+      "sample_id": "ERR10114877",
+      "layout": "paired",
+      "fastq_1": "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/069f1e370e924362ac8b70f2a21e88cc/inputs/ERR10114877_1.fastq.gz",
+      "fastq_2": "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/069f1e370e924362ac8b70f2a21e88cc/inputs/ERR10114877_2.fastq.gz"
+    }
+  ]
+}

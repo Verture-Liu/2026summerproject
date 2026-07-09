@@ -1,0 +1,5 @@
+name: peptide_filter
+version: 1.0.0
+input_formats: [fasta]
+output_formats: [fasta]
+resource_class: light

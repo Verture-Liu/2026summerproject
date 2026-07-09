@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Local Research Agent</title>
+  <link rel="stylesheet" href="/assets/styles.css">
+</head>
+<body>
+  <main>
+    <div class="topbar">
+      <div></div>
+      <div id="languageToggle" class="language-toggle" aria-label="Language selection">
+        <button type="button" class="lang-option active" data-language="en">English</button>
+        <button type="button" class="lang-option" data-language="zh">中文</button>
+      </div>
+    </div>
+    <header class="hero">
+      <div>
+        <p class="eyebrow" data-i18n="eyebrow">LOCAL RESEARCH AGENT</p>
+        <h1 data-i18n="heroTitle">Turn research requests into reviewable, reproducible local workflows</h1>
+        <p data-i18n="heroSubtitle">The model API plans the workflow. Skills on your computer process the data.</p>
+      </div>
+      <div class="hero-card">
+        <span class="status-dot"></span>
+        <strong data-i18n="heroCardTitle">Local-first execution</strong>
+        <p data-i18n="heroCardText">Files stay on this computer. You review every workflow before it runs.</p>
+      </div>
+    </header>
+
+    <nav id="progressSteps" class="progress-steps" aria-label="Workflow progress">
+      <div class="progress-step active" data-step="api"><span>1</span><strong data-i18n="stepApi">Model API</strong></div>
+      <div class="progress-step" data-step="upload"><span>2</span><strong data-i18n="stepUpload">Upload files</strong></div>
+      <div class="progress-step" data-step="plan"><span>3</span><strong data-i18n="stepPlan">Plan workflow</strong></div>
+      <div class="progress-step" data-step="output"><span>4</span><strong data-i18n="stepOutput">Choose output</strong></div>
+      <div class="progress-step" data-step="run"><span>5</span><strong data-i18n="stepRun">Run locally</strong></div>
+    </nav>
+
+    <div id="activityBanner" class="activity-banner" hidden>
+      <div class="spinner" aria-hidden="true"></div>
+      <span id="activityText">Working...</span>
+    </div>
+
+    <section class="card">
+      <div class="section-heading">
+        <span class="section-number">1</span>
+        <div>
+          <h2 data-i18n="apiTitle">Model API</h2>
+          <p data-i18n="apiHelp">Enter the API endpoint, model, and temporary session key.</p>
+        </div>
+      </div>
+      <div class="grid">
+        <label><span data-i18n="baseUrl">Base URL</span><input id="baseUrl" value="https://api.openai.com/v1"></label>
+        <label><span data-i18n="model">Model</span><input id="model" placeholder="Model name" data-i18n-placeholder="modelPlaceholder"></label>
+        <label><span data-i18n="apiKey">API Key</span><input id="apiKey" type="password" placeholder="Used for this session only" data-i18n-placeholder="apiKeyPlaceholder"></label>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="section-heading">
+        <span class="section-number">2</span>
+        <div>
+          <h2 data-i18n="taskTitle">Task and Files</h2>
+          <p data-i18n="taskHelp">Describe the research task and upload the files that should be processed locally.</p>
+        </div>
+      </div>
+      <textarea id="instruction" rows="5" placeholder="Example: Keep peptide sequences between 13 and 26 amino acids and export a FASTA file." data-i18n-placeholder="instructionPlaceholder"></textarea>
+      <input id="files" type="file" multiple>
+      <button id="upload" data-i18n="uploadButton">Create Task and Upload</button>
+      <div id="fileList" class="panel"></div>
+    </section>
+
+    <section class="card">
+      <div class="section-heading">
+        <span class="section-number">3</span>
+        <div>
+          <h2 data-i18n="planTitle">Generate and Validate Workflow</h2>
+          <p data-i18n="planHelp">The model drafts a workflow. The local app validates skill names, inputs, and outputs before execution.</p>
+        </div>
+      </div>
+      <button id="plan" disabled data-i18n="planButton">Generate Workflow</button>
+      <div id="workflowSummary" class="summary-card" data-i18n="workflowEmpty">No workflow generated yet.</div>
+      <pre id="workflow" class="panel" data-i18n="workflowEmpty">No workflow generated yet.</pre>
+      <div id="validation"></div>
+    </section>
+
+    <section class="card">
+      <div class="section-heading">
+        <span class="section-number">4</span>
+        <div>
+          <h2 data-i18n="runTitle">Local Execution</h2>
+          <p data-i18n="runHelp">Select where results should be copied, review the workflow, then run the local skills.</p>
+        </div>
+      </div>
+      <button id="selectOutput" disabled data-i18n="selectOutputButton">Select Results Folder</button>
+      <div id="outputDirectory" class="directory-status" data-i18n="outputEmpty">No results folder selected.</div>
+      <label class="confirm"><input id="approved" type="checkbox"> <span data-i18n="approvalText">I reviewed the workflow and approve running these Skills locally.</span></label>
+      <button id="execute" disabled data-i18n="executeButton">Run Workflow</button>
+      <div id="runSummary" class="summary-card" data-i18n="runEmpty">Waiting to run.</div>
+      <pre id="status" class="panel" data-i18n="runEmpty">Waiting to run.</pre>
+      <a id="reportLink" href="#" target="_blank" hidden data-i18n="reportLink">Open Run Report</a>
+    </section>
+  </main>
+  <script src="/assets/app.js"></script>
+</body>
+</html>

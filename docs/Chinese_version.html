@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Research Agent 中文使用说明</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.72;
+    color: #2C2C2A;
+    background: #FAFAF8;
+  }
+  .page-wrapper { max-width: 980px; margin: 0 auto; padding: 42px 34px 80px; }
+  .doc-header { border-bottom: 2px solid #E8E7E0; padding-bottom: 24px; margin-bottom: 32px; }
+  .doc-header h1 { font-size: 25px; font-weight: 620; color: #22342D; margin-bottom: 8px; }
+  .doc-header p { font-size: 13px; color: #5F5E5A; max-width: 860px; }
+  .badge {
+    display: inline-block;
+    margin: 14px 6px 0 0;
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 620;
+  }
+  .badge-core { background: #E1F5EE; color: #0F6E56; }
+  .badge-qc { background: #E6F1FB; color: #185FA5; }
+  .badge-local { background: #FAEEDA; color: #854F0B; }
+  .badge-repro { background: #EEEDFE; color: #534AB7; }
+  .toc, .note, .quick-card {
+    background: #FFFFFF;
+    border: 0.5px solid #D3D1C7;
+    border-radius: 12px;
+    padding: 18px 20px;
+  }
+  .toc { background: #F1EFE8; margin-bottom: 36px; }
+  .toc h2 { font-size: 14px; color: #22342D; margin-bottom: 8px; }
+  .toc ol { padding-left: 20px; columns: 2; column-gap: 28px; }
+  .toc li { font-size: 13px; line-height: 2; break-inside: avoid; }
+  .toc a { color: #185FA5; text-decoration: none; }
+  .module {
+    margin-bottom: 36px;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 0.5px solid #D3D1C7;
+  }
+  .module-header { padding: 16px 24px; display: flex; align-items: center; gap: 12px; }
+  .module-number {
+    width: 28px; height: 28px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    color: #FFFFFF; font-size: 13px; font-weight: 620; flex-shrink: 0;
+  }
+  .module-header h2 { font-size: 16px; font-weight: 620; }
+  .module-body { padding: 21px 24px; background: #FFFFFF; }
+  .m1 .module-header { background: #E6F1FB; } .m1 .module-number { background: #185FA5; } .m1 h2 { color: #0C447C; }
+  .m2 .module-header { background: #EAF3DE; } .m2 .module-number { background: #3B6D11; } .m2 h2 { color: #27500A; }
+  .m3 .module-header { background: #FAEEDA; } .m3 .module-number { background: #854F0B; } .m3 h2 { color: #633806; }
+  .m4 .module-header { background: #FCEBEB; } .m4 .module-number { background: #A32D2D; } .m4 h2 { color: #791F1F; }
+  .m5 .module-header { background: #E1F5EE; } .m5 .module-number { background: #0F6E56; } .m5 h2 { color: #085041; }
+  .m6 .module-header { background: #EEEDFE; } .m6 .module-number { background: #534AB7; } .m6 h2 { color: #3C3489; }
+  .m7 .module-header { background: #FBEAF0; } .m7 .module-number { background: #993556; } .m7 h2 { color: #72243E; }
+  .sub-section { margin-bottom: 20px; }
+  .sub-section h3 { font-size: 13px; color: #444441; margin-bottom: 8px; padding-bottom: 4px; border-bottom: 0.5px solid #E8E7E0; }
+  .sub-section p, .sub-section li { font-size: 13px; color: #444441; }
+  .sub-section ul, .sub-section ol { padding-left: 20px; }
+  .sub-section li { margin-bottom: 5px; }
+  .flow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin: 14px 0 10px; }
+  .flow-step { background: #FFFFFF; border: 0.5px solid #D3D1C7; border-radius: 999px; padding: 6px 10px; font-size: 12px; color: #444441; }
+  .flow-arrow { color: #888780; font-size: 14px; }
+  code { font-family: "SF Mono", "Consolas", monospace; background: #F1EFE8; border-radius: 4px; padding: 1px 5px; font-size: 12px; }
+  pre { background: #F1EFE8; border-radius: 8px; padding: 14px 16px; font-family: "SF Mono", "Consolas", monospace; font-size: 12px; line-height: 1.6; overflow-x: auto; margin: 10px 0; border: 0.5px solid #D3D1C7; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 12px 0; }
+  th, td { border: 0.5px solid #D3D1C7; padding: 9px 10px; text-align: left; vertical-align: top; }
+  th { background: #F1EFE8; color: #444441; font-weight: 620; }
+  tr:nth-child(even) td { background: #FCFCFA; }
+  .warning { background: #FFF8EA; border-left: 4px solid #D79622; border-radius: 8px; padding: 13px 15px; font-size: 13px; color: #4B3A17; margin: 12px 0; }
+  .gate { background: #FCEBEB; border-left: 4px solid #A32D2D; border-radius: 8px; padding: 13px 15px; font-size: 13px; color: #5F1D1D; margin: 12px 0; }
+  .footer { margin-top: 40px; padding-top: 20px; border-top: 2px solid #E8E7E0; font-size: 12px; color: #77766F; }
+  @media (max-width: 820px) { .toc ol { columns: 1; } .page-wrapper { padding: 28px 18px 60px; } }
+</style>
+</head>
+<body>
+<div class="page-wrapper">
+  <header class="doc-header">
+    <h1>Research Agent 中文使用说明</h1>
+    <p>
+      本说明介绍如何使用本地 Research Agent，把用户的自然语言科研需求转换为可审核、可复现、在本地运行的数据处理流程。
+    </p>
+    <span class="badge badge-core">使用说明</span>
+    <span class="badge badge-qc">质量控制优先</span>
+    <span class="badge badge-local">本地 / Conda 兼容</span>
+    <span class="badge badge-repro">可复现</span>
+  </header>
+
+  <nav class="toc">
+    <h2>目录</h2>
+    <ol>
+      <li><a href="#principle">核心原则</a></li>
+      <li><a href="#start">如何启动</a></li>
+      <li><a href="#workflow">基本使用流程</a></li>
+      <li><a href="#prompts">推荐输入指令</a></li>
+      <li><a href="#skills">可用能力</a></li>
+      <li><a href="#env">环境与工具</a></li>
+      <li><a href="#validation">验证数据</a></li>
+      <li><a href="#outputs">输出结果</a></li>
+      <li><a href="#trouble">常见问题</a></li>
+    </ol>
+  </nav>
+
+  <section class="module m1" id="principle">
+    <div class="module-header"><div class="module-number">1</div><h2>核心原则</h2></div>
+    <div class="module-body">
+      <div class="flow">
+        <span class="flow-step">上传数据</span><span class="flow-arrow">→</span>
+        <span class="flow-step">识别文件类型</span><span class="flow-arrow">→</span>
+        <span class="flow-step">原始 QC</span><span class="flow-arrow">→</span>
+        <span class="flow-step">清洗 / 筛选</span><span class="flow-arrow">→</span>
+        <span class="flow-step">Data Quality Gate</span><span class="flow-arrow">→</span>
+        <span class="flow-step">应用分析</span><span class="flow-arrow">→</span>
+        <span class="flow-step">报告 / 导出</span>
+      </div>
+      <p>
+        agent 不应该把原始数据直接送入下游应用分析。一个更严谨的流程应该先检查输入数据，完成原始质量控制，根据需要进行清洗或筛选，再通过清洗后质量门，最后进入多肽、古 DNA 或微生物组等应用分析。
+      </p>
+      <div class="gate"><strong>关键规则：</strong>原始数据 → QC → 清洗/筛选 → 清洗后质量门 → 下游分析。</div>
+    </div>
+  </section>
+
+  <section class="module m2" id="start">
+    <div class="module-header"><div class="module-number">2</div><h2>如何启动</h2></div>
+    <div class="module-body">
+      <div class="sub-section">
+        <h3>步骤</h3>
+        <ol>
+          <li>在 VS Code 中打开项目文件夹：<code>2026summerproject</code>。</li>
+          <li>在 VS Code 的 Terminal 里输入下面的命令启动本地程序。</li>
+          <li>打开终端提示的本地网页。默认情况下，程序会自动打开浏览器。</li>
+          <li>上传数据文件，输入自然语言任务，点击生成 workflow。</li>
+          <li>检查 workflow，选择结果保存文件夹，勾选本地运行确认，再运行。</li>
+        </ol>
+      </div>
+      <div class="sub-section">
+        <h3>VS Code Terminal 启动命令</h3>
+        <p>第一次使用时，如果还没有创建虚拟环境，输入：</p>
+        <pre>cd /Users/tianaoliu/Documents/vscode/2026summerproject
+python3 -m venv .venv
+.venv/bin/python -m pip install -e '.[dev]'
+.venv/bin/research-agent</pre>
+        <p>以后已经安装好环境后，只需要输入：</p>
+        <pre>cd /Users/tianaoliu/Documents/vscode/2026summerproject
+.venv/bin/research-agent</pre>
+        <p>如果不想自动打开浏览器，或者想固定端口，可以输入：</p>
+        <pre>cd /Users/tianaoliu/Documents/vscode/2026summerproject
+.venv/bin/research-agent --no-browser --port 8000</pre>
+      </div>
+      <div class="warning">
+        如果页面能打开但 workflow 生成失败，优先检查 API key、模型配置和网络；如果 workflow 能生成但运行失败，优先检查本地工具是否安装。
+      </div>
+    </div>
+  </section>
+
+  <section class="module m3" id="workflow">
+    <div class="module-header"><div class="module-number">3</div><h2>基本使用流程</h2></div>
+    <div class="module-body">
+      <table>
+        <thead><tr><th>阶段</th><th>用户看到什么</th><th>agent 做什么</th></tr></thead>
+        <tbody>
+          <tr><td>上传</td><td>文件列表</td><td>保存上传文件，并识别文件格式。</td></tr>
+          <tr><td>规划</td><td>JSON workflow</td><td>把用户请求转换为已注册的本地 skill 步骤。</td></tr>
+          <tr><td>审核</td><td>待批准 workflow</td><td>等待用户确认，不会自动执行本地任务。</td></tr>
+          <tr><td>运行</td><td>步骤状态和输出列表</td><td>逐步执行 skills，并保存日志、指标和输出结果。</td></tr>
+          <tr><td>导出</td><td>HTML、CSV、JSON、ZIP、FASTQ 等结果</td><td>把最终可交付文件复制到用户选择的结果文件夹。</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="module m4" id="prompts">
+    <div class="module-header"><div class="module-number">4</div><h2>推荐输入指令</h2></div>
+    <div class="module-body">
+      <pre>请识别这个 CSV 是否有表头，并整理成 label 和 sequence 两列。</pre>
+      <pre>请处理 AMPLiT 的 Validation.csv，完成肽序列校验、长度统计、重复序列删除，并导出干净 CSV。</pre>
+      <pre>请对这个 FASTQ 做 FastQC 质量检查，并生成 MultiQC 汇总报告。</pre>
+      <pre>请对这对 FASTQ 先做质量检查，再做清洗后质量门检查，最后准备进入微生物组成分析。</pre>
+      <pre>请检查这些本地工具是否可用：fastqc、multiqc、seqkit、seqtk、bowtie2、samtools、kraken2。</pre>
+    </div>
+  </section>
+
+  <section class="module m5" id="skills">
+    <div class="module-header"><div class="module-number">5</div><h2>可用能力</h2></div>
+    <div class="module-body">
+      <table>
+        <thead><tr><th>类别</th><th>Skills</th><th>用途</th></tr></thead>
+        <tbody>
+          <tr><td>文件识别</td><td><code>file_type_detect</code>, <code>fastq_pair_match</code>, <code>sample_sheet_prepare</code>, <code>sample_sheet_validate</code></td><td>识别文件格式、匹配双端 FASTQ、准备和检查样本表。</td></tr>
+          <tr><td>原始 QC</td><td><code>fastq_qc</code>, <code>multiqc_summary</code>, <code>seqkit_stats</code></td><td>检查原始测序数据并生成质量控制报告。</td></tr>
+          <tr><td>CSV 和多肽表格</td><td><code>peptide_csv_normalize</code>, <code>peptide_validate</code>, <code>peptide_label_filter</code>, <code>peptide_length_filter</code>, <code>peptide_deduplicate</code>, <code>peptide_statistics</code>, <code>peptide_chart</code>, <code>peptide_csv_export</code></td><td>处理无表头 CSV、校验肽序列、筛选、去重、统计、画图和导出。</td></tr>
+          <tr><td>质量门</td><td><code>data_quality_gate</code></td><td>在下游分析前检查清洗后的 CSV、FASTA 或 FASTQ 是否满足基本质量要求。</td></tr>
+          <tr><td>古 DNA</td><td><code>host_dna_removal</code>, <code>bwa_align</code>, <code>bowtie2_align</code>, <code>samtools_sort_index</code>, <code>samtools_stats</code>, <code>damageprofiler_profile</code>, <code>ancient_dna_authentication</code></td><td>去宿主、比对、BAM 处理、统计和损伤真实性检查。</td></tr>
+          <tr><td>微生物组</td><td><code>kraken2_profile</code>, <code>metaphlan_profile</code>, <code>bracken_abundance</code>, <code>humann_profile</code>, <code>megahit_assembly</code>, <code>metaspades_assembly</code></td><td>分类学组成、丰度估计、功能分析和宏基因组组装。</td></tr>
+          <tr><td>多肽应用</td><td><code>amp_prediction</code>, <code>peptide_properties</code>, <code>peptide_candidate_rank</code>, <code>amplify_prediction</code>, <code>amp_scanner_prediction</code>, <code>modlamp_descriptor</code></td><td>AMP 预测、肽性质计算和候选序列排序。</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="module m6" id="env">
+    <div class="module-header"><div class="module-number">6</div><h2>环境与工具</h2></div>
+    <div class="module-body">
+      <p>
+        agent 不会自动安装大型生信工具。它会先检查当前 PATH，如果找不到，会根据 <code>config/tool_envs.json</code> 尝试使用 <code>conda run -n 环境名 工具名</code>。如果仍然找不到，就会提示用户需要安装什么。
+      </p>
+      <table>
+        <thead><tr><th>工具</th><th>推荐环境</th><th>用途</th></tr></thead>
+        <tbody>
+          <tr><td>FastQC</td><td>PATH 或 FastQC 环境</td><td>FASTQ 原始质量检查</td></tr>
+          <tr><td>MultiQC</td><td><code>multiqc_env</code></td><td>汇总 QC 报告</td></tr>
+          <tr><td>seqkit</td><td>PATH 或 seqkit 环境</td><td>FASTA/FASTQ 统计、筛选和去重</td></tr>
+          <tr><td>seqtk</td><td>seqtk 环境</td><td>FASTQ 抽样</td></tr>
+          <tr><td>Bowtie2</td><td><code>bowtie2_env</code></td><td>宿主去除或短 reads 比对</td></tr>
+          <tr><td>BWA</td><td><code>bwa_env</code></td><td>古 DNA 比对</td></tr>
+          <tr><td>Samtools</td><td><code>samtools_env</code></td><td>BAM/SAM 处理</td></tr>
+          <tr><td>Kraken2</td><td><code>kraken2_env</code></td><td>微生物分类</td></tr>
+          <tr><td>mapDamage / DamageProfiler</td><td><code>mapdamage_env</code></td><td>古 DNA 损伤模式分析</td></tr>
+        </tbody>
+      </table>
+      <pre>conda env list
+conda activate multiqc_env
+multiqc --version</pre>
+    </div>
+  </section>
+
+  <section class="module m7" id="validation">
+    <div class="module-header"><div class="module-number">7</div><h2>验证数据</h2></div>
+    <div class="module-body">
+      <table>
+        <thead><tr><th>Case</th><th>本地路径</th><th>建议测试</th></tr></thead>
+        <tbody>
+          <tr><td>1. AMPLiT peptide validation</td><td><code>data/raw/reproducibility_cases/case1_amplit_validation/Validation.csv</code></td><td>CSV 标准化、肽序列检查、长度统计、去重和导出。</td></tr>
+          <tr><td>2. PRJEB94382 / ERR15682270</td><td><code>data/raw/reproducibility_cases/case2_prjeb94382_err15682270/</code></td><td>双端 FASTQ 识别、FastQC、MultiQC、read count 检查和质量门。</td></tr>
+          <tr><td>3. PRJEB55583 / ERR10114877</td><td><code>data/raw/reproducibility_cases/case3_prjeb55583_err10114877/</code></td><td>双端 FASTQ QC、序列统计和微生物组流程准备。</td></tr>
+          <tr><td>4. PRJEB30280 / ERR3250149</td><td><code>data/raw/reproducibility_cases/case4_prjeb30280_err3250149/</code></td><td>单端 FASTQ QC、大文件处理和报告导出。</td></tr>
+        </tbody>
+      </table>
+      <div class="warning">建议先用最小的数据集测试流程，再运行更大的文件。</div>
+    </div>
+  </section>
+
+  <section class="module m1" id="outputs">
+    <div class="module-header"><div class="module-number">8</div><h2>输出结果</h2></div>
+    <div class="module-body">
+      <table>
+        <thead><tr><th>输出</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td><code>run_report.html</code></td><td>本次运行的人类可读报告。</td></tr>
+          <tr><td><code>execution_summary.json</code></td><td>workflow、步骤状态、错误和输出路径。</td></tr>
+          <tr><td><code>*_fastqc.html</code>, <code>*_fastqc.zip</code></td><td>FastQC 报告。</td></tr>
+          <tr><td><code>multiqc_report.html</code></td><td>MultiQC 汇总报告。</td></tr>
+          <tr><td><code>data_quality_gate_report.json</code></td><td>清洗后质量门报告。</td></tr>
+          <tr><td><code>*.csv</code>, <code>*.fasta</code>, <code>*.fastq.gz</code></td><td>清洗、筛选或导出的数据。</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="module m2" id="trouble">
+    <div class="module-header"><div class="module-number">9</div><h2>常见问题</h2></div>
+    <div class="module-body">
+      <table>
+        <thead><tr><th>问题</th><th>可能原因</th><th>处理方式</th></tr></thead>
+        <tbody>
+          <tr><td>工具显示 missing</td><td>工具不在 PATH，或 conda 环境没有配置。</td><td>检查 <code>conda env list</code> 和 <code>config/tool_envs.json</code>。</td></tr>
+          <tr><td>workflow 生成失败</td><td>API key、模型配置或网络问题。</td><td>检查 API 配置，或者先用更简单的指令重试。</td></tr>
+          <tr><td>workflow 看起来跳过 QC</td><td>用户输入的是很窄的单工具任务。</td><td>如果目标是完整分析，请明确要求先 QC、再清洗后质量检查、最后下游分析。</td></tr>
+          <tr><td>Data Quality Gate 报 warning</td><td>可能有空序列、重复序列、无效字符、FASTQ 格式问题或双端 reads 数量不一致。</td><td>先查看 <code>data_quality_gate_report.json</code>，再决定是否继续。</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>Research Agent 中文使用说明。本文件用于项目展示、验证和日常使用。</p>
+  </footer>
+</div>
+</body>
+</html>

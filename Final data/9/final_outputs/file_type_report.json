@@ -1,0 +1,18 @@
+{
+  "files": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/1345b067371e4d48b133da6ebc6db5cc/inputs/ERR15682267_1.fastq.gz",
+      "name": "ERR15682267_1.fastq.gz",
+      "format": "fastq",
+      "size_bytes": 4102323,
+      "exists": true
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/1345b067371e4d48b133da6ebc6db5cc/inputs/ERR15682267_2.fastq.gz",
+      "name": "ERR15682267_2.fastq.gz",
+      "format": "fastq",
+      "size_bytes": 5787702,
+      "exists": true
+    }
+  ]
+}

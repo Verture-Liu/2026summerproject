@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN"
+  "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xlink="http://www.w3.org/1999/xlink" width="578.555312pt" height="213.984pt" viewBox="0 0 578.555312 213.984" xmlns="http://www.w3.org/2000/svg" version="1.1">
+ <metadata>
+  <rdf:RDF xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:cc="http://creativecommons.org/ns#" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+   <cc:Work>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:date>2026-07-08T10:44:15.397472</dc:date>
+    <dc:format>image/svg+xml</dc:format>
+    <dc:creator>
+     <cc:Agent>
+      <dc:title>Matplotlib v3.11.0, https://matplotlib.org/</dc:title>
+     </cc:Agent>
+    </dc:creator>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <defs>
+  <style type="text/css">*{stroke-linejoin: round; stroke-linecap: butt}</style>
+ </defs>
+ <g id="figure_1">
+  <g id="patch_1">
+   <path d="M 0 213.984 
+L 578.555312 213.984 
+L 578.555312 0 
+L 0 0 
+z
+" style="fill: #ffffff"/>
+  </g>
+  <g id="axes_1">
+   <g id="patch_2">
+    <path d="M 7.2 206.784 
+L 420.12 206.784 
+L 420.12 7.2 
+L 7.2 7.2 
+z
+" style="fill: #ffffff"/>
+   </g>
+   <g id="patch_3">
+    <path d="M 17.93592 139.723776 
+L 99.69408 139.723776 
+Q 107.95248 139.723776 107.95248 135.732096 
+L 107.95248 76.256064 
+Q 107.95248 72.264384 99.69408 72.264384 
+L 17.93592 72.264384 
+Q 9.67752 72.264384 9.67752 76.256064 
+L 9.67752 135.732096 
+Q 9.67752 139.723776 17.93592 139.723776 
+z
+" clip-path="url(#pc16fa4a568)" style="fill: #fbfbfb; stroke: #e5e7eb; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_4">
+    <path d="M 27.846 93.02112 
+L 37.75608 93.02112 
+L 37.75608 88.231104 
+L 27.846 88.231104 
+z
+" clip-path="url(#pc16fa4a568)" style="fill: #2f6f8f"/>
+   </g>
+   <g id="patch_5">
+    <path d="M 121.16592 139.723776 
+L 202.92408 139.723776 
+Q 211.18248 139.723776 211.18248 135.732096 
+L 211.18248 76.256064 
+Q 211.18248 72.264384 202.92408 72.264384 
+L 121.16592 72.264384 
+Q 112.90752 72.264384 112.90752 76.256064 
+L 112.90752 135.732096 
+Q 112.90752 139.723776 121.16592 139.723776 
+z
+" clip-path="url(#pc16fa4a568)" style="fill: #fbfbfb; stroke: #e5e7eb; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_6">
+    <path d="M 131.076 93.02112 
+L 140.98608 93.02112 
+L 140.98608 88.231104 
+L 131.076 88.231104 
+z
+" clip-path="url(#pc16fa4a568)" style="fill: #d8a24a"/>
+   </g>
+   <g id="patch_7">
+    <path d="M 224.39592 139.723776 
+L 306.15408 139.723776 
+Q 314.41248 139.723776 314.41248 135.732096 
+L 314.41248 76.256064 
+Q 314.41248 72.264384 306.15408 72.264384 
+L 224.39592 72.264384 
+Q 216.13752 72.264384 216.13752 76.256064 
+L 216.13752 135.732096 
+Q 216.13752 139.723776 224.39592 139.723776 
+z
+" clip-path="url(#pc16fa4a568)" style="fill: #fbfbfb; stroke: #e5e7eb; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_8">
+    <path d="M 234.306 93.02112 
+L 244.21608 93.02112 
+L 244.21608 88.231104 
+L 234.306 88.231104 
+z
+" clip-path="url(#pc16fa4a568)" style="fill: #7b6ca8"/>
+   </g>
+   <g id="patch_9">
+    <path d="M 327.62592 139.723776 
+L 409.38408 139.723776 
+Q 417.64248 139.723776 417.64248 135.732096 
+L 417.64248 76.256064 
+Q 417.64248 72.264384 409.38408 72.264384 
+L 327.62592 72.264384 
+Q 319.36752 72.264384 319.36752 76.256064 
+L 319.36752 135.732096 
+Q 319.36752 139.723776 327.62592 139.723776 
+z
+" clip-path="url(#pc16fa4a568)" style="fill: #fbfbfb; stroke: #e5e7eb; stroke-width: 0.8; stroke-linejoin: miter"/>
+   </g>
+   <g id="patch_10">
+    <path d="M 337.536 93.02112 
+L 347.44608 93.02112 
+L 347.44608 88.231104 
+L 337.536 88.231104 
+z
+" clip-path="url(#pc16fa4a568)" style="fill: #c46a4a"/>
+   </g>
+   <g id="patch_11">
+    <path d="M 106.236785 108.98784 
+Q 111.463971 108.98784 115.684926 108.98784 
+" clip-path="url(#pc16fa4a568)" style="fill: none; stroke: #a5b0ba; stroke-width: 0.9; stroke-linecap: round"/>
+    <path d="M 112.084926 107.18784 
+L 115.684926 108.98784 
+L 112.084926 110.78784 
+z
+" clip-path="url(#pc16fa4a568)" style="fill: #a5b0ba; stroke: #a5b0ba; stroke-width: 0.9; stroke-linecap: round"/>
+   </g>
+   <g id="patch_12">
+    <path d="M 209.466785 108.98784 
+Q 214.693971 108.98784 218.914926 108.98784 
+" clip-path="url(#pc16fa4a568)" style="fill: none; stroke: #a5b0ba; stroke-width: 0.9; stroke-linecap: round"/>
+    <path d="M 215.314926 107.18784 
+L 218.914926 108.98784 
+L 215.314926 110.78784 
+z
+" clip-path="url(#pc16fa4a568)" style="fill: #a5b0ba; stroke: #a5b0ba; stroke-width: 0.9; stroke-linecap: round"/>
+   </g>
+   <g id="patch_13">
+    <path d="M 312.696785 108.98784 
+Q 317.923971 108.98784 322.144926 108.98784 
+" clip-path="url(#pc16fa4a568)" style="fill: none; stroke: #a5b0ba; stroke-width: 0.9; stroke-linecap: round"/>
+    <path d="M 318.544926 107.18784 
+L 322.144926 108.98784 
+L 318.544926 110.78784 
+z
+" clip-path="url(#pc16fa4a568)" style="fill: #a5b0ba; stroke: #a5b0ba; stroke-width: 0.9; stroke-linecap: round"/>
+   </g>
+   <g id="matplotlib.axis_1"/>
+   <g id="matplotlib.axis_2"/>
+   <g id="text_1">
+    <text style="font-weight: 700; font-size: 12px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #1f2933" x="15.4584" y="29.907208" transform="rotate(-0 15.4584 29.907208)">Audit interpretation separates task-specific changes from failures</text>
+   </g>
+   <g id="text_2">
+    <text style="font-weight: 700; font-size: 7.4px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #1f2933" transform="translate(42.2982 90.199573)">Source-data</text>
+    <text style="font-weight: 700; font-size: 7.4px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #1f2933" transform="translate(42.2982 97.102675)">match</text>
+   </g>
+   <g id="text_3">
+    <text style="font-size: 6.55px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #6b7280" transform="translate(38.067363 115.640635)">6 FASTQ runs</text>
+    <text style="font-size: 6.55px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #6b7280" transform="translate(29.594836 122.81973)">read-count delta = 0</text>
+   </g>
+   <g id="text_4">
+    <text style="font-weight: 700; font-size: 7.4px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #1f2933" transform="translate(145.5282 89.471135)">Expected</text>
+    <text style="font-weight: 700; font-size: 7.4px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #1f2933" transform="translate(145.5282 97.102675)">curation</text>
+   </g>
+   <g id="text_5">
+    <text style="font-size: 6.55px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #6b7280" transform="translate(142.80591 115.139663)">114 duplicate</text>
+    <text style="font-size: 6.55px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #6b7280" transform="translate(129.826676 122.199015)">peptide rows removed</text>
+   </g>
+   <g id="text_6">
+    <text style="font-weight: 700; font-size: 7.4px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #1f2933" transform="translate(248.7582 90.157948)">Derived</text>
+    <text style="font-weight: 700; font-size: 7.4px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #1f2933" transform="translate(248.7582 96.925768)">QC</text>
+   </g>
+   <g id="text_7">
+    <text style="font-size: 6.55px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #6b7280" transform="translate(233.780758 115.131475)">GC% and read length</text>
+    <text style="font-size: 6.55px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #6b7280" transform="translate(231.425316 122.240976)">reported as QC metrics</text>
+   </g>
+   <g id="text_8">
+    <text style="font-weight: 700; font-size: 7.4px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #1f2933" transform="translate(351.9882 90.157948)">Actionable</text>
+    <text style="font-weight: 700; font-size: 7.4px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #1f2933" transform="translate(351.9882 97.102675)">mismatch</text>
+   </g>
+   <g id="text_9">
+    <text style="font-size: 6.55px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #6b7280" transform="translate(336.834727 115.640635)">0 FASTQ source-data</text>
+    <text style="font-size: 6.55px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; fill: #6b7280" transform="translate(337.562391 122.811542)">mismatches detected</text>
+   </g>
+   <g id="text_10">
+    <text style="font-size: 7.7px; font-family: 'Arial', 'Helvetica', 'DejaVu Sans', sans-serif; text-anchor: start; fill: #6b7280" x="27.846" y="178.84224" transform="rotate(-0 27.846 178.84224)">Interpretation rule: raw-source mismatches require review; expected preprocessing changes and derived QC metrics should be reported, not treated as failures.</text>
+   </g>
+  </g>
+ </g>
+ <defs>
+  <clipPath id="pc16fa4a568">
+   <rect x="7.2" y="7.2" width="412.92" height="199.584"/>
+  </clipPath>
+ </defs>
+</svg>

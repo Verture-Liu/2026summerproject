@@ -1,0 +1,258 @@
+[
+  {
+    "name": "Framework.png",
+    "path": "Framework.png",
+    "sha": "0a9b6cc4a8980274f16b5eea5ba697ee53910619",
+    "size": 233356,
+    "url": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/contents/Framework.png?ref=main",
+    "html_url": "https://github.com/ChenSizhe13893461199/AMPLiT/blob/main/Framework.png",
+    "git_url": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/git/blobs/0a9b6cc4a8980274f16b5eea5ba697ee53910619",
+    "download_url": "https://raw.githubusercontent.com/ChenSizhe13893461199/AMPLiT/main/Framework.png",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/contents/Framework.png?ref=main",
+      "git": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/git/blobs/0a9b6cc4a8980274f16b5eea5ba697ee53910619",
+      "html": "https://github.com/ChenSizhe13893461199/AMPLiT/blob/main/Framework.png"
+    }
+  },
+  {
+    "name": "Graphical_Abstract.png",
+    "path": "Graphical_Abstract.png",
+    "sha": "d5ebc57c20562b62f65bf235221ae99f9f245f1f",
+    "size": 439098,
+    "url": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/contents/Graphical_Abstract.png?ref=main",
+    "html_url": "https://github.com/ChenSizhe13893461199/AMPLiT/blob/main/Graphical_Abstract.png",
+    "git_url": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/git/blobs/d5ebc57c20562b62f65bf235221ae99f9f245f1f",
+    "download_url": "https://raw.githubusercontent.com/ChenSizhe13893461199/AMPLiT/main/Graphical_Abstract.png",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/contents/Graphical_Abstract.png?ref=main",
+      "git": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/git/blobs/d5ebc57c20562b62f65bf235221ae99f9f245f1f",
+      "html": "https://github.com/ChenSizhe13893461199/AMPLiT/blob/main/Graphical_Abstract.png"
+    }
+  },
+  {
+    "name": "LICENSE",
+    "path": "LICENSE",
+    "sha": "261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64",
+    "size": 11357,
+    "url": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/contents/LICENSE?ref=main",
+    "html_url": "https://github.com/ChenSizhe13893461199/AMPLiT/blob/main/LICENSE",
+    "git_url": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/git/blobs/261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64",
+    "download_url": "https://raw.githubusercontent.com/ChenSizhe13893461199/AMPLiT/main/LICENSE",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/contents/LICENSE?ref=main",
+      "git": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/git/blobs/261eeb9e9f8b2b4b0d119366dda99c6fd7d35c64",
+      "html": "https://github.com/ChenSizhe13893461199/AMPLiT/blob/main/LICENSE"
+    }
+  },
+  {
+    "name": "Model",
+    "path": "Model",
+    "sha": "c3ef88046330ec5af574f995b158678e2162a00e",
+    "size": 0,
+    "url": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/contents/Model?ref=main",
+    "html_url": "https://github.com/ChenSizhe13893461199/AMPLiT/tree/main/Model",
+    "git_url": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/git/trees/c3ef88046330ec5af574f995b158678e2162a00e",
+    "download_url": null,
+    "type": "dir",
+    "_links": {
+      "self": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/contents/Model?ref=main",
+      "git": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/git/trees/c3ef88046330ec5af574f995b158678e2162a00e",
+      "html": "https://github.com/ChenSizhe13893461199/AMPLiT/tree/main/Model"
+    }
+  },
+  {
+    "name": "Non-AMPsfilter.csv",
+    "path": "Non-AMPsfilter.csv",
+    "sha": "8bcd7fcebe83c4690f25abf146ca868a9cdfc16e",
+    "size": 1753963,
+    "url": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/contents/Non-AMPsfilter.csv?ref=main",
+    "html_url": "https://github.com/ChenSizhe13893461199/AMPLiT/blob/main/Non-AMPsfilter.csv",
+    "git_url": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/git/blobs/8bcd7fcebe83c4690f25abf146ca868a9cdfc16e",
+    "download_url": "https://raw.githubusercontent.com/ChenSizhe13893461199/AMPLiT/main/Non-AMPsfilter.csv",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/contents/Non-AMPsfilter.csv?ref=main",
+      "git": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/git/blobs/8bcd7fcebe83c4690f25abf146ca868a9cdfc16e",
+      "html": "https://github.com/ChenSizhe13893461199/AMPLiT/blob/main/Non-AMPsfilter.csv"
+    }
+  },
+  {
+    "name": "ORF_hunter_updated.py",
+    "path": "ORF_hunter_updated.py",
+    "sha": "7e445d7887ef986a9094677f8f2a87567c8e15c9",
+    "size": 10335,
+    "url": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/contents/ORF_hunter_updated.py?ref=main",
+    "html_url": "https://github.com/ChenSizhe13893461199/AMPLiT/blob/main/ORF_hunter_updated.py",
+    "git_url": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/git/blobs/7e445d7887ef986a9094677f8f2a87567c8e15c9",
+    "download_url": "https://raw.githubusercontent.com/ChenSizhe13893461199/AMPLiT/main/ORF_hunter_updated.py",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/contents/ORF_hunter_updated.py?ref=main",
+      "git": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/git/blobs/7e445d7887ef986a9094677f8f2a87567c8e15c9",
+      "html": "https://github.com/ChenSizhe13893461199/AMPLiT/blob/main/ORF_hunter_updated.py"
+    }
+  },
+  {
+    "name": "README.md",
+    "path": "README.md",
+    "sha": "d0e5e5435f229ede0a3f8d8cefcf389f7e39b598",
+    "size": 6898,
+    "url": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/contents/README.md?ref=main",
+    "html_url": "https://github.com/ChenSizhe13893461199/AMPLiT/blob/main/README.md",
+    "git_url": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/git/blobs/d0e5e5435f229ede0a3f8d8cefcf389f7e39b598",
+    "download_url": "https://raw.githubusercontent.com/ChenSizhe13893461199/AMPLiT/main/README.md",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/contents/README.md?ref=main",
+      "git": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/git/blobs/d0e5e5435f229ede0a3f8d8cefcf389f7e39b598",
+      "html": "https://github.com/ChenSizhe13893461199/AMPLiT/blob/main/README.md"
+    }
+  },
+  {
+    "name": "Train_AMP_identifier2.py",
+    "path": "Train_AMP_identifier2.py",
+    "sha": "3c1ecc3a5ec60f4ed9ac8932c8b80f2dd5283cc1",
+    "size": 8005,
+    "url": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/contents/Train_AMP_identifier2.py?ref=main",
+    "html_url": "https://github.com/ChenSizhe13893461199/AMPLiT/blob/main/Train_AMP_identifier2.py",
+    "git_url": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/git/blobs/3c1ecc3a5ec60f4ed9ac8932c8b80f2dd5283cc1",
+    "download_url": "https://raw.githubusercontent.com/ChenSizhe13893461199/AMPLiT/main/Train_AMP_identifier2.py",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/contents/Train_AMP_identifier2.py?ref=main",
+      "git": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/git/blobs/3c1ecc3a5ec60f4ed9ac8932c8b80f2dd5283cc1",
+      "html": "https://github.com/ChenSizhe13893461199/AMPLiT/blob/main/Train_AMP_identifier2.py"
+    }
+  },
+  {
+    "name": "TrainingAMP.csv",
+    "path": "TrainingAMP.csv",
+    "sha": "915599e059b859c18a709f53906438f68b2c0356",
+    "size": 1805651,
+    "url": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/contents/TrainingAMP.csv?ref=main",
+    "html_url": "https://github.com/ChenSizhe13893461199/AMPLiT/blob/main/TrainingAMP.csv",
+    "git_url": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/git/blobs/915599e059b859c18a709f53906438f68b2c0356",
+    "download_url": "https://raw.githubusercontent.com/ChenSizhe13893461199/AMPLiT/main/TrainingAMP.csv",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/contents/TrainingAMP.csv?ref=main",
+      "git": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/git/blobs/915599e059b859c18a709f53906438f68b2c0356",
+      "html": "https://github.com/ChenSizhe13893461199/AMPLiT/blob/main/TrainingAMP.csv"
+    }
+  },
+  {
+    "name": "Validation.csv",
+    "path": "Validation.csv",
+    "sha": "7ec36fa7f97757ab77c125eb1842ad7e1a934f41",
+    "size": 244526,
+    "url": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/contents/Validation.csv?ref=main",
+    "html_url": "https://github.com/ChenSizhe13893461199/AMPLiT/blob/main/Validation.csv",
+    "git_url": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/git/blobs/7ec36fa7f97757ab77c125eb1842ad7e1a934f41",
+    "download_url": "https://raw.githubusercontent.com/ChenSizhe13893461199/AMPLiT/main/Validation.csv",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/contents/Validation.csv?ref=main",
+      "git": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/git/blobs/7ec36fa7f97757ab77c125eb1842ad7e1a934f41",
+      "html": "https://github.com/ChenSizhe13893461199/AMPLiT/blob/main/Validation.csv"
+    }
+  },
+  {
+    "name": "Word2Vec_training_data.csv",
+    "path": "Word2Vec_training_data.csv",
+    "sha": "75ec7b769cff3ab5aba63fdd2ad64dd3cc2c59ea",
+    "size": 10905894,
+    "url": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/contents/Word2Vec_training_data.csv?ref=main",
+    "html_url": "https://github.com/ChenSizhe13893461199/AMPLiT/blob/main/Word2Vec_training_data.csv",
+    "git_url": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/git/blobs/75ec7b769cff3ab5aba63fdd2ad64dd3cc2c59ea",
+    "download_url": "https://raw.githubusercontent.com/ChenSizhe13893461199/AMPLiT/main/Word2Vec_training_data.csv",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/contents/Word2Vec_training_data.csv?ref=main",
+      "git": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/git/blobs/75ec7b769cff3ab5aba63fdd2ad64dd3cc2c59ea",
+      "html": "https://github.com/ChenSizhe13893461199/AMPLiT/blob/main/Word2Vec_training_data.csv"
+    }
+  },
+  {
+    "name": "block1.png",
+    "path": "block1.png",
+    "sha": "29bc7597a19ace4cec4dd2c603dad276c5e18b93",
+    "size": 84871,
+    "url": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/contents/block1.png?ref=main",
+    "html_url": "https://github.com/ChenSizhe13893461199/AMPLiT/blob/main/block1.png",
+    "git_url": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/git/blobs/29bc7597a19ace4cec4dd2c603dad276c5e18b93",
+    "download_url": "https://raw.githubusercontent.com/ChenSizhe13893461199/AMPLiT/main/block1.png",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/contents/block1.png?ref=main",
+      "git": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/git/blobs/29bc7597a19ace4cec4dd2c603dad276c5e18b93",
+      "html": "https://github.com/ChenSizhe13893461199/AMPLiT/blob/main/block1.png"
+    }
+  },
+  {
+    "name": "block136.png",
+    "path": "block136.png",
+    "sha": "a384cfdcff8dbccd8213e47c3fbd261962a5fcb1",
+    "size": 56730,
+    "url": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/contents/block136.png?ref=main",
+    "html_url": "https://github.com/ChenSizhe13893461199/AMPLiT/blob/main/block136.png",
+    "git_url": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/git/blobs/a384cfdcff8dbccd8213e47c3fbd261962a5fcb1",
+    "download_url": "https://raw.githubusercontent.com/ChenSizhe13893461199/AMPLiT/main/block136.png",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/contents/block136.png?ref=main",
+      "git": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/git/blobs/a384cfdcff8dbccd8213e47c3fbd261962a5fcb1",
+      "html": "https://github.com/ChenSizhe13893461199/AMPLiT/blob/main/block136.png"
+    }
+  },
+  {
+    "name": "block2.png",
+    "path": "block2.png",
+    "sha": "adc29a723c2e1db410b6ae5be7a38bd5e2b936b8",
+    "size": 56415,
+    "url": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/contents/block2.png?ref=main",
+    "html_url": "https://github.com/ChenSizhe13893461199/AMPLiT/blob/main/block2.png",
+    "git_url": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/git/blobs/adc29a723c2e1db410b6ae5be7a38bd5e2b936b8",
+    "download_url": "https://raw.githubusercontent.com/ChenSizhe13893461199/AMPLiT/main/block2.png",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/contents/block2.png?ref=main",
+      "git": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/git/blobs/adc29a723c2e1db410b6ae5be7a38bd5e2b936b8",
+      "html": "https://github.com/ChenSizhe13893461199/AMPLiT/blob/main/block2.png"
+    }
+  },
+  {
+    "name": "utils1.py",
+    "path": "utils1.py",
+    "sha": "5ad233f7fd258756736f8274c2e09c28b34ad6d4",
+    "size": 30087,
+    "url": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/contents/utils1.py?ref=main",
+    "html_url": "https://github.com/ChenSizhe13893461199/AMPLiT/blob/main/utils1.py",
+    "git_url": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/git/blobs/5ad233f7fd258756736f8274c2e09c28b34ad6d4",
+    "download_url": "https://raw.githubusercontent.com/ChenSizhe13893461199/AMPLiT/main/utils1.py",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/contents/utils1.py?ref=main",
+      "git": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/git/blobs/5ad233f7fd258756736f8274c2e09c28b34ad6d4",
+      "html": "https://github.com/ChenSizhe13893461199/AMPLiT/blob/main/utils1.py"
+    }
+  },
+  {
+    "name": "word2vec11.bin",
+    "path": "word2vec11.bin",
+    "sha": "882aefebc6ffab943ddf06a6ed45e866779fa81b",
+    "size": 8047,
+    "url": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/contents/word2vec11.bin?ref=main",
+    "html_url": "https://github.com/ChenSizhe13893461199/AMPLiT/blob/main/word2vec11.bin",
+    "git_url": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/git/blobs/882aefebc6ffab943ddf06a6ed45e866779fa81b",
+    "download_url": "https://raw.githubusercontent.com/ChenSizhe13893461199/AMPLiT/main/word2vec11.bin",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/contents/word2vec11.bin?ref=main",
+      "git": "https://api.github.com/repos/ChenSizhe13893461199/AMPLiT/git/blobs/882aefebc6ffab943ddf06a6ed45e866779fa81b",
+      "html": "https://github.com/ChenSizhe13893461199/AMPLiT/blob/main/word2vec11.bin"
+    }
+  }
+]

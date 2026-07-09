@@ -1,0 +1,10 @@
+{
+  "samples": [
+    {
+      "sample_id": "SRR29088443",
+      "layout": "paired",
+      "fastq_1": "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/7a0446baab73411eac8df563436c64de/inputs/SRR29088443_1.fastq.gz",
+      "fastq_2": "/Users/tianaoliu/Documents/vscode/2026summerproject/workspace/tasks/7a0446baab73411eac8df563436c64de/inputs/SRR29088443_2.fastq.gz"
+    }
+  ]
+}

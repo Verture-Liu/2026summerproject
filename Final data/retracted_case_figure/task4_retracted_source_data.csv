@@ -1,0 +1,3 @@
+mate,file,agent_records,agent_total_bases,agent_mean_length,agent_gc_percent,agent_n_fraction,malformed_records,local_bytes,ena_read_count_per_mate,ena_total_base_count,ena_bytes,read_count_match,file_bytes_match,run,study
+R1,SRR29088443_1.fastq.gz,53571,13071324,244.0,54.043,4e-06,0,1240071,53571,26517645,1240071,True,True,SRR29088443,SRP508771
+R2,SRR29088443_2.fastq.gz,53571,13446321,251.0,53.573,2e-06,0,1428410,53571,26517645,1428410,True,True,SRR29088443,SRP508771

@@ -1,0 +1,2 @@
+task,raw_rows,cleaned_rows,duplicates_removed,raw_unique_sequences,cleaned_unique_sequences
+peptide_csv_curation,5810,5696,114,5696,5696
