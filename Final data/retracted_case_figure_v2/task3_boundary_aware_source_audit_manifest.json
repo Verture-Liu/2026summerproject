@@ -1,0 +1,9 @@
+{
+  "figure_files": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/retracted_case_figure_v2/task3_boundary_aware_source_audit.png",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/retracted_case_figure_v2/task3_boundary_aware_source_audit.pdf",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/retracted_case_figure_v2/task3_boundary_aware_source_audit.svg"
+  ],
+  "source_data": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/retracted_case_figure_v2/task3_public_vs_agent_source_data.csv",
+  "main_claim": "The agent exactly reproduced source-level public metadata while gating biological interpretation."
+}

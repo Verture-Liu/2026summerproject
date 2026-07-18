@@ -90,8 +90,8 @@ def add_box(
         zorder=1,
     )
     ax.add_patch(box)
-    ax.text(x + 0.020, y + h - 0.032, title, fontsize=8.0, fontweight="bold", va="top", color=title_color or COLORS["ink"], zorder=2)
-    ax.text(x + 0.020, y + h - 0.078, body, fontsize=6.25, va="top", color=COLORS["muted"], linespacing=1.16, zorder=2)
+    ax.text(x + 0.020, y + h - 0.032, title, fontsize=9.4, fontweight="bold", va="top", color=title_color or COLORS["ink"], zorder=2)
+    ax.text(x + 0.020, y + h - 0.082, body, fontsize=7.15, va="top", color=COLORS["muted"], linespacing=1.12, zorder=2)
 
 
 def arrow(ax: plt.Axes, start: tuple[float, float], end: tuple[float, float], color: str = "#9aa5b1") -> None:
@@ -137,7 +137,7 @@ def make_figure() -> dict[str, list[str]]:
         0.03,
         0.965,
         "Human-in-the-loop architecture of the natural-language research agent",
-        fontsize=13,
+        fontsize=14.5,
         fontweight="bold",
         va="top",
     )
@@ -148,8 +148,8 @@ def make_figure() -> dict[str, list[str]]:
     ax.text(
         0.03,
         0.915,
-        "The language model plans constrained workflows; experts review key decisions; predefined local skills and command-line tools perform execution.",
-        fontsize=7.6,
+        "The LLM plans; experts review; constrained local skills execute.",
+        fontsize=8.8,
         color=COLORS["muted"],
         va="top",
     )
@@ -162,31 +162,31 @@ def make_figure() -> dict[str, list[str]]:
     boxes = [
         (
             "User request",
-            "Natural language\n+ uploaded data\nCSV / FASTQ / metadata",
+            "Natural language\n+ source files",
             COLORS["panel"],
             COLORS["ink"],
         ),
         (
             "Workflow planner",
-            "Structured workflow\nsteps, skills,\ninputs and outputs",
+            "Workflow JSON\nsteps + inputs",
             COLORS["pale_blue"],
             COLORS["blue"],
         ),
         (
             "Workflow validator",
-            "Check file type,\nstep references,\nskill compatibility",
+            "File type\nreferences\nskill match",
             COLORS["pale_gold"],
             COLORS["gold"],
         ),
         (
             "Skill execution",
-            "Dispatch steps\nto deterministic\nskills and tools",
+            "Run approved\nlocal tools",
             COLORS["pale_green"],
             COLORS["teal"],
         ),
         (
             "Organized outputs",
-            "final_outputs\nstep_outputs\naudit records",
+            "final outputs\nstep files\naudit records",
             COLORS["pale_purple"],
             COLORS["purple"],
         ),
@@ -199,9 +199,9 @@ def make_figure() -> dict[str, list[str]]:
     # Human-in-the-loop checkpoints
     checkpoint_y = 0.585
     checkpoints = [
-        (0.265, "Expert workflow\nreview"),
-        (0.620, "Local execution\napproval"),
-        (0.840, "Result audit\nand interpretation"),
+        (0.265, "Expert\nreview"),
+        (0.620, "Run\napproval"),
+        (0.840, "Result\naudit"),
     ]
     for x, label in checkpoints:
         add_box(
@@ -221,19 +221,19 @@ def make_figure() -> dict[str, list[str]]:
     arrow(ax, (0.875, checkpoint_y + 0.072), (0.875, y_top), color=COLORS["gold"])
 
     # Skill/tool layer
-    ax.text(0.035, 0.545, "Skill and tool layer", fontsize=9.2, fontweight="bold", va="top")
-    ax.text(0.035, 0.500, "Current skills focus on entry-level but failure-prone ancient-data analysis steps.", fontsize=6.9, color=COLORS["muted"])
+    ax.text(0.035, 0.545, "Skill and tool layer", fontsize=10.2, fontweight="bold", va="top")
+    ax.text(0.035, 0.500, "Entry-level ancient-data checks remain auditable.", fontsize=7.6, color=COLORS["muted"])
 
     skill_y = 0.315
     skill_w = 0.165
     skill_h = 0.140
     skill_xs = [0.035, 0.225, 0.415, 0.605, 0.795]
     skill_boxes = [
-        ("Peptide / CSV", "header detection\nsequence validation\ndeduplication", COLORS["panel"]),
-        ("FASTQ QC", "FastQC\nMultiQC\nseqkit stats", COLORS["pale_blue"]),
+        ("Peptide / CSV", "table curation\nsequence checks", COLORS["panel"]),
+        ("Sequencing QC", "FastQC\nMultiQC\nseqkit", COLORS["pale_blue"]),
         ("Source audit", "ENA/SRA metadata\nread counts\nfile sizes", COLORS["pale_gold"]),
-        ("Ancient-DNA ready", "paired-end checks\nread length\nGC / N metrics", COLORS["pale_green"]),
-        ("Future skills", "BWA / Bowtie2\nsamtools\nmapDamage", COLORS["pale_purple"]),
+        ("aDNA-ready", "pairing\nread length\nGC / N", COLORS["pale_green"]),
+        ("Future skills", "alignment\ndamage\ncontamination", COLORS["pale_purple"]),
     ]
     for x, (title, body, fc) in zip(skill_xs, skill_boxes):
         add_box(ax, x, skill_y, skill_w, skill_h, title, body, fc)
@@ -249,7 +249,7 @@ def make_figure() -> dict[str, list[str]]:
         0.405,
         0.135,
         "Local execution environment",
-        "Runs on the user's machine with configured environments.\nMissing external tools are reported explicitly.",
+        "Runs on the user's machine.\nMissing tools are reported explicitly.",
         "#ffffff",
         ec=COLORS["grid"],
         title_color=COLORS["ink"],
@@ -261,7 +261,7 @@ def make_figure() -> dict[str, list[str]]:
         0.405,
         0.135,
         "Reproducibility and audit trail",
-        "Each run keeps final outputs, intermediate files,\nworkflow JSON, manifests, checksums, and reports.",
+        "Each run keeps outputs, step files,\nworkflow JSON, checksums, and reports.",
         "#ffffff",
         ec=COLORS["grid"],
         title_color=COLORS["ink"],
@@ -272,7 +272,7 @@ def make_figure() -> dict[str, list[str]]:
         0.035,
         0.045,
         "Design principle: the LLM proposes; experts approve and interpret; constrained skills and local tools execute.",
-        fontsize=7.2,
+        fontsize=8.2,
         color=COLORS["blue"],
         fontweight="bold",
     )

@@ -1,0 +1,6 @@
+metric,published,agent,unit,difference,relative_difference_percent
+R1 reads,53571,53571,reads,0,0.0
+R2 reads,53571,53571,reads,0,0.0
+Total bases,26517645,26517645,bp,0,0.0
+R1 file size,1240071,1240071,bytes,0,0.0
+R2 file size,1428410,1428410,bytes,0,0.0

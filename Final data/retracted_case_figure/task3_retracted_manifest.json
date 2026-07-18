@@ -5,5 +5,5 @@
     "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/retracted_case_figure/task3_retracted_fastq_audit.svg"
   ],
   "source_data": "/Users/tianaoliu/Documents/vscode/2026summerproject/Final data/retracted_case_figure/task3_retracted_source_data.csv",
-  "interpretation": "Retraction-associated dataset used as a negative-control source-data audit case."
+  "interpretation": "Retraction-associated dataset used as a boundary-stress source-data audit case."
 }

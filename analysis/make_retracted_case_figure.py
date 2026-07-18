@@ -135,7 +135,7 @@ def draw_case_card(ax: plt.Axes) -> None:
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
     ax.text(0.00, 0.98, "Retraction-associated public FASTQ case", fontsize=10, fontweight="bold", va="top")
-    ax.text(0.00, 0.88, "Used as a negative-control audit,\nnot as evidence for the retracted claim.", fontsize=7.4, color=COLORS["muted"], va="top")
+    ax.text(0.00, 0.88, "Used as a boundary-stress audit,\nnot as evidence for the retracted claim.", fontsize=7.4, color=COLORS["muted"], va="top")
 
     cards = [
         ("Publication", "Genes Immunity\nPMID 39533019"),
@@ -257,7 +257,7 @@ def draw_audit(ax: plt.Axes) -> None:
     panel_label(ax, "D")
     ax.set_xlim(0, 1)
     ax.set_ylim(0, 1)
-    ax.text(0.00, 0.98, "Audit interpretation", fontsize=9.5, fontweight="bold", va="top")
+    ax.text(0.00, 0.98, "Audit interpretation", fontsize=11.0, fontweight="bold", va="top")
 
     items = [
         ("FASTQ format", "pass", COLORS["green"]),
@@ -268,27 +268,27 @@ def draw_audit(ax: plt.Axes) -> None:
     ]
     y0 = 0.78
     for i, (label, status, color) in enumerate(items):
-        y = y0 - i * 0.128
+        y = y0 - i * 0.132
         ax.add_patch(
             FancyBboxPatch(
                 (0.02, y - 0.055),
                 0.92,
-                0.102,
+                0.108,
                 boxstyle="round,pad=0.006,rounding_size=0.012",
                 fc="#ffffff",
                 ec=COLORS["grid"],
                 lw=0.45,
             )
         )
-        ax.add_patch(plt.Circle((0.065, y), 0.012, color=color, ec="white", lw=0.5))
-        ax.text(0.105, y + 0.020, label, fontsize=6.25, fontweight="bold", va="center")
-        ax.text(0.105, y - 0.026, status, fontsize=5.65, color=COLORS["muted"], va="center")
+        ax.add_patch(plt.Circle((0.065, y), 0.014, color=color, ec="white", lw=0.5))
+        ax.text(0.108, y + 0.023, label, fontsize=7.35, fontweight="bold", va="center")
+        ax.text(0.108, y - 0.026, status, fontsize=6.55, color=COLORS["muted"], va="center")
 
     ax.add_patch(
         FancyBboxPatch(
             (0.00, 0.015),
             0.99,
-            0.135,
+            0.155,
             boxstyle="round,pad=0.014,rounding_size=0.02",
             fc=COLORS["panel"],
             ec=COLORS["grid"],
@@ -297,12 +297,12 @@ def draw_audit(ax: plt.Axes) -> None:
     )
     ax.text(
         0.045,
-        0.082,
-        "Negative-control role:\naudit source-data reproducibility\nfrom a problematic literature record.",
-        fontsize=5.95,
+        0.092,
+        "Boundary-stress role:\naudit source-data reproducibility\nfrom a problematic literature record.",
+        fontsize=6.65,
         color=COLORS["muted"],
         va="center",
-        linespacing=1.05,
+        linespacing=1.10,
     )
 
 
@@ -311,7 +311,7 @@ def make_figure() -> dict[str, list[str] | str]:
     df = load_agent_metrics()
     source_path = write_source_data(df)
 
-    fig = plt.figure(figsize=(7.6, 5.15), constrained_layout=True)
+    fig = plt.figure(figsize=(7.6, 5.9), constrained_layout=True)
     gs = fig.add_gridspec(2, 3, width_ratios=[1.05, 1.16, 1.55], height_ratios=[1.03, 1.0])
     ax_a = fig.add_subplot(gs[:, 0])
     ax_b = fig.add_subplot(gs[0, 1:])
@@ -333,7 +333,7 @@ def make_figure() -> dict[str, list[str] | str]:
     manifest = {
         "figures": [str(p) for p in paths],
         "source_data": str(source_path),
-        "interpretation": "Retraction-associated dataset used as a negative-control source-data audit case.",
+        "interpretation": "Retraction-associated dataset used as a boundary-stress source-data audit case.",
     }
     (OUT / "task3_retracted_manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
     return manifest

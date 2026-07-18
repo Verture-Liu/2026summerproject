@@ -301,7 +301,7 @@ def task2_fastq_figure() -> list[Path]:
     ax3.grid(axis="x", color=COLORS["grid"], lw=0.6, which="both")
     ax3.legend(fontsize=6.7, loc="upper right", framealpha=0.94)
 
-    fig.suptitle("Task 2 | FASTQ source-data QC validates published sequencing inputs", fontsize=12, fontweight="bold")
+    fig.suptitle("Task 2 | Sequencing source-data checks verify traceable input handling", fontsize=12, fontweight="bold")
     return save(fig, OUT / "task2_fastq_source_qc")
 
 
