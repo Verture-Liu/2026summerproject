@@ -11,3 +11,4 @@ build/
 ~$*.docx
 *.tmp
 *.log
+.worktrees/
