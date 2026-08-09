@@ -18,6 +18,8 @@ class SkillDescriptor:
     output_formats: list[str]
     resource_class: str
     parameter_schema: dict[str, Any]
+    min_inputs: int
+    max_inputs: int | None
 
 
 class SkillRegistry:
@@ -38,6 +40,16 @@ class SkillRegistry:
                 output_formats=sorted(skill.output_formats),
                 resource_class=skill.resource_class,
                 parameter_schema=skill.parameter_schema,
+                min_inputs=getattr(
+                    skill,
+                    "min_inputs",
+                    0 if "none" in skill.input_formats else 1,
+                ),
+                max_inputs=getattr(
+                    skill,
+                    "max_inputs",
+                    0 if skill.input_formats == {"none"} else 1,
+                ),
             )
             for skill in self._skills.values()
         ]

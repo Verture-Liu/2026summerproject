@@ -64,6 +64,7 @@ class PeptideChartSkill:
             raise ValueError("Chart dimensions or DPI are outside supported bounds")
         context.work_dir.mkdir(parents=True, exist_ok=True)
         outputs = []
+        named_outputs = {}
         for chart in requested:
             fig, ax = plt.subplots(figsize=(width / dpi, height / dpi), dpi=dpi)
             if chart == "length_histogram":
@@ -87,6 +88,21 @@ class PeptideChartSkill:
             fig.savefig(output)
             plt.close(fig)
             outputs.append(str(output))
+            named_outputs[chart] = str(output)
+            named_outputs[f"{chart}_chart"] = str(output)
+            if chart == "length_histogram":
+                named_outputs["length_chart"] = str(output)
+                named_outputs["length_distribution"] = str(output)
+            elif chart == "label_counts":
+                named_outputs["label_chart"] = str(output)
+                named_outputs["label_distribution"] = str(output)
+            elif chart == "amino_acid_composition":
+                named_outputs["composition_chart"] = str(output)
         return SkillResult(
-            "succeeded", outputs, {"charts_created": len(outputs)}, [], None
+            "succeeded",
+            outputs,
+            {"charts_created": len(outputs)},
+            [],
+            None,
+            named_outputs=named_outputs,
         )

@@ -74,6 +74,8 @@ class FileTypeDetectSkill:
     input_formats = {"any"}
     output_formats = {"json"}
     resource_class = "light"
+    min_inputs = 1
+    max_inputs = None
     parameter_schema = _json_schema()
 
     def run(self, context: SkillContext, parameters: dict) -> SkillResult:
@@ -122,6 +124,8 @@ class FastqPairMatchSkill:
     input_formats = {"fastq"}
     output_formats = {"csv", "json"}
     resource_class = "light"
+    min_inputs = 1
+    max_inputs = None
     parameter_schema = _json_schema()
 
     def run(self, context: SkillContext, parameters: dict) -> SkillResult:
@@ -293,6 +297,8 @@ class DataQualityGateSkill:
     input_formats = {"csv", "tsv", "fasta", "fastq"}
     output_formats = {"json"}
     resource_class = "light"
+    min_inputs = 1
+    max_inputs = None
     parameter_schema = _json_schema(
         {
             "sequence_column": {"type": "string"},
@@ -469,7 +475,24 @@ class MultiqcSummarySkill:
     input_formats = {"directory", "txt", "zip", "html", "json"}
     output_formats = {"html", "json"}
     resource_class = "medium"
+    min_inputs = 1
+    max_inputs = None
     parameter_schema = _json_schema()
+
+    def check_readiness(self) -> dict:
+        tool_command = resolve_tool(("multiqc",))
+        return {
+            "ready": tool_command is not None,
+            "tool": "MultiQC",
+            "executable": " ".join(tool_command.command) if tool_command else "",
+            "source": tool_command.source if tool_command else "",
+            "official_url": MULTIQC_URL,
+            "installation_instructions": [
+                "Install MultiQC with conda/mamba or pip.",
+                "Confirm installation by running: multiqc --version",
+                "Restart PaleoRigor after MultiQC is available on PATH or configured in config/tool_envs.json.",
+            ],
+        }
 
     def run(self, context: SkillContext, parameters: dict) -> SkillResult:
         tool_command = resolve_tool(("multiqc",))

@@ -28,7 +28,7 @@ FORMAT_SUFFIXES = {
     "png": {".png"},
     "pdf": {".pdf"},
     "fasta": {".fasta", ".fa", ".faa", ".fna"},
-    "fastq": {".fastq", ".fq", ".gz"},
+    "fastq": {".fastq", ".fq"},
     "sam": {".sam"},
     "bam": {".bam"},
     "bai": {".bai"},
@@ -55,18 +55,48 @@ def _path_matches_format(path: Path, output_format: str) -> bool:
     return bool(suffixes & expected)
 
 
-def _select_declared_output(result_outputs: list[str], output_format: str, index: int, used: set[int]) -> Path | None:
+def _select_declared_output(
+    result_outputs: list[str],
+    named_outputs: dict[str, str],
+    output_name: str,
+    output_format: str,
+    used: set[int],
+) -> Path | None:
+    explicitly_named = named_outputs.get(output_name)
+    if explicitly_named is not None:
+        explicit_path = Path(explicitly_named)
+        try:
+            result_index = [Path(path) for path in result_outputs].index(explicit_path)
+        except ValueError as exc:
+            raise RuntimeError(
+                f"named output {output_name} is not present in the skill result"
+            ) from exc
+        if result_index in used:
+            raise RuntimeError(f"named output {output_name} was already consumed")
+        if not _path_matches_format(explicit_path, output_format):
+            raise RuntimeError(
+                f"named output {output_name} does not match declared format {output_format}"
+            )
+        used.add(result_index)
+        return explicit_path
+
+    candidates: list[tuple[int, Path]] = []
     for result_index, result_output in enumerate(result_outputs):
         if result_index in used:
             continue
         output_path = Path(result_output)
         if _path_matches_format(output_path, output_format):
-            used.add(result_index)
-            return output_path
-    if index < len(result_outputs) and index not in used:
-        used.add(index)
-        return Path(result_outputs[index])
-    return None
+            candidates.append((result_index, output_path))
+    if not candidates:
+        return None
+    if len(candidates) > 1:
+        raise RuntimeError(
+            f"ambiguous declared output {output_name} ({output_format}): "
+            "the skill produced multiple matching files without an explicit named output"
+        )
+    result_index, output_path = candidates[0]
+    used.add(result_index)
+    return output_path
 
 
 def _write_report(task_dir: Path, workflow, steps: list[dict], outputs: list[str]) -> None:
@@ -106,13 +136,19 @@ def execute_workflow(workflow, task_dir: Path, uploaded_files: dict[str, Path], 
         try:
             result = registry.get(step.skill).run(SkillContext(work_dir, resolved_inputs), step.parameters)
             used_result_outputs: set[int] = set()
-            for index, output in enumerate(step.outputs):
+            for output in step.outputs:
                 output_path = _select_declared_output(
                     result.outputs,
+                    result.named_outputs,
+                    output.name,
                     output.format,
-                    index,
                     used_result_outputs,
                 )
+                if output_path is None and result.status == "succeeded":
+                    raise RuntimeError(
+                        f"{step.skill} did not produce declared output "
+                        f"{output.name} ({output.format})"
+                    )
                 if output_path is not None:
                     step_outputs[f"{step.id}.{output.name}"] = output_path
                     step_outputs[output.name] = output_path

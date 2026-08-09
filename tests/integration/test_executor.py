@@ -80,3 +80,49 @@ def test_executor_resolves_step_output_name_references(tmp_path):
     )
     assert summary.status == "succeeded"
     assert Path(summary.outputs[0]).name == "valid_peptides.csv"
+
+
+def test_executor_uses_declared_output_meaning_when_same_formats_are_reversed(tmp_path):
+    source = tmp_path / "peptides.csv"
+    source.write_text(
+        "label,sequence\n1,ACDEFGHIK\n1,INVALIDX\n",
+        encoding="utf-8",
+    )
+    workflow = Workflow.model_validate(
+        {
+            "schema_version": "1.0",
+            "task_summary": "validate with reversed declarations",
+            "steps": [
+                {
+                    "id": "step_01",
+                    "skill": "peptide_validate",
+                    "inputs": [{"source": "uploaded", "ref": "peptides"}],
+                    "parameters": {},
+                    "outputs": [
+                        {"name": "rejected_csv", "format": "csv"},
+                        {"name": "validated_csv", "format": "csv"},
+                    ],
+                    "reason": "validate peptides",
+                },
+                {
+                    "id": "step_02",
+                    "skill": "peptide_csv_export",
+                    "inputs": [{"source": "step", "ref": "step_01.rejected_csv"}],
+                    "parameters": {"filename": "rejected_copy.csv"},
+                    "outputs": [{"name": "copy", "format": "csv"}],
+                    "reason": "copy rejected rows",
+                },
+            ],
+        }
+    )
+
+    summary = execute_workflow(
+        workflow,
+        tmp_path / "task",
+        {"peptides": source},
+        build_default_registry(),
+        {},
+    )
+
+    assert summary.status == "succeeded"
+    assert Path(summary.steps[1]["inputs"][0]).name == "rejected_peptides.csv"

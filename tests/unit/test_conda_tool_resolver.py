@@ -19,19 +19,39 @@ def test_resolve_tool_uses_path_before_conda(monkeypatch):
     assert command == ToolCommand(tool="fastqc", command=["/usr/bin/fastqc"], source="path")
 
 
-def test_resolve_tool_falls_back_to_conda_mapping(monkeypatch):
+def test_resolve_tool_falls_back_to_conda_mapping(tmp_path, monkeypatch):
+    conda = tmp_path / "miniconda" / "bin" / "conda"
+    executable = tmp_path / "miniconda" / "envs" / "multiqc_env" / "bin" / "multiqc"
+    conda.parent.mkdir(parents=True)
+    executable.parent.mkdir(parents=True)
+    conda.write_text("", encoding="utf-8")
+    executable.write_text("", encoding="utf-8")
     monkeypatch.setattr(
         "research_agent.skills.conda_tools.shutil.which",
-        lambda name: "/opt/miniconda3/bin/conda" if name == "conda" else None,
+        lambda name: str(conda) if name == "conda" else None,
     )
 
     command = resolve_tool(("multiqc",), {"multiqc": "multiqc_env"})
 
     assert command == ToolCommand(
         tool="multiqc",
-        command=["/opt/miniconda3/bin/conda", "run", "-n", "multiqc_env", "multiqc"],
+        command=[str(conda), "run", "-n", "multiqc_env", "multiqc"],
         source="conda:multiqc_env",
     )
+
+
+def test_resolve_tool_rejects_stale_conda_environment_mapping(tmp_path, monkeypatch):
+    conda = tmp_path / "miniconda" / "bin" / "conda"
+    conda.parent.mkdir(parents=True)
+    conda.write_text("", encoding="utf-8")
+    monkeypatch.setattr(
+        "research_agent.skills.conda_tools.shutil.which",
+        lambda name: str(conda) if name == "conda" else None,
+    )
+
+    command = resolve_tool(("multiqc",), {"multiqc": "missing_env"})
+
+    assert command is None
 
 
 def test_run_tool_command_prepends_resolved_command(tmp_path, monkeypatch):

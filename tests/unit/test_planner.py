@@ -96,6 +96,17 @@ def test_system_prompt_includes_staged_workflow_templates():
     assert "cleaning/filtering/host-removal" in prompt
 
 
+def test_system_prompt_exposes_skill_input_count_contracts():
+    prompt = build_system_prompt(
+        [{"ref": "reads", "format": "fastq"}],
+        build_default_registry().catalog(),
+    )
+
+    assert '"name": "host_dna_removal"' in prompt
+    assert '"min_inputs": 1' in prompt
+    assert '"max_inputs": 2' in prompt
+
+
 @pytest.mark.asyncio
 async def test_planner_repairs_invalid_workflow_once():
     calls = []

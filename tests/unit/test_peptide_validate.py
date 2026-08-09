@@ -22,6 +22,8 @@ def test_rejects_invalid_amino_acids_empty_and_out_of_range_sequences(tmp_path):
     )
     assert result.metrics["valid_rows"] == 1
     rejected = pd.read_csv(result.outputs[1])
+    assert result.named_outputs["validated_csv"] == result.outputs[0]
+    assert result.named_outputs["rejected_csv"] == result.outputs[1]
     assert set(rejected["rejection_reason"]) == {
         "invalid_amino_acid",
         "empty_sequence",

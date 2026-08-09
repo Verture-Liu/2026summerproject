@@ -91,6 +91,8 @@ class ConcoctBinningSkill(LocalCliSkill):
 
 
 class DasToolRefineSkill(LocalCliSkill):
+    min_inputs = 2
+    max_inputs = None
     name = "dastool_refine"
     description = "Integrate multiple binning results into a consensus MAG set with DAS Tool."
     executable_candidates = ("DAS_Tool",)
@@ -153,6 +155,7 @@ class Checkm2QualitySkill(LocalCliSkill):
 
 
 class DrepDereplicateSkill(LocalCliSkill):
+    max_inputs = None
     name = "drep_dereplicate"
     description = "Dereplicate related metagenome-assembled genomes with dRep."
     executable_candidates = ("dRep",)

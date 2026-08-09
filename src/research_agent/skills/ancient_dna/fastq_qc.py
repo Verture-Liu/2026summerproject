@@ -67,6 +67,8 @@ class FastqQcSkill:
     input_formats = {"fastq"}
     output_formats = {"html", "zip", "json"}
     resource_class = "heavy"
+    min_inputs = 1
+    max_inputs = None
     parameter_schema = {
         "type": "object",
         "properties": {
@@ -74,6 +76,21 @@ class FastqQcSkill:
         },
         "additionalProperties": False,
     }
+
+    def check_readiness(self) -> dict:
+        tool_command = resolve_tool(("fastqc",))
+        return {
+            "ready": tool_command is not None,
+            "tool": "FastQC",
+            "executable": " ".join(tool_command.command) if tool_command else "",
+            "source": tool_command.source if tool_command else "",
+            "official_url": FASTQC_URL,
+            "installation_instructions": [
+                "Install FastQC with conda/mamba, Homebrew, or your system package manager.",
+                "Confirm installation by running: fastqc --version",
+                "Restart PaleoRigor after FastQC is available on PATH or configured in config/tool_envs.json.",
+            ],
+        }
 
     def run(self, context: SkillContext, parameters: dict) -> SkillResult:
         tool_command = resolve_tool(("fastqc",))
@@ -102,6 +119,19 @@ class FastqQcSkill:
             for source in context.inputs:
                 if not source.is_file():
                     raise ValueError(f"FASTQ input does not exist: {source}")
+            input_metrics = [_fastq_sequence_metrics(path) for path in context.inputs]
+            malformed = [
+                item for item in input_metrics if item["malformed_records"] > 0
+            ]
+            if malformed:
+                names = ", ".join(item["name"] for item in malformed)
+                return SkillResult(
+                    "failed",
+                    [],
+                    {"input_metrics": input_metrics},
+                    [],
+                    f"Detected malformed FASTQ record(s) before running FastQC: {names}",
+                )
             context.work_dir.mkdir(parents=True, exist_ok=True)
             output_dir = context.work_dir / "fastqc"
             output_dir.mkdir(exist_ok=True)
@@ -135,9 +165,7 @@ class FastqQcSkill:
                     "official_url": FASTQC_URL,
                     "reviewed_skill_source": REVIEWED_SKILL_URL,
                     "inputs": [str(path) for path in context.inputs],
-                    "input_metrics": [
-                        _fastq_sequence_metrics(path) for path in context.inputs
-                    ],
+                    "input_metrics": input_metrics,
                     "threads": threads,
                     "reports": [str(path) for path in reports],
                 },

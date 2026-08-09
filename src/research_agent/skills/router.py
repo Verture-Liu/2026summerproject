@@ -24,6 +24,8 @@ class RoutedSkillDescriptor:
     parameter_schema: dict
     package_id: str
     package_version: str
+    min_inputs: int
+    max_inputs: int | None
 
 
 def _package_checksum(package: Path) -> str:
@@ -166,6 +168,16 @@ class SkillRouter:
                 parameter_schema=skill.parameter_schema,
                 package_id=self._metadata[name]["package_id"],
                 package_version=self._metadata[name]["package_version"],
+                min_inputs=getattr(
+                    skill,
+                    "min_inputs",
+                    0 if "none" in skill.input_formats else 1,
+                ),
+                max_inputs=getattr(
+                    skill,
+                    "max_inputs",
+                    0 if skill.input_formats == {"none"} else 1,
+                ),
             )
             for name, skill in self._skills.items()
         ]

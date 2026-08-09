@@ -17,6 +17,8 @@ class AncientDnaAuthenticationSkill:
     input_formats = {"bam"}
     output_formats = {"pdf", "txt", "json"}
     resource_class = "heavy"
+    min_inputs = 1
+    max_inputs = 1
     parameter_schema = {
         "type": "object",
         "required": ["reference"],
@@ -26,6 +28,27 @@ class AncientDnaAuthenticationSkill:
         },
         "additionalProperties": False,
     }
+
+    def check_readiness(self) -> dict:
+        missing = [
+            name
+            for name, candidates in (
+                ("mapDamage", ("mapDamage", "mapDamage2")),
+                ("samtools", ("samtools",)),
+            )
+            if resolve_tool(candidates) is None
+        ]
+        return {
+            "ready": not missing,
+            "tool": ", ".join(missing) if missing else "mapDamage + samtools",
+            "missing": missing,
+            "official_url": MAPDAMAGE_URL,
+            "installation_instructions": [
+                "Install mapDamage and Samtools in dedicated conda/mamba environments.",
+                "Configure those environments in config/tool_envs.json when the commands are not on PATH.",
+                "PaleoRigor will not install external software automatically.",
+            ],
+        }
 
     def run(self, context: SkillContext, parameters: dict) -> SkillResult:
         executable = resolve_tool(("mapDamage", "mapDamage2"))

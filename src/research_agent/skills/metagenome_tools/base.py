@@ -11,6 +11,8 @@ from research_agent.skills.conda_tools import ToolCommand, resolve_tool
 
 class LocalCliSkill(ABC):
     resource_class = "heavy"
+    min_inputs = 1
+    max_inputs = 1
     timeout_seconds = 24 * 3600
     executable_candidates: tuple[str, ...]
     official_url: str
@@ -22,6 +24,21 @@ class LocalCliSkill(ABC):
     def find_executable(self) -> str | None:
         tool_command = self.find_tool_command()
         return tool_command.command[-1] if tool_command else None
+
+    def check_readiness(self) -> dict:
+        tool_command = self.find_tool_command()
+        return {
+            "ready": tool_command is not None,
+            "tool": self.executable_candidates[0],
+            "executable": " ".join(tool_command.command) if tool_command else "",
+            "source": tool_command.source if tool_command else "",
+            "official_url": self.official_url,
+            "installation_instructions": [
+                self.installation_hint,
+                "Install the tool and required databases in a dedicated environment, then restart PaleoRigor.",
+                "PaleoRigor will not install external software automatically.",
+            ],
+        }
 
     @abstractmethod
     def build_command(

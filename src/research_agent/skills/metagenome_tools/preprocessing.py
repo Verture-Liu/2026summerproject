@@ -9,6 +9,7 @@ MIN_LENGTH = {"type": "integer", "minimum": 1, "maximum": 10000}
 
 
 class FastpPreprocessSkill(LocalCliSkill):
+    max_inputs = 2
     name = "fastp_preprocess"
     description = "Trim adapters and low-quality bases from FASTQ reads with fastp."
     executable_candidates = ("fastp",)
@@ -51,6 +52,7 @@ class FastpPreprocessSkill(LocalCliSkill):
 
 
 class AdapterRemovalPreprocessSkill(LocalCliSkill):
+    max_inputs = 2
     name = "adapterremoval_preprocess"
     description = "Trim and optionally merge ancient paired-end FASTQ reads with AdapterRemoval."
     executable_candidates = ("AdapterRemoval",)
@@ -96,6 +98,7 @@ class AdapterRemovalPreprocessSkill(LocalCliSkill):
 
 
 class CutadaptPreprocessSkill(LocalCliSkill):
+    max_inputs = 2
     name = "cutadapt_preprocess"
     description = "Trim adapters and filter short FASTQ reads with Cutadapt."
     executable_candidates = ("cutadapt",)

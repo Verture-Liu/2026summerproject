@@ -60,6 +60,13 @@ class PeptideStatisticsSkill:
         distribution_path = context.work_dir / "length_distribution.csv"
         write_table(distribution, distribution_path)
         outputs = [str(stats_path), str(distribution_path)]
+        named_outputs = {
+            "statistics": str(stats_path),
+            "statistics_json": str(stats_path),
+            "lengths": str(distribution_path),
+            "length_distribution": str(distribution_path),
+            "length_distribution_csv": str(distribution_path),
+        }
         if parameters.get("include_amino_acid_composition", True):
             residues = Counter("".join(frame["sequence"].astype(str)))
             total = sum(residues.values())
@@ -78,4 +85,18 @@ class PeptideStatisticsSkill:
             composition_path = context.work_dir / "amino_acid_composition.csv"
             write_table(composition, composition_path)
             outputs.append(str(composition_path))
-        return SkillResult("succeeded", outputs, stats, [], None)
+            named_outputs.update(
+                {
+                    "composition": str(composition_path),
+                    "amino_acid_composition": str(composition_path),
+                    "amino_acid_composition_csv": str(composition_path),
+                }
+            )
+        return SkillResult(
+            "succeeded",
+            outputs,
+            stats,
+            [],
+            None,
+            named_outputs=named_outputs,
+        )

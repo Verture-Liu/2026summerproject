@@ -27,10 +27,10 @@
 - Consumes: `Workflow`, `SkillRegistry`, and `uploaded_formats: dict[str, str]`.
 - Produces: `ValidationIssue` records and a backward-compatible `ValidationReport`.
 
-- [ ] Add failing tests for issue codes, step/skill context, expected/observed values, hints, duplicate output aliases, and ambiguous references.
-- [ ] Run focused validator tests and confirm the new assertions fail for missing behavior.
-- [ ] Implement structured issues and deterministic checks while preserving string error lists.
-- [ ] Run focused validator tests and refactor only after they pass.
+- [x] Add failing tests for issue codes, step/skill context, expected/observed values, hints, duplicate output aliases, and ambiguous references.
+- [x] Run focused validator tests and confirm the new assertions fail for missing behavior.
+- [x] Implement structured issues and deterministic checks while preserving string error lists.
+- [x] Run focused validator tests and refactor only after they pass.
 
 ### Task 2: Skill dependency readiness contracts
 
@@ -44,10 +44,10 @@
 - Consumes: optional `check_readiness() -> dict` implemented by dependency-backed skills.
 - Produces: pre-execution `dependency_missing` or `dependency_incompatible` issues with installation guidance.
 
-- [ ] Add a failing test using a fake registered skill whose readiness report is not ready.
-- [ ] Confirm the test fails because readiness is not consulted.
-- [ ] Add optional readiness validation without requiring every existing skill to implement it.
-- [ ] Run focused tests and keep missing-tool behavior non-mutating.
+- [x] Add a failing test using a fake registered skill whose readiness report is not ready.
+- [x] Confirm the test fails because readiness is not consulted.
+- [x] Add optional readiness validation without requiring every existing skill to implement it.
+- [x] Run focused tests and keep missing-tool behavior non-mutating.
 
 ### Task 3: API and web-facing compatibility
 
@@ -59,10 +59,10 @@
 - Consumes: extended `ValidationReport`.
 - Produces: existing response fields plus structured `issues` for the browser and external API clients.
 
-- [ ] Add a failing API test showing incompatible input is rejected before execution with an actionable issue.
-- [ ] Confirm the test fails on the missing structured payload.
-- [ ] Serialize structured issues in planning and execution-validation responses.
-- [ ] Run API and validator tests.
+- [x] Add a failing API test showing incompatible input is rejected before execution with an actionable issue.
+- [x] Confirm the test fails on the missing structured payload.
+- [x] Serialize structured issues in planning and execution-validation responses.
+- [x] Run API and validator tests.
 
 ### Task 4: Regression and adversarial self-tests
 
@@ -74,7 +74,7 @@
 - Consumes: real registry catalog and representative CSV, FASTQ, paired-end, missing-tool, and malformed-reference workflows.
 - Produces: deterministic acceptance/rejection evidence.
 
-- [ ] Add parameterized adversarial cases modeled on previously observed planner hallucinations.
-- [ ] Run focused tests repeatedly after each minimal fix.
-- [ ] Run the full project suite and inspect every failure rather than weakening checks.
-- [ ] Review the final diff for unintended autonomous repair or environment mutation.
+- [x] Add parameterized adversarial cases modeled on previously observed planner hallucinations.
+- [x] Run focused tests repeatedly after each minimal fix.
+- [x] Run the full project suite and inspect every failure rather than weakening checks.
+- [x] Review the final diff for unintended autonomous repair or environment mutation.

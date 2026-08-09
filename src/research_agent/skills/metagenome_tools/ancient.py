@@ -13,6 +13,7 @@ INDEX = {"type": "string", "minLength": 1}
 
 
 class BwaAlignSkill(LocalCliSkill):
+    max_inputs = 2
     name = "bwa_align"
     description = "Align FASTQ reads to a reference genome with BWA MEM."
     executable_candidates = ("bwa",)
@@ -37,6 +38,7 @@ class BwaAlignSkill(LocalCliSkill):
 
 
 class Bowtie2AlignSkill(LocalCliSkill):
+    max_inputs = 2
     name = "bowtie2_align"
     description = "Align single-end or paired-end FASTQ reads to a Bowtie2 index."
     executable_candidates = ("bowtie2",)

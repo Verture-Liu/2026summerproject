@@ -37,12 +37,31 @@ def _sequence_suffix(path: Path) -> str:
     return ".fastq"
 
 
-class SeqkitStatsSkill:
+class _SeqkitReadiness:
+    def check_readiness(self) -> dict:
+        tool_command = resolve_tool(("seqkit",))
+        return {
+            "ready": tool_command is not None,
+            "tool": "seqkit",
+            "executable": " ".join(tool_command.command) if tool_command else "",
+            "source": tool_command.source if tool_command else "",
+            "official_url": SEQKIT_URL,
+            "installation_instructions": [
+                "Install seqkit with conda/mamba or its official release.",
+                "Confirm installation by running: seqkit version",
+                "PaleoRigor will not install external software automatically.",
+            ],
+        }
+
+
+class SeqkitStatsSkill(_SeqkitReadiness):
     name = "seqkit_stats"
     description = "Run seqkit stats on FASTA or FASTQ files to summarize sequence counts and lengths."
     input_formats = {"fasta", "fastq"}
     output_formats = {"tsv", "json"}
     resource_class = "medium"
+    min_inputs = 1
+    max_inputs = None
     parameter_schema = _json_schema()
 
     def run(self, context: SkillContext, parameters: dict) -> SkillResult:
@@ -75,7 +94,7 @@ class SeqkitStatsSkill:
             return SkillResult("failed", [], {}, [], str(exc))
 
 
-class SeqkitLengthFilterSkill:
+class SeqkitLengthFilterSkill(_SeqkitReadiness):
     name = "seqkit_length_filter"
     description = "Filter FASTA or FASTQ sequences by minimum and maximum sequence length with seqkit."
     input_formats = {"fasta", "fastq"}
@@ -135,7 +154,7 @@ class SeqkitLengthFilterSkill:
             return SkillResult("failed", [], {}, [], str(exc))
 
 
-class SeqkitDeduplicateSkill:
+class SeqkitDeduplicateSkill(_SeqkitReadiness):
     name = "seqkit_deduplicate"
     description = "Remove duplicate FASTA or FASTQ sequences with seqkit rmdup."
     input_formats = {"fasta", "fastq"}
@@ -203,6 +222,21 @@ class SeqtkSampleSkill:
         }
     )
 
+    def check_readiness(self) -> dict:
+        tool_command = resolve_tool(("seqtk",))
+        return {
+            "ready": tool_command is not None,
+            "tool": "seqtk",
+            "executable": " ".join(tool_command.command) if tool_command else "",
+            "source": tool_command.source if tool_command else "",
+            "official_url": "https://github.com/lh3/seqtk",
+            "installation_instructions": [
+                "Install seqtk with conda/mamba or its official release.",
+                "Confirm installation by running: seqtk",
+                "PaleoRigor will not install external software automatically.",
+            ],
+        }
+
     def run(self, context: SkillContext, parameters: dict) -> SkillResult:
         tool_command = resolve_tool(("seqtk",))
         if tool_command is None:
@@ -262,6 +296,8 @@ class GzipDecompressSkill:
     input_formats = {"gz"}
     output_formats = {"fastq", "fasta", "txt", "json"}
     resource_class = "light"
+    min_inputs = 1
+    max_inputs = None
     parameter_schema = _json_schema()
 
     def run(self, context: SkillContext, parameters: dict) -> SkillResult:
@@ -290,6 +326,8 @@ class GzipCompressSkill:
     input_formats = {"fasta", "fastq", "csv", "tsv", "txt"}
     output_formats = {"gz", "json"}
     resource_class = "light"
+    min_inputs = 1
+    max_inputs = None
     parameter_schema = _json_schema()
 
     def run(self, context: SkillContext, parameters: dict) -> SkillResult:

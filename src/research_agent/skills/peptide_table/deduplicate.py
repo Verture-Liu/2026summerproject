@@ -81,4 +81,12 @@ class PeptideDeduplicateSkill:
                 "conflicting_sequences": len(conflicts),
             },
             [],
+            named_outputs={
+                "deduplicated": str(output),
+                "deduplicated_csv": str(output),
+                "dedup_csv": str(output),
+                "duplicates": str(report_path),
+                "duplicate_report": str(report_path),
+                "duplicate_report_csv": str(report_path),
+            },
         )

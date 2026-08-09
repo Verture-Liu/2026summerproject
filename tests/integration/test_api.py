@@ -100,3 +100,49 @@ def test_execute_requires_output_directory(tmp_path):
     )
     assert response.status_code == 400
     assert response.json()["detail"]["error"] == "output_directory_required"
+
+
+def test_execute_rejects_incompatible_input_with_structured_issue(tmp_path):
+    destination = tmp_path / "results"
+    destination.mkdir()
+    client = TestClient(
+        create_app(
+            task_root=tmp_path / "tasks",
+            directory_chooser=lambda: str(destination),
+        )
+    )
+    task_id = client.post("/api/tasks").json()["task_id"]
+    upload = client.post(
+        f"/api/tasks/{task_id}/files",
+        files={"files": ("Validation.csv", b"label,sequence\n1,ACDE\n", "text/csv")},
+    )
+    assert upload.status_code == 201
+    ref = upload.json()["files"][0]["ref"]
+    selected = client.post(f"/api/tasks/{task_id}/select-output-directory")
+    assert selected.status_code == 200
+    workflow = {
+        "schema_version": "1.0",
+        "task_summary": "run FastQC",
+        "steps": [
+            {
+                "id": "step_01",
+                "skill": "fastq_qc",
+                "inputs": [{"source": "uploaded", "ref": ref}],
+                "parameters": {},
+                "outputs": [{"name": "qc_html", "format": "html"}],
+                "reason": "quality control",
+            }
+        ],
+    }
+
+    response = client.post(
+        f"/api/tasks/{task_id}/execute",
+        json={"approved": True, "workflow": workflow},
+    )
+
+    assert response.status_code == 400
+    detail = response.json()["detail"]
+    assert detail["error"] == "workflow_invalid"
+    assert detail["issues"][0]["code"] == "input_format_incompatible"
+    assert detail["issues"][0]["observed"] == "csv"
+    assert detail["issues"][0]["expected"] == ["fastq"]

@@ -6,6 +6,7 @@ MIN_CONTIG = {"type": "integer", "minimum": 200}
 
 
 class MegahitAssemblySkill(LocalCliSkill):
+    max_inputs = 2
     name = "megahit_assembly"
     description = "Assemble metagenomic FASTQ reads into contigs with MEGAHIT."
     executable_candidates = ("megahit",)
@@ -36,6 +37,7 @@ class MegahitAssemblySkill(LocalCliSkill):
 
 
 class MetaspadesAssemblySkill(LocalCliSkill):
+    max_inputs = 2
     name = "metaspades_assembly"
     description = "Assemble metagenomic FASTQ reads into contigs with metaSPAdes."
     executable_candidates = ("spades.py", "metaspades.py")

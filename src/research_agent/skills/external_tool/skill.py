@@ -1,6 +1,7 @@
 import shutil
 
 from research_agent.skills.base import SkillContext, SkillResult
+from research_agent.skills.conda_tools import resolve_tool
 
 
 class ExternalToolSkill:
@@ -13,6 +14,8 @@ class ExternalToolSkill:
         input_formats: set[str],
         output_formats: set[str],
         parameter_schema: dict,
+        min_inputs: int = 1,
+        max_inputs: int | None = 1,
     ):
         self.name = name
         self.description = description
@@ -21,6 +24,34 @@ class ExternalToolSkill:
         self.output_formats = output_formats
         self.parameter_schema = parameter_schema
         self.resource_class = "heavy"
+        self.min_inputs = min_inputs
+        self.max_inputs = max_inputs
+
+    def check_readiness(self) -> dict:
+        tool_command = resolve_tool((self.executable,))
+        if tool_command is None:
+            issue_code = "dependency_missing"
+            error = f"Required tool is not installed or configured: {self.executable}"
+        else:
+            issue_code = "skill_not_configured"
+            error = (
+                f"The command adapter for {self.name} is not configured in this "
+                "prototype and execution is intentionally blocked."
+            )
+        return {
+            "ready": False,
+            "tool": self.executable,
+            "executable": (
+                " ".join(tool_command.command) if tool_command is not None else ""
+            ),
+            "source": tool_command.source if tool_command is not None else "",
+            "issue_code": issue_code,
+            "error": error,
+            "installation_instructions": [
+                f"Install {self.executable} and confirm that it is available on PATH.",
+                "PaleoRigor will not install external software automatically.",
+            ],
+        }
 
     def run(self, context: SkillContext, parameters: dict) -> SkillResult:
         executable = shutil.which(self.executable)
@@ -54,6 +85,8 @@ def amp_external_skills() -> list[ExternalToolSkill]:
             input_formats={"fastq"},
             output_formats={"fastq"},
             parameter_schema=no_extra,
+            min_inputs=2,
+            max_inputs=2,
         ),
         ExternalToolSkill(
             name="host_dna_removal",
@@ -67,6 +100,7 @@ def amp_external_skills() -> list[ExternalToolSkill]:
                 "properties": {"reference": {"type": "string"}},
                 "additionalProperties": False,
             },
+            max_inputs=2,
         ),
         ExternalToolSkill(
             name="fastq_quality_filter",
@@ -80,6 +114,7 @@ def amp_external_skills() -> list[ExternalToolSkill]:
                 "properties": {"min_length": {"type": "integer", "minimum": 1}},
                 "additionalProperties": False,
             },
+            max_inputs=2,
         ),
         ExternalToolSkill(
             name="metagenome_assembly",
@@ -93,6 +128,7 @@ def amp_external_skills() -> list[ExternalToolSkill]:
                 "properties": {"mode": {"enum": ["meta"]}},
                 "additionalProperties": False,
             },
+            max_inputs=2,
         ),
         ExternalToolSkill(
             name="orf_extraction",

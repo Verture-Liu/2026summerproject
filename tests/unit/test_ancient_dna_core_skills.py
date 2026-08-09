@@ -113,6 +113,29 @@ def test_fastq_qc_returns_outputs_in_declared_workflow_order(tmp_path, monkeypat
     ]
 
 
+def test_fastq_qc_rejects_late_malformed_record_before_running_tool(tmp_path, monkeypatch):
+    source = tmp_path / "late_broken.fastq"
+    valid = "".join(f"@r{i}\nACGT\n+\n!!!!\n" for i in range(100))
+    source.write_text(valid + "broken\nACGT\n+\n!!!\n", encoding="utf-8")
+    monkeypatch.setattr(
+        "research_agent.skills.ancient_dna.fastq_qc.resolve_tool",
+        lambda names: ToolCommand("fastqc", ["/usr/local/bin/fastqc"], "path"),
+    )
+
+    def must_not_run(*args, **kwargs):
+        raise AssertionError("FastQC must not run for a structurally invalid FASTQ")
+
+    monkeypatch.setattr(
+        "research_agent.skills.ancient_dna.fastq_qc.run_command",
+        must_not_run,
+    )
+
+    result = FastqQcSkill().run(SkillContext(tmp_path / "work", [source]), {})
+
+    assert result.status == "failed"
+    assert "malformed FASTQ" in result.error
+
+
 def test_host_removal_reports_missing_alignment_stack(tmp_path, monkeypatch):
     monkeypatch.setattr(
         "research_agent.skills.ancient_dna.host_removal.resolve_tool",

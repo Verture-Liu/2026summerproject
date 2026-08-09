@@ -18,6 +18,8 @@ class HostDnaRemovalSkill:
     input_formats = {"fastq"}
     output_formats = {"fastq", "txt", "json"}
     resource_class = "heavy"
+    min_inputs = 1
+    max_inputs = 2
     parameter_schema = {
         "type": "object",
         "required": ["reference"],
@@ -27,6 +29,28 @@ class HostDnaRemovalSkill:
         },
         "additionalProperties": False,
     }
+
+    def check_readiness(self) -> dict:
+        missing = [
+            name
+            for name, candidates in (
+                ("bowtie2", ("bowtie2",)),
+                ("samtools", ("samtools",)),
+            )
+            if resolve_tool(candidates) is None
+        ]
+        return {
+            "ready": not missing,
+            "tool": ", ".join(missing) if missing else "bowtie2 + samtools",
+            "missing": missing,
+            "official_urls": [BOWTIE2_URL, SAMTOOLS_URL],
+            "installation_instructions": [
+                "Install Bowtie2 and Samtools with conda/mamba, Homebrew, or your system package manager.",
+                "Build a human reference index with bowtie2-build.",
+                "Configure conda environments in config/tool_envs.json when the commands are not on PATH.",
+                "PaleoRigor will not install external software automatically.",
+            ],
+        }
 
     def run(self, context: SkillContext, parameters: dict) -> SkillResult:
         bowtie2 = resolve_tool(("bowtie2",))

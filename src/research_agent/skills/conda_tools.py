@@ -48,6 +48,13 @@ def resolve_tool(
         for name in executable_candidates:
             env = mapping.get(name)
             if env:
+                env_path = Path(env).expanduser()
+                if not env_path.is_absolute():
+                    conda_root = Path(conda).resolve().parent.parent
+                    env_path = conda_root / "envs" / env
+                executable_path = env_path / "bin" / name
+                if not executable_path.is_file():
+                    continue
                 return ToolCommand(
                     tool=name,
                     command=[conda, "run", "-n", env, name],

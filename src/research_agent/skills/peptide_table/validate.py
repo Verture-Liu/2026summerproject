@@ -79,4 +79,12 @@ class PeptideValidateSkill:
                 "rejection_reasons": dict(sorted(reasons.items())),
             },
             [f"Rejected {len(rejected)} invalid row(s)."] if len(rejected) else [],
+            named_outputs={
+                "valid": str(valid_path),
+                "validated": str(valid_path),
+                "valid_csv": str(valid_path),
+                "validated_csv": str(valid_path),
+                "rejected": str(rejected_path),
+                "rejected_csv": str(rejected_path),
+            },
         )

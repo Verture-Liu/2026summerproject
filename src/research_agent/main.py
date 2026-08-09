@@ -79,6 +79,8 @@ def create_app(
                     "description": item.description,
                     "input_formats": item.input_formats,
                     "output_formats": item.output_formats,
+                    "min_inputs": item.min_inputs,
+                    "max_inputs": item.max_inputs,
                     "package_id": item.package_id,
                     "package_version": item.package_version,
                 }
@@ -126,7 +128,14 @@ def create_app(
             except Exception as exc:
                 raise HTTPException(502, detail={"error": "planning_failed", "message": str(exc)}) from exc
         uploaded_formats = {ref: item["summary"]["format"] for ref, item in index.items()}
-        report = validate_workflow(workflow, registry, uploaded_formats)
+        uploaded_paths = {ref: Path(item["path"]) for ref, item in index.items()}
+        report = validate_workflow(
+            workflow,
+            registry,
+            uploaded_formats,
+            uploaded_paths=uploaded_paths,
+            check_dependencies=True,
+        )
         (task_dir / "workflow.draft.json").write_text(workflow.model_dump_json(indent=2), encoding="utf-8")
         return {
             "workflow": workflow.model_dump(),
@@ -134,6 +143,7 @@ def create_app(
                 "valid": report.valid,
                 "errors": report.errors,
                 "warnings": report.warnings,
+                "issues": [issue.to_dict() for issue in report.issues],
             },
         }
 
@@ -168,11 +178,25 @@ def create_app(
             raise HTTPException(400, detail={"error": "output_directory_required"})
         index = _load_index(task_dir)
         uploaded_formats = {ref: item["summary"]["format"] for ref, item in index.items()}
-        report = validate_workflow(request.workflow, registry, uploaded_formats)
+        uploaded_paths = {ref: Path(item["path"]) for ref, item in index.items()}
+        report = validate_workflow(
+            request.workflow,
+            registry,
+            uploaded_formats,
+            uploaded_paths=uploaded_paths,
+            check_dependencies=True,
+        )
         if not report.valid:
-            raise HTTPException(400, detail={"error": "workflow_invalid", "details": report.errors})
+            raise HTTPException(
+                400,
+                detail={
+                    "error": "workflow_invalid",
+                    "details": report.errors,
+                    "issues": [issue.to_dict() for issue in report.issues],
+                },
+            )
         (task_dir / "workflow.json").write_text(request.workflow.model_dump_json(indent=2), encoding="utf-8")
-        uploaded_files = {ref: Path(item["path"]) for ref, item in index.items()}
+        uploaded_files = uploaded_paths
         summary = execute_workflow(request.workflow, task_dir, uploaded_files, registry, {"api_key": ""})
         export = export_task_results(
             outputs=[Path(path) for path in summary.outputs],

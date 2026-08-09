@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Protocol
 
@@ -24,6 +24,7 @@ class SkillResult:
     metrics: dict[str, Any]
     warnings: list[str]
     error: str | None = None
+    named_outputs: dict[str, str] = field(default_factory=dict)
 
 
 class Skill(Protocol):
@@ -33,6 +34,8 @@ class Skill(Protocol):
     output_formats: set[str]
     resource_class: str
     parameter_schema: dict[str, Any]
+    min_inputs: int
+    max_inputs: int | None
 
     def run(self, context: SkillContext, parameters: dict[str, Any]) -> SkillResult:
         ...

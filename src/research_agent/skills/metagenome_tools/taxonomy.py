@@ -6,6 +6,7 @@ DATABASE = {"type": "string", "minLength": 1}
 
 
 class MetaphlanProfileSkill(LocalCliSkill):
+    max_inputs = 2
     name = "metaphlan_profile"
     description = "Generate microbial taxonomic profiles from FASTQ reads with MetaPhlAn."
     executable_candidates = ("metaphlan",)
@@ -36,6 +37,7 @@ class MetaphlanProfileSkill(LocalCliSkill):
 
 
 class Kraken2ProfileSkill(LocalCliSkill):
+    max_inputs = 2
     name = "kraken2_profile"
     description = "Classify metagenomic FASTQ reads against a local Kraken2 database."
     executable_candidates = ("kraken2",)
@@ -75,6 +77,7 @@ class Kraken2ProfileSkill(LocalCliSkill):
 
 
 class MaltProfileSkill(LocalCliSkill):
+    max_inputs = None
     name = "malt_profile"
     description = "Align and taxonomically bin ancient metagenomic reads with MALT."
     executable_candidates = ("malt-run",)
@@ -106,4 +109,3 @@ class MaltProfileSkill(LocalCliSkill):
 
     def output_roots(self, context, parameters):
         return [context.work_dir / "malt_output.rma6"]
-
