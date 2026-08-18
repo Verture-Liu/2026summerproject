@@ -26,10 +26,12 @@ def wilson(successes: int, total: int, z: float = 1.959963984540054) -> tuple[fl
 def summarize_records(records: list[dict]) -> dict:
     by_pair: dict[tuple[str, int], dict[str, bool]] = defaultdict(dict)
     by_arm: dict[str, list[bool]] = defaultdict(list)
+    by_scenario_values: dict[str, dict[str, list[bool]]] = defaultdict(lambda: defaultdict(list))
     for record in records:
         success = bool(record["strict_success"])
         by_pair[(record["scenario_id"], int(record["repeat"]))][record["arm"]] = success
         by_arm[record["arm"]].append(success)
+        by_scenario_values[record["scenario_id"]][record["arm"]].append(success)
     complete_pairs = [pair for pair in by_pair.values() if set(pair) == {"raw_llm", "paleorigor"}]
     paleorigor_only = sum(pair["paleorigor"] and not pair["raw_llm"] for pair in complete_pairs)
     raw_only = sum(pair["raw_llm"] and not pair["paleorigor"] for pair in complete_pairs)
@@ -40,10 +42,21 @@ def summarize_records(records: list[dict]) -> dict:
         arms[arm] = {"successes": successes, "total": len(values), "rate": successes / len(values), "wilson_95": [low, high]}
     raw_rate = arms.get("raw_llm", {}).get("rate", math.nan)
     paleo_rate = arms.get("paleorigor", {}).get("rate", math.nan)
+    by_scenario = {}
+    for scenario_id, arm_values in sorted(by_scenario_values.items()):
+        by_scenario[scenario_id] = {}
+        for arm, values in arm_values.items():
+            successes = sum(values)
+            by_scenario[scenario_id][arm] = {
+                "successes": successes,
+                "total": len(values),
+                "rate": successes / len(values),
+            }
     return {
         "pairs": len(complete_pairs),
         "arms": arms,
         "paired_rate_difference": paleo_rate - raw_rate,
         "discordant": {"paleorigor_only": paleorigor_only, "raw_only": raw_only},
         "mcnemar_exact_two_sided_p": exact_mcnemar(paleorigor_only, raw_only),
+        "by_scenario": by_scenario,
     }

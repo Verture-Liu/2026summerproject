@@ -24,3 +24,5 @@ def test_summary_preserves_pairs_and_computes_exact_mcnemar():
     assert result["discordant"]["paleorigor_only"] == 1
     assert result["discordant"]["raw_only"] == 0
     assert result["mcnemar_exact_two_sided_p"] == exact_mcnemar(1, 0) == 1.0
+    assert result["by_scenario"]["A"]["paleorigor"]["rate"] == 1.0
+    assert result["by_scenario"]["A"]["raw_llm"]["rate"] == 0.0
