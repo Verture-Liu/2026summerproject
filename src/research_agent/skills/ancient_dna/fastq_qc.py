@@ -61,6 +61,16 @@ def _fastq_sequence_metrics(path: Path) -> dict:
     }
 
 
+def _fastq_stem(path: Path) -> str:
+    name = path.name
+    if name.lower().endswith(".gz"):
+        name = name[:-3]
+    for suffix in (".fastq", ".fq"):
+        if name.lower().endswith(suffix):
+            return name[: -len(suffix)]
+    return Path(name).stem
+
+
 class FastqQcSkill:
     name = "fastq_qc"
     description = "Raw QC stage: run FastQC on one or more FASTQ files before cleaning, host removal, or downstream analysis."
@@ -170,13 +180,51 @@ class FastqQcSkill:
                     "reports": [str(path) for path in reports],
                 },
             )
+            if len(context.inputs) == 1:
+                json_reports = [metadata]
+            else:
+                json_reports = []
+                for source, metrics in zip(context.inputs, input_metrics):
+                    json_reports.append(
+                        write_metadata(
+                            context.work_dir / f"{_fastq_stem(source)}_fastqc_metrics.json",
+                            {
+                                "tool": "FastQC",
+                                "input": str(source),
+                                "input_metrics": metrics,
+                            },
+                        )
+                    )
+            named_outputs = {}
+            for index, source in enumerate(context.inputs, 1):
+                stem = _fastq_stem(source)
+                html_report = next(
+                    (path for path in html_reports if path.name == f"{stem}_fastqc.html"),
+                    html_reports[index - 1],
+                )
+                zip_report = next(
+                    (path for path in zip_reports if path.name == f"{stem}_fastqc.zip"),
+                    zip_reports[index - 1],
+                )
+                json_report = json_reports[index - 1]
+                for output_format, path in [
+                    ("html", html_report),
+                    ("json", json_report),
+                    ("zip", zip_report),
+                ]:
+                    named_outputs[f"fastqc_r{index}_{output_format}"] = str(path)
+                    named_outputs[path.name] = str(path)
+                    if len(context.inputs) == 1:
+                        named_outputs[f"fastqc_{output_format}"] = str(path)
+                        named_outputs[f"qc_{output_format}"] = str(path)
             return SkillResult(
                 "succeeded",
                 [str(path) for path in html_reports]
-                + [str(metadata)]
+                + [str(path) for path in json_reports]
                 + [str(path) for path in zip_reports],
                 {"input_files": len(context.inputs), "report_files": len(reports)},
                 [],
+                named_outputs=named_outputs,
             )
         except subprocess.TimeoutExpired:
             return SkillResult("failed", [], {}, [], "FastQC timed out")

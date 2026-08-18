@@ -47,6 +47,40 @@ class AmbiguousCsvRegistry:
         return AmbiguousCsvSkill()
 
 
+def test_executor_maps_equal_count_same_format_outputs_in_declared_order(tmp_path):
+    uploaded = tmp_path / "table.csv"
+    uploaded.write_text("value\ninput\n", encoding="utf-8")
+    workflow = Workflow.model_validate(
+        {
+            "schema_version": "1.0",
+            "task_summary": "two named tables",
+            "steps": [
+                {
+                    "id": "step_01",
+                    "skill": "two_csv_outputs",
+                    "inputs": [{"source": "uploaded", "ref": "table"}],
+                    "parameters": {},
+                    "outputs": [
+                        {"name": "first_table", "format": "csv"},
+                        {"name": "second_table", "format": "csv"},
+                    ],
+                    "reason": "map complete ordered output set",
+                }
+            ],
+        }
+    )
+
+    summary = execute_workflow(
+        workflow,
+        tmp_path / "task",
+        {"table": uploaded},
+        AmbiguousCsvRegistry(),
+        {},
+    )
+
+    assert summary.status == "succeeded"
+
+
 def test_executor_maps_declared_outputs_by_format_when_skill_returns_extra_files(tmp_path):
     uploaded = tmp_path / "reads.fastq.gz"
     uploaded.write_text("@r1\nACGT\n+\n!!!!\n", encoding="utf-8")

@@ -228,6 +228,9 @@ def main() -> int:
     parser.add_argument("--force", action="store_true")
     parser.add_argument("--no-execute", action="store_true")
     parser.add_argument("--limit", type=int)
+    parser.add_argument("--runs-root")
+    parser.add_argument("--arm", choices=["raw_llm", "paleorigor"])
+    parser.add_argument("--scenario", action="append")
     args = parser.parse_args()
     config = load_config(PROJECT_ROOT / ".env")
     scenarios = load_scenarios(PROJECT_ROOT)
@@ -241,9 +244,21 @@ def main() -> int:
     by_id = {scenario.id: scenario for scenario in scenarios}
     schedule = build_call_schedule(scenarios)
     calls = [(pair, arm) for pair in schedule for arm in pair.arm_order]
+    if args.arm:
+        calls = [(pair, arm) for pair, arm in calls if arm == args.arm]
+    if args.scenario:
+        requested = set(args.scenario)
+        unknown = requested - set(by_id)
+        if unknown:
+            parser.error(f"Unknown scenario(s): {', '.join(sorted(unknown))}")
+        calls = [(pair, arm) for pair, arm in calls if pair.scenario_id in requested]
     if args.limit is not None:
         calls = calls[: args.limit]
-    runs_root = PROJECT_ROOT / "analysis" / "benchmark_v2" / "runs"
+    runs_root = (
+        (PROJECT_ROOT / args.runs_root).resolve()
+        if args.runs_root
+        else PROJECT_ROOT / "analysis" / "benchmark_v2" / "runs"
+    )
     with httpx.Client(verify=True) as http:
         client = DeepSeekClient(http, config.base_url, config.api_key, config.model, config.timeout_seconds, config.max_retries)
         for index, (pair, arm) in enumerate(calls, 1):

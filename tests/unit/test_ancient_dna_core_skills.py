@@ -136,6 +136,36 @@ def test_fastq_qc_rejects_late_malformed_record_before_running_tool(tmp_path, mo
     assert "malformed FASTQ" in result.error
 
 
+def test_fastq_qc_multi_input_returns_per_mate_json_and_named_outputs(tmp_path, monkeypatch):
+    sources = []
+    for mate in [1, 2]:
+        source = tmp_path / f"sample_{mate}.fastq"
+        source.write_text(f"@r{mate}\nACGT\n+\n!!!!\n", encoding="utf-8")
+        sources.append(source)
+
+    monkeypatch.setattr(
+        "research_agent.skills.ancient_dna.fastq_qc.resolve_tool",
+        lambda names: ToolCommand("fastqc", ["/usr/local/bin/fastqc"], "path"),
+    )
+
+    def fake_run_command(command, cwd, stdout_path, stderr_path, timeout):
+        output_dir = Path(command[command.index("--outdir") + 1])
+        output_dir.mkdir(parents=True, exist_ok=True)
+        for mate in [1, 2]:
+            (output_dir / f"sample_{mate}_fastqc.html").write_text("<html></html>", encoding="utf-8")
+            (output_dir / f"sample_{mate}_fastqc.zip").write_bytes(b"zip")
+        return subprocess.CompletedProcess(command, 0, "", "")
+
+    monkeypatch.setattr("research_agent.skills.ancient_dna.fastq_qc.run_command", fake_run_command)
+    result = FastqQcSkill().run(SkillContext(tmp_path / "work", sources), {})
+
+    assert result.status == "succeeded"
+    assert [Path(path).suffix for path in result.outputs] == [".html", ".html", ".json", ".json", ".zip", ".zip"]
+    assert Path(result.named_outputs["fastqc_r1_html"]).name == "sample_1_fastqc.html"
+    assert Path(result.named_outputs["fastqc_r2_json"]).name == "sample_2_fastqc_metrics.json"
+    assert Path(result.named_outputs["fastqc_r2_zip"]).name == "sample_2_fastqc.zip"
+
+
 def test_host_removal_reports_missing_alignment_stack(tmp_path, monkeypatch):
     monkeypatch.setattr(
         "research_agent.skills.ancient_dna.host_removal.resolve_tool",

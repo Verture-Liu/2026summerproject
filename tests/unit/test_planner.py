@@ -93,6 +93,7 @@ def test_system_prompt_includes_staged_workflow_templates():
     assert "Do not set fail_on_error true before deduplication" in prompt
     assert "FASTQ staged template" in prompt
     assert "file_type_detect -> fastq_pair_match -> fastq_qc" in prompt
+    assert "one separate fastq_qc step per mate" in prompt
     assert "cleaning/filtering/host-removal" in prompt
 
 

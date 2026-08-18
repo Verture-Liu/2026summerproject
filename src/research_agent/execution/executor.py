@@ -99,6 +99,63 @@ def _select_declared_output(
     return output_path
 
 
+def _resolve_declared_outputs(
+    result_outputs: list[str],
+    named_outputs: dict[str, str],
+    declared_outputs,
+) -> list[Path | None]:
+    result_paths = [Path(path) for path in result_outputs]
+    resolved: list[Path | None] = [None] * len(declared_outputs)
+    used: set[int] = set()
+
+    for declared_index, output in enumerate(declared_outputs):
+        explicitly_named = named_outputs.get(output.name)
+        if explicitly_named is None:
+            continue
+        explicit_path = Path(explicitly_named)
+        try:
+            result_index = result_paths.index(explicit_path)
+        except ValueError as exc:
+            raise RuntimeError(
+                f"named output {output.name} is not present in the skill result"
+            ) from exc
+        if result_index in used:
+            raise RuntimeError(f"named output {output.name} was already consumed")
+        if not _path_matches_format(explicit_path, output.format):
+            raise RuntimeError(
+                f"named output {output.name} does not match declared format {output.format}"
+            )
+        resolved[declared_index] = explicit_path
+        used.add(result_index)
+
+    formats = dict.fromkeys(output.format for output in declared_outputs)
+    for output_format in formats:
+        unresolved = [
+            index
+            for index, output in enumerate(declared_outputs)
+            if output.format == output_format and resolved[index] is None
+        ]
+        if not unresolved:
+            continue
+        candidates = [
+            (index, path)
+            for index, path in enumerate(result_paths)
+            if index not in used and _path_matches_format(path, output_format)
+        ]
+        if len(candidates) == len(unresolved):
+            for declared_index, (result_index, path) in zip(unresolved, candidates):
+                resolved[declared_index] = path
+                used.add(result_index)
+            continue
+        if len(candidates) > 1:
+            output_name = declared_outputs[unresolved[0]].name
+            raise RuntimeError(
+                f"ambiguous declared output {output_name} ({output_format}): "
+                "the skill produced multiple matching files without an explicit named output"
+            )
+    return resolved
+
+
 def _write_report(task_dir: Path, workflow, steps: list[dict], outputs: list[str]) -> None:
     rows = "".join(
         f"<tr><td>{html.escape(step['id'])}</td><td>{html.escape(step['skill'])}</td>"
@@ -135,15 +192,12 @@ def execute_workflow(workflow, task_dir: Path, uploaded_files: dict[str, Path], 
         started = datetime.now(UTC)
         try:
             result = registry.get(step.skill).run(SkillContext(work_dir, resolved_inputs), step.parameters)
-            used_result_outputs: set[int] = set()
-            for output in step.outputs:
-                output_path = _select_declared_output(
-                    result.outputs,
-                    result.named_outputs,
-                    output.name,
-                    output.format,
-                    used_result_outputs,
-                )
+            resolved_declared_outputs = _resolve_declared_outputs(
+                result.outputs,
+                result.named_outputs,
+                step.outputs,
+            )
+            for output, output_path in zip(step.outputs, resolved_declared_outputs):
                 if output_path is None and result.status == "succeeded":
                     raise RuntimeError(
                         f"{step.skill} did not produce declared output "
