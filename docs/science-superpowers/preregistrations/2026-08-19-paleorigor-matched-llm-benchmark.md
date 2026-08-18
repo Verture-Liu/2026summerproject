@@ -8,7 +8,7 @@ Does the PaleoRigor control layer improve the reliability of workflow planning f
 
 The frozen benchmark contains six scenarios: two supported tasks and four boundary tasks. Each scenario is repeated three times in each of two matched arms (`raw_llm` and `paleorigor`), giving 18 matched pairs and 36 formal model calls. Nine pairs run `raw_llm` first and nine run `paleorigor` first according to the frozen manifest. All calls will be attempted; collection will not stop based on significance or apparent performance.
 
-Both arms use `deepseek-v4-flash`, the same file summaries, workflow JSON schema, registered skill catalogue, `thinking=enabled`, timeout, retry policy and model endpoint. The only intended difference is the PaleoRigor prompt and deterministic control layer. Temperature is submitted as zero but is not treated as a source of determinism if the provider ignores it in thinking mode.
+Both arms use `deepseek-v4-flash`, the same file summaries, workflow JSON schema, machine-readable blocked-decision schema, registered skill catalogue, `thinking=enabled`, timeout, retry policy and model endpoint. A blocked decision has exactly `status`, `reason_code` and `message`; it exists because the workflow schema requires at least one step and therefore cannot itself encode a correct stop. The only intended difference is the PaleoRigor prompt and deterministic control layer. Temperature is submitted as zero but is not treated as a source of determinism if the provider ignores it in thinking mode.
 
 ## Primary outcome
 

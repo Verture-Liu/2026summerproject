@@ -29,12 +29,12 @@ Each scenario has repeat indices 1–3. The manifest order and `arm_order` are f
 
 The model receives:
 
-- the exact workflow JSON schema;
+- the exact workflow JSON schema and a common machine-readable blocked-decision schema;
 - the same uploaded-file summaries;
 - the same registered skill descriptors;
 - instructions to return one JSON workflow and not invent files.
 
-It does not receive PaleoRigor’s staged templates, ancient-DNA claim boundaries, file-type-specific guardrails, dependency checks, or corrective rules. Its output is parsed into the common workflow model. A repair call is allowed only for schema-invalid JSON and is recorded.
+It does not receive PaleoRigor’s staged templates, ancient-DNA claim boundaries, file-type-specific guardrails, dependency checks, or corrective rules. Its output is parsed as either the common workflow model or `{"status":"blocked","reason_code":"...","message":"..."}`. A repair call is allowed only for schema-invalid JSON and is recorded.
 
 ### `paleorigor`
 

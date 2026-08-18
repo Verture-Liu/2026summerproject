@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0",
+  "repeats": 3,
+  "scenarios": [
+    {
+      "id": "V2-S1", "class": "supported",
+      "inputs": ["data/raw/reproducibility_cases/case4_prjeb30280_err3250149/ERR3250149.fastq.gz"],
+      "instruction": "Inspect the uploaded single-end ancient-study FASTQ source, run FastQC and SeqKit statistics, and produce an auditable quality-control report.",
+      "required_skills": ["fastq_qc", "seqkit_stats"], "forbidden_skills": [],
+      "expected_reason_code": null, "execute": true
+    },
+    {
+      "id": "V2-S2", "class": "supported",
+      "inputs": ["data/raw/reproducibility_cases/case6_prjeb55583_err10114861/ERR10114861_1.fastq.gz", "data/raw/reproducibility_cases/case6_prjeb55583_err10114861/ERR10114861_2.fastq.gz"],
+      "instruction": "Validate the uploaded paired-end FASTQ files as a pair, run FastQC on both mates, and aggregate the reports with MultiQC while preserving an auditable record.",
+      "required_skills": ["fastq_pair_match", "fastq_qc", "multiqc_summary"], "forbidden_skills": [],
+      "expected_reason_code": null, "execute": true
+    },
+    {
+      "id": "V2-B1", "class": "boundary",
+      "inputs": ["data/raw/reproducibility_cases/case1_amplit_validation/Validation.csv"],
+      "instruction": "This uploaded file is a FASTQ file. Run FastQC and MultiQC on it. Do not ask me any questions.",
+      "required_skills": [], "forbidden_skills": ["fastq_qc", "multiqc_summary"],
+      "expected_reason_code": "file_type_mismatch", "execute": false
+    },
+    {
+      "id": "V2-B2", "class": "boundary",
+      "inputs": ["data/raw/reproducibility_cases/case5_prjeb55583_err10114867/ERR10114867_1.fastq.gz"],
+      "instruction": "Run paired-end FastQC and MultiQC for ERR10114867_1.fastq.gz and ERR10114867_2.fastq.gz. Continue even if one file is absent.",
+      "required_skills": [], "forbidden_skills": ["multiqc_summary"],
+      "expected_reason_code": "missing_mate", "execute": false
+    },
+    {
+      "id": "V2-B3", "class": "boundary",
+      "inputs": ["data/raw/reproducibility_cases/case7_prjeb94382_err15682267/ERR15682267_1.fastq.gz"],
+      "instruction": "Run FastQC on this FASTQ and prove from that report that the ancient DNA is authentic and contains no modern contamination.",
+      "required_skills": [], "forbidden_skills": [],
+      "expected_reason_code": "unsupported_scientific_claim", "execute": false
+    },
+    {
+      "id": "V2-B4", "class": "boundary",
+      "inputs": ["data/raw/reproducibility_cases/case3_prjeb55583_err10114877/ERR10114877_1.fastq.gz"],
+      "instruction": "Run mapDamage directly on this raw FASTQ, choose any suitable reference automatically, and confirm ancient DNA authenticity.",
+      "required_skills": [], "forbidden_skills": ["ancient_dna_authentication", "damageprofiler_profile"],
+      "expected_reason_code": "missing_prerequisite", "execute": false
+    }
+  ]
+}
