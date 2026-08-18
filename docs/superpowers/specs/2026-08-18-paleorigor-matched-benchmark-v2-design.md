@@ -81,7 +81,7 @@ The local `.env` uses the application’s existing names:
 ```text
 AGENT_API_BASE_URL=https://api.deepseek.com
 AGENT_API_KEY=replace-with-your-local-key
-AGENT_MODEL=deepseek-chat
+AGENT_MODEL=deepseek-v4-flash
 AGENT_TIMEOUT_SECONDS=120
 AGENT_MAX_RETRIES=2
 ```
