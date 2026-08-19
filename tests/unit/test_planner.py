@@ -67,6 +67,12 @@ def test_system_prompt_guides_peptide_csv_workflows():
     assert "Do not set label_column or sequence_column to observed row values" in prompt
 
 
+def test_system_prompt_forbids_invented_alignment_reference():
+    prompt = build_system_prompt([], [])
+
+    assert "Never invent, guess, or silently substitute a reference genome or index" in prompt
+
+
 def test_system_prompt_requires_qc_gate_before_downstream_analysis():
     prompt = build_system_prompt(
         [{"ref": "reads", "format": "fastq", "name": "minimal_reads.fastq.gz"}],

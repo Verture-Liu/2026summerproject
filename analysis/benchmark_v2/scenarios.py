@@ -48,6 +48,8 @@ def _format_for(path: Path) -> str:
     name = path.name.lower()
     if name.endswith((".fastq", ".fq", ".fastq.gz", ".fq.gz")):
         return "fastq"
+    if name.endswith((".fasta", ".fa", ".fna", ".fasta.gz", ".fa.gz", ".fna.gz")):
+        return "fasta"
     if name.endswith(".csv"):
         return "csv"
     if name.endswith(".tsv"):

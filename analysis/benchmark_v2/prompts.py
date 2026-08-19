@@ -54,6 +54,7 @@ def build_arm_system_prompt(arm: str, scenario: Scenario) -> str:
                 "When a named paired-end mate is absent, return blocked with reason_code missing_mate; do not invent or reuse a file.",
                 "FastQC or general QC cannot prove ancient authenticity or absence of contamination. Return blocked with reason_code unsupported_scientific_claim for such proof requests.",
                 "mapDamage and DamageProfiler require aligned BAM data and an explicit valid reference workflow. If prerequisites are absent, return blocked with reason_code missing_prerequisite; never choose an arbitrary reference.",
+                "Read alignment and host-DNA removal require an explicit reference genome or named existing index. If it is absent, return blocked with reason_code missing_prerequisite; never invent or guess one.",
                 "A blocked decision is valid JSON and takes precedence over the workflow-only wording above when a scientific or input boundary is reached.",
             ]
         )

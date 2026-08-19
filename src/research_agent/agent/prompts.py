@@ -44,6 +44,7 @@ def build_system_prompt(file_summaries, skill_descriptors) -> str:
             "For headerless peptide CSV files, let peptide_csv_normalize auto-detect columns or use numeric zero-based indices only. Do not set label_column or sequence_column to observed row values such as 1, 0, or an actual peptide sequence.",
             "FASTQ staged template: file_type_detect -> fastq_pair_match -> fastq_qc -> multiqc_summary -> requested cleaning/filtering/host-removal -> data_quality_gate -> requested downstream application.",
             "For paired-end reads, use one separate fastq_qc step per mate, then pass both FastQC ZIP outputs to multiqc_summary. Do not combine both mates into one fastq_qc step.",
+            "Read alignment and host-DNA removal require an explicit reference genome or a named existing index. Never invent, guess, or silently substitute a reference genome or index.",
             "For uploaded raw peptide CSV or TSV files, normalize before peptide operations.",
             "Validate canonical peptide tables before filtering, statistics, charts, or export.",
             "peptide_validate has two canonical CSV outputs: validated_csv (valid rows) and rejected_csv (rejected rows). Use validated_csv for downstream steps and declare rejected_csv when an audit table is needed.",

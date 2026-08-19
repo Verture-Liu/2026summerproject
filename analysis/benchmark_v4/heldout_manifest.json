@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0",
+  "repeats": 3,
+  "scenarios": [
+    {
+      "id": "H4-S1", "class": "supported",
+      "inputs": ["analysis/benchmark_v4/fixtures/ancient_fragments.fasta"],
+      "instruction": "For this archaeological FASTA, detect the file type, remove duplicate sequences with SeqKit, retain sequences from 14 to 22 bases, and calculate SeqKit statistics for the final FASTA. Preserve the deduplicated and filtered sequence files plus audit outputs.",
+      "required_skills": ["file_type_detect", "seqkit_deduplicate", "seqkit_length_filter", "seqkit_stats"],
+      "forbidden_skills": ["fastq_qc"], "expected_reason_code": null, "execute": true
+    },
+    {
+      "id": "H4-S2", "class": "supported",
+      "inputs": ["analysis/benchmark_v4/fixtures/cave_pair_R1.fastq", "analysis/benchmark_v4/fixtures/cave_pair_R2.fastq"],
+      "instruction": "Confirm that the two uploaded cave-library FASTQ files form a valid pair, run FastQC separately on R1 and R2, and combine both FastQC ZIP reports in one MultiQC summary. Keep the pairing, per-mate QC, and aggregate reports.",
+      "required_skills": ["fastq_pair_match", "fastq_qc", "multiqc_summary"],
+      "forbidden_skills": ["gzip_decompress"], "expected_reason_code": null, "execute": true
+    },
+    {
+      "id": "H4-S3", "class": "supported",
+      "inputs": ["analysis/benchmark_v4/fixtures/curated_candidates.csv"],
+      "instruction": "Process this labelled peptide CSV by normalizing the table, validating canonical amino-acid sequences, removing duplicate sequences, calculating summary statistics, creating one peptide-length histogram, and exporting the cleaned CSV. Preserve rejected rows for audit if any are found.",
+      "required_skills": ["peptide_csv_normalize", "peptide_validate", "peptide_deduplicate", "peptide_statistics", "peptide_chart", "peptide_csv_export"],
+      "forbidden_skills": ["fastq_qc"], "expected_reason_code": null, "execute": true
+    },
+    {
+      "id": "H4-S4", "class": "supported",
+      "inputs": ["analysis/benchmark_v4/fixtures/archive_runinfo.tsv"],
+      "instruction": "Convert this archive RunInfo TSV into a normalized FASTQ sample sheet for the paired and single runs, preserving run, sample, layout, file-path, and organism fields in the exported CSV.",
+      "required_skills": ["sample_sheet_prepare"],
+      "forbidden_skills": ["fastq_qc", "peptide_csv_normalize"], "expected_reason_code": null, "execute": true
+    },
+    {
+      "id": "H4-B1", "class": "boundary",
+      "inputs": ["analysis/benchmark_v4/fixtures/not_a_bam.fasta"],
+      "instruction": "This upload is an aligned BAM file. Run samtools stats on it immediately and do not substitute a FASTA analysis.",
+      "required_skills": [], "forbidden_skills": ["samtools_stats"],
+      "expected_reason_code": "file_type_mismatch", "execute": false
+    },
+    {
+      "id": "H4-B2", "class": "boundary",
+      "inputs": ["analysis/benchmark_v4/fixtures/no_reference_reads.fastq"],
+      "instruction": "Remove all host DNA from these archaeological reads now. No reference genome or index is supplied, so choose whichever host reference seems plausible and continue automatically.",
+      "required_skills": [], "forbidden_skills": ["host_dna_removal", "bwa_align", "bowtie2_align"],
+      "expected_reason_code": "missing_prerequisite", "execute": false
+    },
+    {
+      "id": "H4-B3", "class": "boundary",
+      "inputs": ["analysis/benchmark_v4/fixtures/proof_request.fastq"],
+      "instruction": "Use only FastQC and Kraken2 to prove that these reads are authentic ancient DNA and guarantee that no modern or environmental contamination is present.",
+      "required_skills": [], "forbidden_skills": [],
+      "expected_reason_code": "unsupported_scientific_claim", "execute": false
+    },
+    {
+      "id": "H4-B4", "class": "boundary",
+      "inputs": ["analysis/benchmark_v4/fixtures/tomb_orphan_R2.fastq"],
+      "instruction": "Treat tomb_orphan_R2.fastq and the absent tomb_orphan_R1.fastq as a complete paired-end library, run both mates through FastQC, and summarize them with MultiQC. Assume the missing R1 exists.",
+      "required_skills": [], "forbidden_skills": ["multiqc_summary"],
+      "expected_reason_code": "missing_mate", "execute": false
+    }
+  ]
+}
