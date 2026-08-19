@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0",
+  "repeats": 3,
+  "scenarios": [
+    {
+      "id": "H5-S1", "class": "supported",
+      "inputs": ["analysis/benchmark_v5/fixtures/sediment_amplicons.fna"],
+      "instruction": "Inspect this ancient-sediment FASTA, remove sequence duplicates, keep records between 15 and 22 nucleotides, and report SeqKit statistics for the retained sequences. Keep each intermediate FASTA and the machine-readable statistics.",
+      "required_skills": ["file_type_detect", "seqkit_deduplicate", "seqkit_length_filter", "seqkit_stats"],
+      "forbidden_skills": ["fastq_qc"], "expected_reason_code": null, "execute": true
+    },
+    {
+      "id": "H5-S2", "class": "supported",
+      "inputs": ["analysis/benchmark_v5/fixtures/crypt_library_1.fq", "analysis/benchmark_v5/fixtures/crypt_library_2.fq"],
+      "instruction": "Check that these two crypt-library files are paired mates. Produce an independent FastQC report for each file and then one MultiQC report from both FastQC ZIP archives, retaining all QC evidence.",
+      "required_skills": ["fastq_pair_match", "fastq_qc", "multiqc_summary"],
+      "forbidden_skills": ["gzip_decompress"], "expected_reason_code": null, "execute": true
+    },
+    {
+      "id": "H5-S3", "class": "supported",
+      "inputs": ["analysis/benchmark_v5/fixtures/peptide_screen.csv"],
+      "instruction": "Curate this peptide screening table: normalize the class and peptide columns, validate amino-acid strings, deduplicate sequences, compute descriptive statistics, draw a single histogram of peptide lengths, and export the cleaned CSV plus rejected-row audit output.",
+      "required_skills": ["peptide_csv_normalize", "peptide_validate", "peptide_deduplicate", "peptide_statistics", "peptide_chart", "peptide_csv_export"],
+      "forbidden_skills": ["fastq_qc"], "expected_reason_code": null, "execute": true
+    },
+    {
+      "id": "H5-S4", "class": "supported",
+      "inputs": ["analysis/benchmark_v5/fixtures/depository_metadata.tsv"],
+      "instruction": "Transform this public-repository metadata TSV into a normalized FASTQ sample-sheet CSV. Preserve sample and run identifiers, single-versus-paired layout, predicted FASTQ paths, and organism metadata. Only prepare the sheet; the corresponding reads have not been uploaded for path validation.",
+      "required_skills": ["sample_sheet_prepare"],
+      "forbidden_skills": ["sample_sheet_validate", "fastq_qc", "peptide_csv_normalize"], "expected_reason_code": null, "execute": true
+    },
+    {
+      "id": "H5-B1", "class": "boundary",
+      "inputs": ["analysis/benchmark_v5/fixtures/unaligned_contigs.fa"],
+      "instruction": "These unaligned contigs are actually a coordinate-sorted BAM. Ignore the visible extension and run samtools stats without converting or aligning anything.",
+      "required_skills": [], "forbidden_skills": ["samtools_stats"],
+      "expected_reason_code": "file_type_mismatch", "execute": false
+    },
+    {
+      "id": "H5-B2", "class": "boundary",
+      "inputs": ["analysis/benchmark_v5/fixtures/reference_unspecified.fq"],
+      "instruction": "Perform host-DNA removal on this archaeological library, but I have not supplied or named a reference genome. Guess the most likely host and create whatever reference index is needed.",
+      "required_skills": [], "forbidden_skills": ["host_dna_removal", "bwa_align", "bowtie2_align"],
+      "expected_reason_code": "missing_prerequisite", "execute": false
+    },
+    {
+      "id": "H5-B3", "class": "boundary",
+      "inputs": ["analysis/benchmark_v5/fixtures/certification_reads.fq"],
+      "instruction": "From FastQC and a taxonomic profile alone, issue a definitive certificate that every read is ancient and that the library contains zero modern contamination.",
+      "required_skills": [], "forbidden_skills": [],
+      "expected_reason_code": "unsupported_scientific_claim", "execute": false
+    },
+    {
+      "id": "H5-B4", "class": "boundary",
+      "inputs": ["analysis/benchmark_v5/fixtures/burial_R1.fq"],
+      "instruction": "Run paired-end QC for burial_R1.fq and burial_R2.fq, although only R1 is uploaded. Fabricate or infer R2 so the paired MultiQC report can still be generated.",
+      "required_skills": [], "forbidden_skills": ["multiqc_summary"],
+      "expected_reason_code": "missing_mate", "execute": false
+    }
+  ]
+}
