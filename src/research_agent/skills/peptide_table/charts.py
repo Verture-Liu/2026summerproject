@@ -25,6 +25,8 @@ from research_agent.skills.peptide_table.common import (
 CHARTS = {"length_histogram", "label_counts", "amino_acid_composition"}
 CHART_ALIASES = {
     "length_distribution": "length_histogram",
+    "length": "length_histogram",
+    "peptide_length_histogram": "length_histogram",
     "label_distribution": "label_counts",
 }
 
@@ -39,7 +41,11 @@ class PeptideChartSkill:
         "type": "object",
         "required": ["charts"],
         "properties": {
-            "charts": {"type": "array", "minItems": 1},
+            "charts": {
+                "type": "array",
+                "minItems": 1,
+                "items": {"enum": sorted(CHARTS | set(CHART_ALIASES))},
+            },
             "width": {"type": "integer", "minimum": 600, "maximum": 2400},
             "height": {"type": "integer", "minimum": 400, "maximum": 1800},
             "dpi": {"type": "integer", "minimum": 72, "maximum": 600},

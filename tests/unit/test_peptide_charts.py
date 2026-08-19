@@ -45,6 +45,19 @@ def test_accepts_length_distribution_alias_for_length_histogram(tmp_path):
     ]
 
 
+@pytest.mark.parametrize("alias", ["length", "peptide_length_histogram"])
+def test_accepts_common_plain_language_length_aliases(tmp_path, alias):
+    source = write_table(
+        tmp_path,
+        [{"label": 1, "sequence": "ACDE"}, {"label": 0, "sequence": "AAAAAA"}],
+    )
+    result = PeptideChartSkill().run(
+        SkillContext(tmp_path / "work", [source]),
+        {"charts": [alias]},
+    )
+    assert Path(result.outputs[0]).name == "length_histogram.png"
+
+
 def test_chart_rejects_empty_input(tmp_path):
     source = write_table(tmp_path, [])
     with pytest.raises(ValueError, match="empty"):

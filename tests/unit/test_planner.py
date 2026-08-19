@@ -73,6 +73,16 @@ def test_system_prompt_forbids_invented_alignment_reference():
     assert "Never invent, guess, or silently substitute a reference genome or index" in prompt
 
 
+def test_system_prompt_does_not_validate_unavailable_sample_sheet_files():
+    prompt = build_system_prompt(
+        [{"ref": "runinfo.tsv", "format": "tsv", "name": "runinfo.tsv"}],
+        build_default_registry().catalog(),
+    )
+
+    assert "Do not add sample_sheet_validate" in prompt
+    assert "length_histogram, label_counts, or amino_acid_composition" in prompt
+
+
 def test_system_prompt_requires_qc_gate_before_downstream_analysis():
     prompt = build_system_prompt(
         [{"ref": "reads", "format": "fastq", "name": "minimal_reads.fastq.gz"}],
