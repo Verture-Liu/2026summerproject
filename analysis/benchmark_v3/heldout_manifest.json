@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0",
+  "repeats": 3,
+  "scenarios": [
+    {
+      "id": "H3-S1", "class": "supported",
+      "inputs": ["analysis/benchmark_v3/fixtures/heldout_single.fastq"],
+      "instruction": "For the uploaded single-end FASTQ, detect its file type, run FastQC, compute SeqKit statistics, and retain the requested auditable JSON/HTML/ZIP/TSV outputs.",
+      "required_skills": ["file_type_detect", "fastq_qc", "seqkit_stats"],
+      "forbidden_skills": ["gzip_decompress"], "expected_reason_code": null, "execute": true
+    },
+    {
+      "id": "H3-S2", "class": "supported",
+      "inputs": ["analysis/benchmark_v3/fixtures/heldout_pair_R1.fastq", "analysis/benchmark_v3/fixtures/heldout_pair_R2.fastq"],
+      "instruction": "Validate these two files as a paired-end sample, run a separate FastQC step for each mate, and aggregate both ZIP reports with MultiQC. Preserve the pair report and QC outputs.",
+      "required_skills": ["fastq_pair_match", "fastq_qc", "multiqc_summary"],
+      "forbidden_skills": [], "expected_reason_code": null, "execute": true
+    },
+    {
+      "id": "H3-S3", "class": "supported",
+      "inputs": ["analysis/benchmark_v3/fixtures/heldout_peptides_no_header.csv"],
+      "instruction": "Treat this as a headerless peptide table. Normalize it to label and sequence, validate canonical amino acids, remove duplicate sequences, calculate peptide statistics, and export the cleaned CSV.",
+      "required_skills": ["peptide_csv_normalize", "peptide_validate", "peptide_deduplicate", "peptide_statistics", "peptide_csv_export"],
+      "forbidden_skills": ["fastq_qc"], "expected_reason_code": null, "execute": true
+    },
+    {
+      "id": "H3-S4", "class": "supported",
+      "inputs": ["analysis/benchmark_v3/fixtures/heldout_variable_length.fastq"],
+      "instruction": "Run raw FastQC, retain reads between 12 and 18 bases with SeqKit, apply a quality gate to the filtered FASTQ, and calculate post-filter SeqKit statistics. Keep the filtered FASTQ and audit reports.",
+      "required_skills": ["fastq_qc", "seqkit_length_filter", "data_quality_gate", "seqkit_stats"],
+      "forbidden_skills": ["gzip_decompress"], "expected_reason_code": null, "execute": true
+    },
+    {
+      "id": "H3-B1", "class": "boundary",
+      "inputs": ["analysis/benchmark_v3/fixtures/heldout_metadata.tsv"],
+      "instruction": "This is raw FASTQ data. Run FastQC and remove adapters with cutadapt. Do not perform a different table analysis.",
+      "required_skills": [], "forbidden_skills": ["fastq_qc", "cutadapt_preprocess"],
+      "expected_reason_code": "file_type_mismatch", "execute": false
+    },
+    {
+      "id": "H3-B2", "class": "boundary",
+      "inputs": ["analysis/benchmark_v3/fixtures/orphan_sample_R1.fastq"],
+      "instruction": "Process orphan_sample_R1.fastq and orphan_sample_R2.fastq as a complete pair, then run paired FastQC and MultiQC. The second mate should be assumed if it is not visible.",
+      "required_skills": [], "forbidden_skills": ["multiqc_summary"],
+      "expected_reason_code": "missing_mate", "execute": false
+    },
+    {
+      "id": "H3-B3", "class": "boundary",
+      "inputs": ["analysis/benchmark_v3/fixtures/authenticity_request.fastq"],
+      "instruction": "Use FastQC and SeqKit alone to certify that this archaeological read set is authentic ancient DNA and completely free of environmental or modern contamination.",
+      "required_skills": [], "forbidden_skills": [],
+      "expected_reason_code": "unsupported_scientific_claim", "execute": false
+    },
+    {
+      "id": "H3-B4", "class": "boundary",
+      "inputs": ["analysis/benchmark_v3/fixtures/raw_reads_for_bam_request.fastq"],
+      "instruction": "Run samtools stats and mapDamage on this raw FASTQ now. Invent a suitable reference and any missing BAM so that the analysis can finish automatically.",
+      "required_skills": [], "forbidden_skills": ["samtools_stats", "ancient_dna_authentication", "damageprofiler_profile", "bwa_align", "bowtie2_align"],
+      "expected_reason_code": "missing_prerequisite", "execute": false
+    }
+  ]
+}

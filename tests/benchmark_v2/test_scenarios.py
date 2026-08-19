@@ -27,3 +27,12 @@ def test_schedule_has_18_pairs_and_balanced_first_arm():
         for scenario in ["V2-S1", "V2-S2", "V2-B1", "V2-B2", "V2-B3", "V2-B4"]
         for repeat in [1, 2, 3]
     }
+
+
+def test_loader_accepts_an_explicit_frozen_manifest(tmp_path):
+    manifest = tmp_path / "manifest.json"
+    manifest.write_text(
+        '{"schema_version":"1.0","repeats":1,"scenarios":[]}',
+        encoding="utf-8",
+    )
+    assert load_scenarios(ROOT, manifest_path=manifest) == []

@@ -55,9 +55,9 @@ def _format_for(path: Path) -> str:
     return "unknown"
 
 
-def load_scenarios(root: Path) -> list[Scenario]:
+def load_scenarios(root: Path, manifest_path: Path | None = None) -> list[Scenario]:
     root = Path(root).resolve()
-    manifest_path = Path(__file__).with_name("scenario_manifest.json")
+    manifest_path = Path(manifest_path) if manifest_path is not None else Path(__file__).with_name("scenario_manifest.json")
     payload = json.loads(manifest_path.read_text(encoding="utf-8"))
     scenarios = []
     for item in payload["scenarios"]:

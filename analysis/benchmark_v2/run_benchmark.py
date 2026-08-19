@@ -231,9 +231,11 @@ def main() -> int:
     parser.add_argument("--runs-root")
     parser.add_argument("--arm", choices=["raw_llm", "paleorigor"])
     parser.add_argument("--scenario", action="append")
+    parser.add_argument("--manifest")
     args = parser.parse_args()
     config = load_config(PROJECT_ROOT / ".env")
-    scenarios = load_scenarios(PROJECT_ROOT)
+    manifest_path = (PROJECT_ROOT / args.manifest).resolve() if args.manifest else None
+    scenarios = load_scenarios(PROJECT_ROOT, manifest_path=manifest_path)
     if args.check:
         print(json.dumps(local_check(PROJECT_ROOT, config, scenarios), ensure_ascii=False, indent=2))
         return 0
