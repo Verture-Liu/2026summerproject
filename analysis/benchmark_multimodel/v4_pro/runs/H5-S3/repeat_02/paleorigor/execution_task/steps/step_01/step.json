@@ -1,0 +1,32 @@
+{
+  "id": "step_01",
+  "skill": "peptide_csv_normalize",
+  "status": "succeeded",
+  "parameters": {
+    "delimiter": "auto",
+    "label_column": "class",
+    "sequence_column": "peptide",
+    "drop_empty_rows": true
+  },
+  "metrics": {
+    "input_rows": 6,
+    "normalized_rows": 6,
+    "empty_rows_removed": 0,
+    "header_detected": true,
+    "label_column": "class",
+    "sequence_column": "peptide"
+  },
+  "warnings": [],
+  "error": null,
+  "started_at": "2026-08-19T07:05:47.357810+00:00",
+  "ended_at": "2026-08-19T07:05:47.364610+00:00",
+  "inputs": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v5/fixtures/peptide_screen.csv"
+  ],
+  "outputs": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_multimodel/v4_pro/runs/H5-S3/repeat_02/paleorigor/execution_task/steps/step_01/normalized_peptides.csv",
+      "sha256": "4a5fd698de9e9127a93ac8a25e3a2ff7b6d2e036b8b2fcfb8379419ac2f9e8e1"
+    }
+  ]
+}

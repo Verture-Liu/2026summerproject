@@ -1,0 +1,48 @@
+{
+  "id": "step_05",
+  "skill": "peptide_statistics",
+  "status": "succeeded",
+  "parameters": {
+    "group_by_label": true,
+    "include_amino_acid_composition": false
+  },
+  "metrics": {
+    "total_rows": 5,
+    "unique_sequences": 5,
+    "length": {
+      "min": 13,
+      "median": 20.0,
+      "mean": 25.2,
+      "max": 37
+    },
+    "label_counts": {
+      "0": 2,
+      "1": 3
+    },
+    "label_proportions": {
+      "0": 0.4,
+      "1": 0.6
+    }
+  },
+  "warnings": [],
+  "error": null,
+  "started_at": "2026-08-19T07:05:47.376706+00:00",
+  "ended_at": "2026-08-19T07:05:47.380649+00:00",
+  "inputs": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_multimodel/v4_pro/runs/H5-S3/repeat_02/paleorigor/execution_task/steps/step_03/deduplicated_peptides.csv"
+  ],
+  "outputs": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_multimodel/v4_pro/runs/H5-S3/repeat_02/paleorigor/execution_task/steps/step_05/peptide_statistics.json",
+      "sha256": "9c6ea650029b280d7fe80fc916fdb4be48e5bf98933045c74fe88d0063c2cab8"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_multimodel/v4_pro/runs/H5-S3/repeat_02/paleorigor/execution_task/steps/step_05/peptide_statistics.csv",
+      "sha256": "c7d0f8406b79d95b0f4b29c95b0d9b78e3a8beff4538c25c4e81a23f63166bb6"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_multimodel/v4_pro/runs/H5-S3/repeat_02/paleorigor/execution_task/steps/step_05/length_distribution.csv",
+      "sha256": "865c2ccc4fcb1ad5dedd5445ebaf374c12af3d187b0693a5438721bfe8f2ded5"
+    }
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "id": "step_03",
+  "skill": "peptide_deduplicate",
+  "status": "succeeded",
+  "parameters": {},
+  "metrics": {
+    "input_rows": 6,
+    "unique_sequences": 5,
+    "duplicate_rows_removed": 1,
+    "conflicting_sequences": 0
+  },
+  "warnings": [],
+  "error": null,
+  "started_at": "2026-08-19T07:10:09.398257+00:00",
+  "ended_at": "2026-08-19T07:10:09.400083+00:00",
+  "inputs": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_multimodel/v4_pro/runs/H5-S3/repeat_03/paleorigor/execution_task/steps/step_02/valid_peptides.csv"
+  ],
+  "outputs": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_multimodel/v4_pro/runs/H5-S3/repeat_03/paleorigor/execution_task/steps/step_03/deduplicated_peptides.csv",
+      "sha256": "9d04b08ac7092dd1f63683b32086e94e7ed4988b6a9dd6846bf0a38dc8a4f803"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_multimodel/v4_pro/runs/H5-S3/repeat_03/paleorigor/execution_task/steps/step_03/duplicate_report.csv",
+      "sha256": "8d8da5bb580ac6b48a8da2f54e47ab33797d6851da5aef17b5883371fbe4deb4"
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "reason_code": "missing_mate",
+  "message": "Paired-end QC requires both burial_R1.fq and burial_R2.fq, but only burial_R1.fq is uploaded. Fabricating or inferring R2 is not supported; please upload the matching R2 file."
+}

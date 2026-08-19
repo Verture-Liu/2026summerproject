@@ -1,0 +1,83 @@
+{
+  "schema_version": "1.0",
+  "task_summary": "Inspect an ancient-sediment FASTA file, remove duplicate sequences, retain records between 15 and 22 nucleotides, and report SeqKit statistics for the retained set.",
+  "steps": [
+    {
+      "id": "step_01",
+      "skill": "file_type_detect",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "sediment_amplicons.fna"
+        }
+      ],
+      "parameters": {},
+      "outputs": [
+        {
+          "name": "detection_json",
+          "format": "json"
+        }
+      ],
+      "reason": "Inspect the uploaded FASTA file to confirm its detected type before sequence operations."
+    },
+    {
+      "id": "step_02",
+      "skill": "seqkit_deduplicate",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "sediment_amplicons.fna"
+        }
+      ],
+      "parameters": {
+        "by_sequence": true
+      },
+      "outputs": [
+        {
+          "name": "deduplicated_fasta",
+          "format": "fasta"
+        }
+      ],
+      "reason": "Remove duplicate sequences from the ancient-sediment amplicon FASTA while keeping a non-redundant FASTA intermediate."
+    },
+    {
+      "id": "step_03",
+      "skill": "seqkit_length_filter",
+      "inputs": [
+        {
+          "source": "step",
+          "ref": "deduplicated_fasta"
+        }
+      ],
+      "parameters": {
+        "min_length": 15,
+        "max_length": 22
+      },
+      "outputs": [
+        {
+          "name": "filtered_fasta",
+          "format": "fasta"
+        }
+      ],
+      "reason": "Retain deduplicated FASTA records with lengths between 15 and 22 nucleotides inclusively, as requested."
+    },
+    {
+      "id": "step_04",
+      "skill": "seqkit_stats",
+      "inputs": [
+        {
+          "source": "step",
+          "ref": "filtered_fasta"
+        }
+      ],
+      "parameters": {},
+      "outputs": [
+        {
+          "name": "statistics_json",
+          "format": "json"
+        }
+      ],
+      "reason": "Report machine-readable SeqKit statistics for the retained, length-filtered FASTA sequences."
+    }
+  ]
+}

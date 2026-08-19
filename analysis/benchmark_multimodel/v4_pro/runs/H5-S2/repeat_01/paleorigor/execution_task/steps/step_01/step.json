@@ -1,0 +1,26 @@
+{
+  "id": "step_01",
+  "skill": "file_type_detect",
+  "status": "succeeded",
+  "parameters": {},
+  "metrics": {
+    "files": 2,
+    "formats": [
+      "fastq"
+    ]
+  },
+  "warnings": [],
+  "error": null,
+  "started_at": "2026-08-19T06:58:07.272607+00:00",
+  "ended_at": "2026-08-19T06:58:07.272927+00:00",
+  "inputs": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v5/fixtures/crypt_library_1.fq",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v5/fixtures/crypt_library_2.fq"
+  ],
+  "outputs": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_multimodel/v4_pro/runs/H5-S2/repeat_01/paleorigor/execution_task/steps/step_01/file_type_report.json",
+      "sha256": "15d21d86b23c81ca9ffcaf5ea32732758c980ca21dddd3079b788fba4e80ce84"
+    }
+  ]
+}

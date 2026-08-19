@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "task_summary": "Run samtools stats on the provided contigs file treated as a coordinate-sorted BAM, ignoring the visible .fa extension.",
+  "steps": [
+    {
+      "id": "step_01",
+      "skill": "samtools_stats",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "unaligned_contigs.fa"
+        }
+      ],
+      "parameters": {},
+      "outputs": [
+        {
+          "name": "samtools_stats.txt",
+          "format": "txt"
+        }
+      ],
+      "reason": "The input is actually a coordinate-sorted BAM despite the .fa extension. samtools stats accepts BAM input and generates alignment statistics directly, with no conversion or alignment step required."
+    }
+  ]
+}

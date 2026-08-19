@@ -1,0 +1,78 @@
+{
+  "strict_success": false,
+  "decision": "workflow",
+  "failure_codes": [
+    "missing_required_skill:file_type_detect"
+  ],
+  "workflow": {
+    "schema_version": "1.0",
+    "task_summary": "Deduplicate ancient-sediment FASTA sequences, retain records between 15 and 22 nucleotides, and generate SeqKit statistics for the retained sequences.",
+    "steps": [
+      {
+        "id": "step_01",
+        "skill": "seqkit_deduplicate",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "sediment_amplicons.fna"
+          }
+        ],
+        "parameters": {
+          "by_sequence": true
+        },
+        "outputs": [
+          {
+            "name": "deduplicated.fna",
+            "format": "fasta"
+          }
+        ],
+        "reason": "Remove duplicate sequences from the uploaded FASTA before length filtering."
+      },
+      {
+        "id": "step_02",
+        "skill": "seqkit_length_filter",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "deduplicated.fna"
+          }
+        ],
+        "parameters": {
+          "min_length": 15,
+          "max_length": 22
+        },
+        "outputs": [
+          {
+            "name": "length_filtered.fna",
+            "format": "fasta"
+          }
+        ],
+        "reason": "Keep only deduplicated records between 15 and 22 nucleotides as requested."
+      },
+      {
+        "id": "step_03",
+        "skill": "seqkit_stats",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "length_filtered.fna"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "retained_seqkit_stats.json",
+            "format": "json"
+          }
+        ],
+        "reason": "Calculate machine-readable SeqKit statistics for the retained 15-22 nt sequences."
+      }
+    ]
+  },
+  "validation": {
+    "valid": true,
+    "errors": [],
+    "warnings": [],
+    "issues": []
+  }
+}

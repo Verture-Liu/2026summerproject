@@ -1,0 +1,35 @@
+{
+  "strict_success": true,
+  "decision": "workflow",
+  "failure_codes": [],
+  "workflow": {
+    "schema_version": "1.0",
+    "task_summary": "Normalize depository metadata TSV into a FASTQ sample-sheet CSV, preserving sample and run identifiers, single/paired layout, predicted FASTQ paths, and organism metadata.",
+    "steps": [
+      {
+        "id": "step_01",
+        "skill": "sample_sheet_prepare",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "depository_metadata.tsv"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "sample_sheet.csv",
+            "format": "csv"
+          }
+        ],
+        "reason": "The uploaded TSV contains sequencing metadata; sample_sheet_prepare converts it to a normalized FASTQ sample-sheet CSV without requiring read files for validation."
+      }
+    ]
+  },
+  "validation": {
+    "valid": true,
+    "errors": [],
+    "warnings": [],
+    "issues": []
+  }
+}

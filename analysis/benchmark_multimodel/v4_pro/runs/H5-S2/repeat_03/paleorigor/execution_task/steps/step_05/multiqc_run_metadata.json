@@ -1,0 +1,10 @@
+{
+  "tool": "MultiQC",
+  "official_url": "https://multiqc.info/",
+  "tool_source": "conda:multiqc_env",
+  "inputs": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_multimodel/v4_pro/runs/H5-S2/repeat_03/paleorigor/execution_task/steps/step_03/fastqc/crypt_library_1_fastqc.zip",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_multimodel/v4_pro/runs/H5-S2/repeat_03/paleorigor/execution_task/steps/step_04/fastqc/crypt_library_2_fastqc.zip"
+  ],
+  "report": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_multimodel/v4_pro/runs/H5-S2/repeat_03/paleorigor/execution_task/steps/step_05/multiqc/multiqc_report.html"
+}

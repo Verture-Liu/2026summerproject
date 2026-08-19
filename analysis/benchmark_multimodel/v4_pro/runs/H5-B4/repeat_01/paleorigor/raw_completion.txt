@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "reason_code": "missing_mate",
+  "message": "burial_R2.fq is absent. Paired-end QC cannot be run or reported by fabricating or inferring the missing mate. Upload both FASTQ files before planning paired-end analysis."
+}

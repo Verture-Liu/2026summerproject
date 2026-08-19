@@ -1,0 +1,146 @@
+{
+  "strict_success": true,
+  "decision": "workflow",
+  "failure_codes": [],
+  "workflow": {
+    "schema_version": "1.0",
+    "task_summary": "Validate paired FASTQ mates and generate independent FastQC reports for each file, then combine both FastQC ZIP archives into one MultiQC report while retaining all QC evidence.",
+    "steps": [
+      {
+        "id": "step_01",
+        "skill": "file_type_detect",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "crypt_library_1.fq"
+          },
+          {
+            "source": "uploaded",
+            "ref": "crypt_library_2.fq"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "detected_file_types",
+            "format": "json"
+          }
+        ],
+        "reason": "Confirm the actual file types for both crypt-library files before pairing and QC."
+      },
+      {
+        "id": "step_02",
+        "skill": "fastq_pair_match",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "crypt_library_1.fq"
+          },
+          {
+            "source": "uploaded",
+            "ref": "crypt_library_2.fq"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "pair_match_sample_sheet",
+            "format": "csv"
+          },
+          {
+            "name": "pair_match_summary",
+            "format": "json"
+          }
+        ],
+        "reason": "Check that the two crypt-library FASTQ files are valid paired-end mates before running independent QC."
+      },
+      {
+        "id": "step_03",
+        "skill": "fastq_qc",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "crypt_library_1.fq"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "r1_fastqc_html",
+            "format": "html"
+          },
+          {
+            "name": "r1_fastqc_json",
+            "format": "json"
+          },
+          {
+            "name": "r1_fastqc_zip",
+            "format": "zip"
+          }
+        ],
+        "reason": "Produce an independent FastQC report for crypt_library_1.fq before summarizing both mates."
+      },
+      {
+        "id": "step_04",
+        "skill": "fastq_qc",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "crypt_library_2.fq"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "r2_fastqc_html",
+            "format": "html"
+          },
+          {
+            "name": "r2_fastqc_json",
+            "format": "json"
+          },
+          {
+            "name": "r2_fastqc_zip",
+            "format": "zip"
+          }
+        ],
+        "reason": "Produce an independent FastQC report for crypt_library_2.fq before summarizing both mates."
+      },
+      {
+        "id": "step_05",
+        "skill": "multiqc_summary",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "r1_fastqc_zip"
+          },
+          {
+            "source": "step",
+            "ref": "r2_fastqc_zip"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "multiqc_report_html",
+            "format": "html"
+          },
+          {
+            "name": "multiqc_report_json",
+            "format": "json"
+          }
+        ],
+        "reason": "Combine both FastQC ZIP archives into one MultiQC report while retaining the individual QC evidence."
+      }
+    ]
+  },
+  "validation": {
+    "valid": true,
+    "errors": [],
+    "warnings": [
+      "step_03: heavy resource requirement",
+      "step_04: heavy resource requirement"
+    ],
+    "issues": []
+  }
+}

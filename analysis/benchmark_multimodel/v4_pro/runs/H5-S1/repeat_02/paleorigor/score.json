@@ -1,0 +1,98 @@
+{
+  "strict_success": true,
+  "decision": "workflow",
+  "failure_codes": [],
+  "workflow": {
+    "schema_version": "1.0",
+    "task_summary": "Inspect an ancient-sediment FASTA file, deduplicate sequences, retain sequences between 15 and 22 nucleotides, and generate SeqKit statistics for the retained FASTA.",
+    "steps": [
+      {
+        "id": "step_01",
+        "skill": "file_type_detect",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "sediment_amplicons.fna"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "detected_file_types",
+            "format": "json"
+          }
+        ],
+        "reason": "Confirm the uploaded ancient-sediment nucleotide file is FASTA before running sequence operations."
+      },
+      {
+        "id": "step_02",
+        "skill": "seqkit_deduplicate",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "sediment_amplicons.fna"
+          }
+        ],
+        "parameters": {
+          "by_sequence": true
+        },
+        "outputs": [
+          {
+            "name": "deduplicated_fasta",
+            "format": "fasta"
+          }
+        ],
+        "reason": "Remove duplicate FASTA sequences and keep the deduplicated intermediate FASTA."
+      },
+      {
+        "id": "step_03",
+        "skill": "seqkit_length_filter",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "deduplicated_fasta"
+          }
+        ],
+        "parameters": {
+          "min_length": 15,
+          "max_length": 22
+        },
+        "outputs": [
+          {
+            "name": "length_filtered_fasta",
+            "format": "fasta"
+          }
+        ],
+        "reason": "Retain only deduplicated nucleotide records between 15 and 22 nucleotides inclusive and keep this filtered FASTA."
+      },
+      {
+        "id": "step_04",
+        "skill": "seqkit_stats",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "length_filtered_fasta"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "retained_statistics_json",
+            "format": "json"
+          },
+          {
+            "name": "retained_statistics_tsv",
+            "format": "tsv"
+          }
+        ],
+        "reason": "Generate machine-readable SeqKit summary statistics for the retained length-filtered sequences."
+      }
+    ]
+  },
+  "validation": {
+    "valid": true,
+    "errors": [],
+    "warnings": [],
+    "issues": []
+  }
+}

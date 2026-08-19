@@ -1,0 +1,11 @@
+{
+  "files": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v5/fixtures/depository_metadata.tsv",
+      "name": "depository_metadata.tsv",
+      "format": "tsv",
+      "size_bytes": 176,
+      "exists": true
+    }
+  ]
+}

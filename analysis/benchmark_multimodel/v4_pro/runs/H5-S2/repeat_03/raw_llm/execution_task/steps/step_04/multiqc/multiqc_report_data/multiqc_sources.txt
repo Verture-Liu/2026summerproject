@@ -1,0 +1,3 @@
+Module	Section	Sample Name	Source
+FastQC	all_sections	crypt_library_1	/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_multimodel/v4_pro/runs/H5-S2/repeat_03/raw_llm/execution_task/steps/step_02/fastqc/crypt_library_1_fastqc.zip
+FastQC	all_sections	crypt_library_2	/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_multimodel/v4_pro/runs/H5-S2/repeat_03/raw_llm/execution_task/steps/step_03/fastqc/crypt_library_2_fastqc.zip

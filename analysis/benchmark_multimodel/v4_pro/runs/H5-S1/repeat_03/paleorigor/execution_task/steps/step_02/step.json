@@ -1,0 +1,26 @@
+{
+  "id": "step_02",
+  "skill": "seqkit_deduplicate",
+  "status": "succeeded",
+  "parameters": {
+    "by_sequence": true
+  },
+  "metrics": {},
+  "warnings": [],
+  "error": null,
+  "started_at": "2026-08-19T06:57:17.438858+00:00",
+  "ended_at": "2026-08-19T06:57:17.484721+00:00",
+  "inputs": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v5/fixtures/sediment_amplicons.fna"
+  ],
+  "outputs": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_multimodel/v4_pro/runs/H5-S1/repeat_03/paleorigor/execution_task/steps/step_02/deduplicated.fasta",
+      "sha256": "5244f272e182ec758faa923a8307207ac7d1dc680a6f1e02c5b4f089e9eb5c83"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_multimodel/v4_pro/runs/H5-S1/repeat_03/paleorigor/execution_task/steps/step_02/seqkit_deduplicate_metadata.json",
+      "sha256": "e9c3130335e7849783d4b2476c5547f5b47af6ba525739515fc6056488b86471"
+    }
+  ]
+}

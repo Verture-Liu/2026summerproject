@@ -1,0 +1,23 @@
+{
+  "schema_version": "1.0",
+  "task_summary": "Normalize the public-repository metadata TSV into a FASTQ sample-sheet CSV without validating FASTQ paths.",
+  "steps": [
+    {
+      "id": "step_01",
+      "skill": "sample_sheet_prepare",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "depository_metadata.tsv"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "fastq_sample_sheet",
+          "format": "csv"
+        }
+      ],
+      "reason": "Prepare a normalized FASTQ sample sheet from the uploaded depository metadata, preserving sample and run identifiers, single-versus-paired layout, predicted FASTQ paths, and organism metadata. The corresponding reads were not uploaded, so sample-sheet validation is intentionally not planned."
+    }
+  ]
+}

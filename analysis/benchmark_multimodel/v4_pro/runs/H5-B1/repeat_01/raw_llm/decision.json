@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "reason_code": "file_type_mismatch",
+  "message": "The uploaded file 'unaligned_contigs.fa' is declared as FASTA in the file list, but the samtools_stats skill requires BAM or SAM input. No listed skill can change the declared type, and no conversion or alignment is allowed."
+}

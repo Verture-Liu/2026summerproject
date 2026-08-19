@@ -1,0 +1,106 @@
+{
+  "schema_version": "1.0",
+  "task_summary": "Inspect uploaded ancient-sediment FASTA, remove duplicate sequences, retain records between 15 and 22 nucleotides, and generate SeqKit statistics for the retained sequences.",
+  "steps": [
+    {
+      "id": "step_01",
+      "skill": "file_type_detect",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "sediment_amplicons.fna"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "detected_file_type_json",
+          "format": "json"
+        }
+      ],
+      "reason": "Confirm the uploaded ancient-sediment file is detected as FASTA before sequence processing."
+    },
+    {
+      "id": "step_02",
+      "skill": "seqkit_deduplicate",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "sediment_amplicons.fna"
+        }
+      ],
+      "parameters": {
+        "by_sequence": true
+      },
+      "outputs": [
+        {
+          "name": "deduplicated_fasta",
+          "format": "fasta"
+        }
+      ],
+      "reason": "Remove duplicate nucleotide sequences from the ancient-sediment FASTA."
+    },
+    {
+      "id": "step_03",
+      "skill": "seqkit_length_filter",
+      "inputs": [
+        {
+          "source": "step",
+          "ref": "deduplicated_fasta"
+        }
+      ],
+      "parameters": {
+        "min_length": 15,
+        "max_length": 22
+      },
+      "outputs": [
+        {
+          "name": "length_filtered_fasta",
+          "format": "fasta"
+        }
+      ],
+      "reason": "Retain only deduplicated records with length between 15 and 22 nucleotides."
+    },
+    {
+      "id": "step_04",
+      "skill": "data_quality_gate",
+      "inputs": [
+        {
+          "source": "step",
+          "ref": "length_filtered_fasta"
+        }
+      ],
+      "parameters": {
+        "min_records": 1,
+        "fail_on_error": true
+      },
+      "outputs": [
+        {
+          "name": "fasta_quality_gate_json",
+          "format": "json"
+        }
+      ],
+      "reason": "Check the retained FASTA contains at least one record before generating final statistics."
+    },
+    {
+      "id": "step_05",
+      "skill": "seqkit_stats",
+      "inputs": [
+        {
+          "source": "step",
+          "ref": "length_filtered_fasta"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "seqkit_statistics_json",
+          "format": "json"
+        },
+        {
+          "name": "seqkit_statistics_tsv",
+          "format": "tsv"
+        }
+      ],
+      "reason": "Generate machine-readable SeqKit statistics for the retained sequences."
+    }
+  ]
+}

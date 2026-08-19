@@ -1,0 +1,16 @@
+{
+  "gate_passed": true,
+  "files": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_multimodel/v4_pro/runs/H5-S1/repeat_03/paleorigor/execution_task/steps/step_03/length_filtered.fasta",
+      "name": "length_filtered.fasta",
+      "size_bytes": 98,
+      "format": "fasta",
+      "records": 3,
+      "min_length": 16,
+      "max_length": 22,
+      "mean_length": 18.667
+    }
+  ],
+  "warnings": []
+}

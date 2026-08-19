@@ -1,0 +1,128 @@
+{
+  "schema_version": "1.0",
+  "task_summary": "Verify the two uploaded FASTQ library files are paired mates, run independent FastQC raw QC for each file, then summarize both FastQC ZIP archives with MultiQC.",
+  "steps": [
+    {
+      "id": "step_01",
+      "skill": "file_type_detect",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "crypt_library_1.fq"
+        },
+        {
+          "source": "uploaded",
+          "ref": "crypt_library_2.fq"
+        }
+      ],
+      "parameters": {},
+      "outputs": [
+        {
+          "name": "file_type_report",
+          "format": "json"
+        }
+      ],
+      "reason": "Confirm the actual file types of the uploaded FASTQ-like files before pair validation and raw QC."
+    },
+    {
+      "id": "step_02",
+      "skill": "fastq_pair_match",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "crypt_library_1.fq"
+        },
+        {
+          "source": "uploaded",
+          "ref": "crypt_library_2.fq"
+        }
+      ],
+      "parameters": {},
+      "outputs": [
+        {
+          "name": "pairing_report",
+          "format": "json"
+        }
+      ],
+      "reason": "Check whether the two crypt-library FASTQ files match as read 1 and read 2 mates before running QC."
+    },
+    {
+      "id": "step_03",
+      "skill": "fastq_qc",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "crypt_library_1.fq"
+        }
+      ],
+      "parameters": {},
+      "outputs": [
+        {
+          "name": "fastqc_r1_html",
+          "format": "html"
+        },
+        {
+          "name": "fastqc_r1_json",
+          "format": "json"
+        },
+        {
+          "name": "fastqc_r1_zip",
+          "format": "zip"
+        }
+      ],
+      "reason": "Run independent FastQC raw QC on the first mate and retain its HTML, JSON, and ZIP evidence."
+    },
+    {
+      "id": "step_04",
+      "skill": "fastq_qc",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "crypt_library_2.fq"
+        }
+      ],
+      "parameters": {},
+      "outputs": [
+        {
+          "name": "fastqc_r2_html",
+          "format": "html"
+        },
+        {
+          "name": "fastqc_r2_json",
+          "format": "json"
+        },
+        {
+          "name": "fastqc_r2_zip",
+          "format": "zip"
+        }
+      ],
+      "reason": "Run independent FastQC raw QC on the second mate and retain its HTML, JSON, and ZIP evidence."
+    },
+    {
+      "id": "step_05",
+      "skill": "multiqc_summary",
+      "inputs": [
+        {
+          "source": "step",
+          "ref": "fastqc_r1_zip"
+        },
+        {
+          "source": "step",
+          "ref": "fastqc_r2_zip"
+        }
+      ],
+      "parameters": {},
+      "outputs": [
+        {
+          "name": "multiqc_report",
+          "format": "html"
+        },
+        {
+          "name": "multiqc_data",
+          "format": "json"
+        }
+      ],
+      "reason": "Combine both FastQC ZIP archives into one MultiQC report while retaining the summarized MultiQC evidence."
+    }
+  ]
+}

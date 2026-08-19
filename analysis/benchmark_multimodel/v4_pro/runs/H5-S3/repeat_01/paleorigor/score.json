@@ -1,0 +1,168 @@
+{
+  "strict_success": true,
+  "decision": "workflow",
+  "failure_codes": [],
+  "workflow": {
+    "schema_version": "1.0",
+    "task_summary": "Curate uploaded peptide screening CSV by normalizing class and peptide columns, validating sequences, deduplicating, running a quality gate, computing descriptive statistics, plotting a peptide length histogram, and exporting cleaned and rejected-row outputs.",
+    "steps": [
+      {
+        "id": "step_01",
+        "skill": "peptide_csv_normalize",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "peptide_screen.csv"
+          }
+        ],
+        "parameters": {
+          "delimiter": "auto",
+          "label_column": "class",
+          "sequence_column": "peptide",
+          "drop_empty_rows": true
+        },
+        "outputs": [
+          {
+            "name": "normalized_csv",
+            "format": "csv"
+          }
+        ],
+        "reason": "Prepare the raw peptide CSV by normalizing class and peptide columns into canonical label and sequence columns before validation and downstream peptide operations."
+      },
+      {
+        "id": "step_02",
+        "skill": "peptide_validate",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "normalized_csv"
+          }
+        ],
+        "parameters": {
+          "invalid_row_policy": "reject"
+        },
+        "outputs": [
+          {
+            "name": "validated_csv",
+            "format": "csv"
+          },
+          {
+            "name": "rejected_csv",
+            "format": "csv"
+          }
+        ],
+        "reason": "Validate amino-acid strings and class labels, retaining valid rows for downstream use and declaring rejected rows for the requested audit output."
+      },
+      {
+        "id": "step_03",
+        "skill": "peptide_deduplicate",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "validated_csv"
+          }
+        ],
+        "parameters": {
+          "keep": "first"
+        },
+        "outputs": [
+          {
+            "name": "deduplicated_csv",
+            "format": "csv"
+          }
+        ],
+        "reason": "Remove duplicate peptide sequences after validation and audit conflicting labels, creating a non-redundant cleaned peptide table."
+      },
+      {
+        "id": "step_04",
+        "skill": "data_quality_gate",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "deduplicated_csv"
+          }
+        ],
+        "parameters": {
+          "min_rows": 1
+        },
+        "outputs": [
+          {
+            "name": "quality_gate_json",
+            "format": "json"
+          }
+        ],
+        "reason": "Run a post-cleaning quality gate on the deduplicated peptide table before descriptive statistics, charting, and export."
+      },
+      {
+        "id": "step_05",
+        "skill": "peptide_statistics",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "deduplicated_csv"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "statistics_json",
+            "format": "json"
+          },
+          {
+            "name": "statistics_csv",
+            "format": "csv"
+          }
+        ],
+        "reason": "Compute descriptive peptide counts, lengths, labels, and related summary statistics from the cleaned peptide table."
+      },
+      {
+        "id": "step_06",
+        "skill": "peptide_chart",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "deduplicated_csv"
+          }
+        ],
+        "parameters": {
+          "charts": [
+            "length_histogram"
+          ]
+        },
+        "outputs": [
+          {
+            "name": "length_histogram",
+            "format": "png"
+          }
+        ],
+        "reason": "Draw the requested single histogram of peptide lengths from the cleaned peptide table."
+      },
+      {
+        "id": "step_07",
+        "skill": "peptide_csv_export",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "deduplicated_csv"
+          }
+        ],
+        "parameters": {
+          "filename": "peptide_screen_cleaned.csv"
+        },
+        "outputs": [
+          {
+            "name": "cleaned_csv",
+            "format": "csv"
+          }
+        ],
+        "reason": "Export the cleaned, validated, deduplicated peptide table as a reusable CSV output."
+      }
+    ]
+  },
+  "validation": {
+    "valid": true,
+    "errors": [],
+    "warnings": [],
+    "issues": []
+  }
+}

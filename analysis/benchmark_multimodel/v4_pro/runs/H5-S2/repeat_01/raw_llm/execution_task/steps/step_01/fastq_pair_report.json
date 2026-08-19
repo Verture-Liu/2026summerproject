@@ -1,0 +1,10 @@
+{
+  "samples": [
+    {
+      "sample_id": "crypt_library",
+      "layout": "paired",
+      "fastq_1": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v5/fixtures/crypt_library_1.fq",
+      "fastq_2": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v5/fixtures/crypt_library_2.fq"
+    }
+  ]
+}

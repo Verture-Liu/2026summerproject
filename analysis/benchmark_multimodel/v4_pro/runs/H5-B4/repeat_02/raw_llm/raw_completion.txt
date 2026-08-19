@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "reason_code": "missing_mate",
+  "message": "burial_R2.fq is missing; paired-end QC cannot be run and R2 cannot be fabricated. Please upload burial_R2.fq."
+}

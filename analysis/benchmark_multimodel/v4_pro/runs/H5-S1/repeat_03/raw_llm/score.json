@@ -1,0 +1,78 @@
+{
+  "strict_success": false,
+  "decision": "workflow",
+  "failure_codes": [
+    "missing_required_skill:file_type_detect"
+  ],
+  "workflow": {
+    "schema_version": "1.0",
+    "task_summary": "Remove duplicate sequences from sediment_amplicons.fna, retain sequences between 15 and 22 nucleotides, and report SeqKit statistics for the retained sequences.",
+    "steps": [
+      {
+        "id": "step_01",
+        "skill": "seqkit_deduplicate",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "sediment_amplicons.fna"
+          }
+        ],
+        "parameters": {
+          "by_sequence": true
+        },
+        "outputs": [
+          {
+            "name": "deduplicated_sediment_amplicons.fasta",
+            "format": "fasta"
+          }
+        ],
+        "reason": "Remove sequence duplicates from the uploaded ancient-sediment FASTA."
+      },
+      {
+        "id": "step_02",
+        "skill": "seqkit_length_filter",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "deduplicated_sediment_amplicons.fasta"
+          }
+        ],
+        "parameters": {
+          "min_length": 15,
+          "max_length": 22
+        },
+        "outputs": [
+          {
+            "name": "retained_sediment_amplicons.fasta",
+            "format": "fasta"
+          }
+        ],
+        "reason": "Keep FASTA records between 15 and 22 nucleotides after duplicate removal."
+      },
+      {
+        "id": "step_03",
+        "skill": "seqkit_stats",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "retained_sediment_amplicons.fasta"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "retained_seqkit_stats.json",
+            "format": "json"
+          }
+        ],
+        "reason": "Report machine-readable SeqKit statistics for the retained sequences."
+      }
+    ]
+  },
+  "validation": {
+    "valid": true,
+    "errors": [],
+    "warnings": [],
+    "issues": []
+  }
+}

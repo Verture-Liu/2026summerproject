@@ -1,0 +1,282 @@
+{
+  "preregistered_h1_supported": true,
+  "flash_context_already_observed": {
+    "pairs": 24,
+    "arms": {
+      "paleorigor": {
+        "successes": 23,
+        "total": 24,
+        "rate": 0.9583333333333334,
+        "wilson_95": [
+          0.7975819352134406,
+          0.9926065438344942
+        ]
+      },
+      "raw_llm": {
+        "successes": 19,
+        "total": 24,
+        "rate": 0.7916666666666666,
+        "wilson_95": [
+          0.5952954674681133,
+          0.9075517464714814
+        ]
+      }
+    },
+    "paired_rate_difference": 0.16666666666666674,
+    "discordant": {
+      "paleorigor_only": 5,
+      "raw_only": 1
+    },
+    "mcnemar_exact_two_sided_p": 0.21875,
+    "by_scenario": {
+      "H5-B1": {
+        "paleorigor": {
+          "successes": 3,
+          "total": 3,
+          "rate": 1.0
+        },
+        "raw_llm": {
+          "successes": 1,
+          "total": 3,
+          "rate": 0.3333333333333333
+        }
+      },
+      "H5-B2": {
+        "paleorigor": {
+          "successes": 3,
+          "total": 3,
+          "rate": 1.0
+        },
+        "raw_llm": {
+          "successes": 3,
+          "total": 3,
+          "rate": 1.0
+        }
+      },
+      "H5-B3": {
+        "paleorigor": {
+          "successes": 3,
+          "total": 3,
+          "rate": 1.0
+        },
+        "raw_llm": {
+          "successes": 3,
+          "total": 3,
+          "rate": 1.0
+        }
+      },
+      "H5-B4": {
+        "paleorigor": {
+          "successes": 3,
+          "total": 3,
+          "rate": 1.0
+        },
+        "raw_llm": {
+          "successes": 3,
+          "total": 3,
+          "rate": 1.0
+        }
+      },
+      "H5-S1": {
+        "paleorigor": {
+          "successes": 3,
+          "total": 3,
+          "rate": 1.0
+        },
+        "raw_llm": {
+          "successes": 1,
+          "total": 3,
+          "rate": 0.3333333333333333
+        }
+      },
+      "H5-S2": {
+        "paleorigor": {
+          "successes": 3,
+          "total": 3,
+          "rate": 1.0
+        },
+        "raw_llm": {
+          "successes": 3,
+          "total": 3,
+          "rate": 1.0
+        }
+      },
+      "H5-S3": {
+        "paleorigor": {
+          "successes": 3,
+          "total": 3,
+          "rate": 1.0
+        },
+        "raw_llm": {
+          "successes": 2,
+          "total": 3,
+          "rate": 0.6666666666666666
+        }
+      },
+      "H5-S4": {
+        "paleorigor": {
+          "successes": 2,
+          "total": 3,
+          "rate": 0.6666666666666666
+        },
+        "raw_llm": {
+          "successes": 3,
+          "total": 3,
+          "rate": 1.0
+        }
+      }
+    }
+  },
+  "pro_confirmatory_sample": {
+    "pairs": 24,
+    "arms": {
+      "paleorigor": {
+        "successes": 24,
+        "total": 24,
+        "rate": 1.0,
+        "wilson_95": [
+          0.8620237953250198,
+          1.0
+        ]
+      },
+      "raw_llm": {
+        "successes": 19,
+        "total": 24,
+        "rate": 0.7916666666666666,
+        "wilson_95": [
+          0.5952954674681133,
+          0.9075517464714814
+        ]
+      }
+    },
+    "paired_rate_difference": 0.20833333333333337,
+    "discordant": {
+      "paleorigor_only": 5,
+      "raw_only": 0
+    },
+    "mcnemar_exact_two_sided_p": 0.0625,
+    "by_scenario": {
+      "H5-B1": {
+        "paleorigor": {
+          "successes": 3,
+          "total": 3,
+          "rate": 1.0
+        },
+        "raw_llm": {
+          "successes": 2,
+          "total": 3,
+          "rate": 0.6666666666666666
+        }
+      },
+      "H5-B2": {
+        "paleorigor": {
+          "successes": 3,
+          "total": 3,
+          "rate": 1.0
+        },
+        "raw_llm": {
+          "successes": 3,
+          "total": 3,
+          "rate": 1.0
+        }
+      },
+      "H5-B3": {
+        "paleorigor": {
+          "successes": 3,
+          "total": 3,
+          "rate": 1.0
+        },
+        "raw_llm": {
+          "successes": 3,
+          "total": 3,
+          "rate": 1.0
+        }
+      },
+      "H5-B4": {
+        "paleorigor": {
+          "successes": 3,
+          "total": 3,
+          "rate": 1.0
+        },
+        "raw_llm": {
+          "successes": 3,
+          "total": 3,
+          "rate": 1.0
+        }
+      },
+      "H5-S1": {
+        "paleorigor": {
+          "successes": 3,
+          "total": 3,
+          "rate": 1.0
+        },
+        "raw_llm": {
+          "successes": 0,
+          "total": 3,
+          "rate": 0.0
+        }
+      },
+      "H5-S2": {
+        "paleorigor": {
+          "successes": 3,
+          "total": 3,
+          "rate": 1.0
+        },
+        "raw_llm": {
+          "successes": 3,
+          "total": 3,
+          "rate": 1.0
+        }
+      },
+      "H5-S3": {
+        "paleorigor": {
+          "successes": 3,
+          "total": 3,
+          "rate": 1.0
+        },
+        "raw_llm": {
+          "successes": 2,
+          "total": 3,
+          "rate": 0.6666666666666666
+        }
+      },
+      "H5-S4": {
+        "paleorigor": {
+          "successes": 3,
+          "total": 3,
+          "rate": 1.0
+        },
+        "raw_llm": {
+          "successes": 3,
+          "total": 3,
+          "rate": 1.0
+        }
+      }
+    }
+  },
+  "verification": {
+    "checked": 48,
+    "expected": 48,
+    "all_match": true,
+    "discrepancies": [],
+    "api_errors": 0,
+    "reported_models": [
+      "deepseek-v4-pro"
+    ]
+  },
+  "operational_metrics": {
+    "paleorigor": {
+      "runs": 24,
+      "median_latency_seconds": 13.674532229459146,
+      "total_tokens": 577985,
+      "median_tokens": 23275.5
+    },
+    "raw_llm": {
+      "runs": 24,
+      "median_latency_seconds": 13.29641458299011,
+      "total_tokens": 305389,
+      "median_tokens": 11660.5
+    }
+  },
+  "interpretation": "The preregistered engineering criterion was met on V4-Pro. Inference remains limited by 24 pairs and one API provider; this is not a vendor ranking."
+}

@@ -1,0 +1,119 @@
+{
+  "workflow_schema_version": "1.0",
+  "status": "succeeded",
+  "workflow": {
+    "schema_version": "1.0",
+    "task_summary": "Normalize uploaded repository metadata TSV into a FASTQ sample-sheet CSV without validating referenced reads.",
+    "steps": [
+      {
+        "id": "step_01",
+        "skill": "file_type_detect",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "depository_metadata.tsv"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "detected_file_type",
+            "format": "json"
+          }
+        ],
+        "reason": "Confirm the uploaded file type before parsing the metadata table."
+      },
+      {
+        "id": "step_02",
+        "skill": "sample_sheet_prepare",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "depository_metadata.tsv"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "normalized_sample_sheet",
+            "format": "csv"
+          }
+        ],
+        "reason": "Transform metadata into a normalized FASTQ sample sheet while preserving sample/run identifiers, layout, predicted FASTQ paths, and organism metadata; no path validation is requested."
+      }
+    ]
+  },
+  "inputs": [
+    {
+      "ref": "depository_metadata.tsv",
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v5/fixtures/depository_metadata.tsv",
+      "sha256": "ae72c343b7a36e075fe54809d3eeee952ae580f548392c1761cbb52d4283b9a5"
+    }
+  ],
+  "steps": [
+    {
+      "id": "step_01",
+      "skill": "file_type_detect",
+      "status": "succeeded",
+      "parameters": {},
+      "metrics": {
+        "files": 1,
+        "formats": [
+          "tsv"
+        ]
+      },
+      "warnings": [],
+      "error": null,
+      "started_at": "2026-08-19T07:11:23.270912+00:00",
+      "ended_at": "2026-08-19T07:11:23.271312+00:00",
+      "inputs": [
+        "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v5/fixtures/depository_metadata.tsv"
+      ],
+      "outputs": [
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_multimodel/v4_pro/runs/H5-S4/repeat_02/paleorigor/execution_task/steps/step_01/file_type_report.json",
+          "sha256": "b3a554978f99ff86697dfbdf18757a14fab9db264db95634c6daa8f3d121f918"
+        }
+      ]
+    },
+    {
+      "id": "step_02",
+      "skill": "sample_sheet_prepare",
+      "status": "succeeded",
+      "parameters": {},
+      "metrics": {
+        "samples": 3,
+        "runs": 3,
+        "paired_runs": 2,
+        "single_runs": 1
+      },
+      "warnings": [],
+      "error": null,
+      "started_at": "2026-08-19T07:11:23.271631+00:00",
+      "ended_at": "2026-08-19T07:11:23.275257+00:00",
+      "inputs": [
+        "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v5/fixtures/depository_metadata.tsv"
+      ],
+      "outputs": [
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_multimodel/v4_pro/runs/H5-S4/repeat_02/paleorigor/execution_task/steps/step_02/samplesheet.csv",
+          "sha256": "6dbe86c6f8aaa1a6d62ef5edea92a409c85d101b2523dd3d3bc500ea47d0a41b"
+        }
+      ]
+    }
+  ],
+  "environment": {
+    "python": "3.13.9",
+    "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O"
+  },
+  "settings": {
+    "base_url": "https://api.deepseek.com",
+    "model": "deepseek-v4-pro",
+    "timeout_seconds": 120.0,
+    "max_retries": 2,
+    "api_key_present": true,
+    "thinking": "enabled",
+    "temperature": 0,
+    "api_key": ""
+  }
+}

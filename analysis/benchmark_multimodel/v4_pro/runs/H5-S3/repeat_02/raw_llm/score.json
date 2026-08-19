@@ -1,0 +1,152 @@
+{
+  "strict_success": true,
+  "decision": "workflow",
+  "failure_codes": [],
+  "workflow": {
+    "schema_version": "1.0",
+    "task_summary": "Curate peptide screening CSV by normalizing class and peptide columns, validating sequences and labels, deduplicating, computing statistics, creating a length histogram, and exporting cleaned and rejected-row outputs.",
+    "steps": [
+      {
+        "id": "step_01",
+        "skill": "peptide_csv_normalize",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "peptide_screen.csv"
+          }
+        ],
+        "parameters": {
+          "delimiter": "auto",
+          "label_column": "class",
+          "sequence_column": "peptide",
+          "drop_empty_rows": true
+        },
+        "outputs": [
+          {
+            "name": "normalized_peptides",
+            "format": "csv"
+          }
+        ],
+        "reason": "Normalize the class and peptide columns into canonical label and sequence columns required by downstream peptide-table skills."
+      },
+      {
+        "id": "step_02",
+        "skill": "peptide_validate",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "normalized_peptides"
+          }
+        ],
+        "parameters": {
+          "invalid_row_policy": "reject"
+        },
+        "outputs": [
+          {
+            "name": "validated_peptides",
+            "format": "csv"
+          },
+          {
+            "name": "rejected_rows_audit",
+            "format": "csv"
+          }
+        ],
+        "reason": "Validate binary labels and amino-acid strings, separating invalid rows into a rejected-row audit output."
+      },
+      {
+        "id": "step_03",
+        "skill": "peptide_deduplicate",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "validated_peptides"
+          }
+        ],
+        "parameters": {
+          "conflict_policy": "keep_first",
+          "keep": "first"
+        },
+        "outputs": [
+          {
+            "name": "deduplicated_peptides",
+            "format": "csv"
+          }
+        ],
+        "reason": "Remove duplicate peptide sequences before downstream statistics, charting, and export."
+      },
+      {
+        "id": "step_04",
+        "skill": "peptide_statistics",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "deduplicated_peptides"
+          }
+        ],
+        "parameters": {
+          "group_by_label": true,
+          "include_amino_acid_composition": true
+        },
+        "outputs": [
+          {
+            "name": "peptide_statistics",
+            "format": "csv"
+          }
+        ],
+        "reason": "Compute descriptive statistics for the cleaned and deduplicated peptide set."
+      },
+      {
+        "id": "step_05",
+        "skill": "peptide_chart",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "deduplicated_peptides"
+          }
+        ],
+        "parameters": {
+          "charts": [
+            "length_histogram"
+          ]
+        },
+        "outputs": [
+          {
+            "name": "peptide_length_histogram",
+            "format": "png"
+          }
+        ],
+        "reason": "Draw a single histogram of peptide lengths from the cleaned peptide data."
+      },
+      {
+        "id": "step_06",
+        "skill": "peptide_csv_export",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "deduplicated_peptides"
+          }
+        ],
+        "parameters": {
+          "columns": [
+            "label",
+            "sequence"
+          ],
+          "filename": "cleaned_peptides.csv"
+        },
+        "outputs": [
+          {
+            "name": "cleaned_peptides",
+            "format": "csv"
+          }
+        ],
+        "reason": "Export the cleaned, deduplicated peptide CSV for downstream use."
+      }
+    ]
+  },
+  "validation": {
+    "valid": true,
+    "errors": [],
+    "warnings": [],
+    "issues": []
+  }
+}

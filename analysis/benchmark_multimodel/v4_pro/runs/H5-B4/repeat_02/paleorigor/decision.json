@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "reason_code": "missing_mate",
+  "message": "burial_R2.fq is named as the paired mate but is not present in the uploaded files. I cannot fabricate or infer the missing mate to generate a paired-end MultiQC report."
+}

@@ -1,0 +1,18 @@
+{
+  "label_counts": {
+    "0": 2,
+    "1": 3
+  },
+  "label_proportions": {
+    "0": 0.4,
+    "1": 0.6
+  },
+  "length": {
+    "max": 37,
+    "mean": 25.2,
+    "median": 20.0,
+    "min": 13
+  },
+  "total_rows": 5,
+  "unique_sequences": 5
+}

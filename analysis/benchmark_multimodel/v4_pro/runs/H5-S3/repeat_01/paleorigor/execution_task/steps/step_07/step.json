@@ -1,0 +1,28 @@
+{
+  "id": "step_07",
+  "skill": "peptide_csv_export",
+  "status": "succeeded",
+  "parameters": {
+    "filename": "peptide_screen_cleaned.csv"
+  },
+  "metrics": {
+    "exported_rows": 5,
+    "columns": [
+      "label",
+      "sequence"
+    ]
+  },
+  "warnings": [],
+  "error": null,
+  "started_at": "2026-08-19T07:04:48.524111+00:00",
+  "ended_at": "2026-08-19T07:04:48.526449+00:00",
+  "inputs": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_multimodel/v4_pro/runs/H5-S3/repeat_01/paleorigor/execution_task/steps/step_03/deduplicated_peptides.csv"
+  ],
+  "outputs": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_multimodel/v4_pro/runs/H5-S3/repeat_01/paleorigor/execution_task/steps/step_07/peptide_screen_cleaned.csv",
+      "sha256": "9d04b08ac7092dd1f63683b32086e94e7ed4988b6a9dd6846bf0a38dc8a4f803"
+    }
+  ]
+}

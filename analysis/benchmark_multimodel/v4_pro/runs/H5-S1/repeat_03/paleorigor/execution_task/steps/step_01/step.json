@@ -1,0 +1,25 @@
+{
+  "id": "step_01",
+  "skill": "file_type_detect",
+  "status": "succeeded",
+  "parameters": {},
+  "metrics": {
+    "files": 1,
+    "formats": [
+      "fasta"
+    ]
+  },
+  "warnings": [],
+  "error": null,
+  "started_at": "2026-08-19T06:57:17.438349+00:00",
+  "ended_at": "2026-08-19T06:57:17.438642+00:00",
+  "inputs": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v5/fixtures/sediment_amplicons.fna"
+  ],
+  "outputs": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_multimodel/v4_pro/runs/H5-S1/repeat_03/paleorigor/execution_task/steps/step_01/file_type_report.json",
+      "sha256": "fa543f94e6a34b9062f4a2ad63c6f0e96992b050f080de07263f8884f9d7413a"
+    }
+  ]
+}

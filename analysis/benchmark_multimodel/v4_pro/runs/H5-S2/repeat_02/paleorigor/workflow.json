@@ -1,0 +1,106 @@
+{
+  "schema_version": "1.0",
+  "task_summary": "Validate paired-end mate pairing for two FASTQ files, run independent FastQC for each mate, and summarize both FastQC ZIP archives with MultiQC.",
+  "steps": [
+    {
+      "id": "step_01",
+      "skill": "fastq_pair_match",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "crypt_library_1.fq"
+        },
+        {
+          "source": "uploaded",
+          "ref": "crypt_library_2.fq"
+        }
+      ],
+      "parameters": {},
+      "outputs": [
+        {
+          "name": "pairing_report",
+          "format": "json"
+        }
+      ],
+      "reason": "Check that the two uploaded FASTQ files are valid paired-end mates before running QC."
+    },
+    {
+      "id": "step_02",
+      "skill": "fastq_qc",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "crypt_library_1.fq"
+        }
+      ],
+      "parameters": {},
+      "outputs": [
+        {
+          "name": "fastqc_r1_html",
+          "format": "html"
+        },
+        {
+          "name": "fastqc_r1_json",
+          "format": "json"
+        },
+        {
+          "name": "fastqc_r1_zip",
+          "format": "zip"
+        }
+      ],
+      "reason": "Generate independent FastQC evidence for the first mate."
+    },
+    {
+      "id": "step_03",
+      "skill": "fastq_qc",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "crypt_library_2.fq"
+        }
+      ],
+      "parameters": {},
+      "outputs": [
+        {
+          "name": "fastqc_r2_html",
+          "format": "html"
+        },
+        {
+          "name": "fastqc_r2_json",
+          "format": "json"
+        },
+        {
+          "name": "fastqc_r2_zip",
+          "format": "zip"
+        }
+      ],
+      "reason": "Generate independent FastQC evidence for the second mate."
+    },
+    {
+      "id": "step_04",
+      "skill": "multiqc_summary",
+      "inputs": [
+        {
+          "source": "step",
+          "ref": "fastqc_r1_zip"
+        },
+        {
+          "source": "step",
+          "ref": "fastqc_r2_zip"
+        }
+      ],
+      "parameters": {},
+      "outputs": [
+        {
+          "name": "multiqc_report_html",
+          "format": "html"
+        },
+        {
+          "name": "multiqc_report_json",
+          "format": "json"
+        }
+      ],
+      "reason": "Summarize both FastQC ZIP archives into one MultiQC report while preserving the evidence."
+    }
+  ]
+}

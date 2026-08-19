@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "reason_code": "missing_prerequisite",
+  "message": "host_dna_removal requires a reference genome or pre-built Bowtie2 index, but no reference file is supplied and no index-building skill is available in the registered skills."
+}

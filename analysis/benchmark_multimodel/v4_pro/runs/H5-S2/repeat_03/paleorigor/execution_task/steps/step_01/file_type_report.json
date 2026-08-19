@@ -1,0 +1,18 @@
+{
+  "files": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v5/fixtures/crypt_library_1.fq",
+      "name": "crypt_library_1.fq",
+      "format": "fastq",
+      "size_bytes": 228,
+      "exists": true
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v5/fixtures/crypt_library_2.fq",
+      "name": "crypt_library_2.fq",
+      "format": "fastq",
+      "size_bytes": 228,
+      "exists": true
+    }
+  ]
+}

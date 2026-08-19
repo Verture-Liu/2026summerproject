@@ -1,0 +1,28 @@
+{
+  "id": "step_01",
+  "skill": "fastq_pair_match",
+  "status": "succeeded",
+  "parameters": {},
+  "metrics": {
+    "samples": 1,
+    "warnings": 0
+  },
+  "warnings": [],
+  "error": null,
+  "started_at": "2026-08-19T07:00:27.352191+00:00",
+  "ended_at": "2026-08-19T07:00:27.352664+00:00",
+  "inputs": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v5/fixtures/crypt_library_1.fq",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v5/fixtures/crypt_library_2.fq"
+  ],
+  "outputs": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_multimodel/v4_pro/runs/H5-S2/repeat_02/paleorigor/execution_task/steps/step_01/fastq_sample_sheet.csv",
+      "sha256": "c849e4bcf66f2d69e08bbb40b6a703e42d6b77b1baab6347bdce6c7fb0a9b13d"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_multimodel/v4_pro/runs/H5-S2/repeat_02/paleorigor/execution_task/steps/step_01/fastq_pair_report.json",
+      "sha256": "da74c8af7e485c9f4b2c6b5dfa974c1e4b3216bd4b5088b8eac45a37b76616ad"
+    }
+  ]
+}

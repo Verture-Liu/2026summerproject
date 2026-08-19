@@ -1,0 +1,59 @@
+{
+  "schema_version": "1.0",
+  "task_summary": "Verify paired-end relationship between crypt_library_1.fq and crypt_library_2.fq, generate independent FastQC reports for each file, and summarize both FastQC ZIP archives with MultiQC while retaining all QC evidence.",
+  "steps": [
+    {
+      "id": "step_01",
+      "skill": "fastq_pair_match",
+      "inputs": [
+        {"source": "uploaded", "ref": "crypt_library_1.fq"},
+        {"source": "uploaded", "ref": "crypt_library_2.fq"}
+      ],
+      "parameters": {},
+      "outputs": [
+        {"name": "pair_match.json", "format": "json"}
+      ],
+      "reason": "Check whether the two crypt-library FASTQ files are paired-end mates."
+    },
+    {
+      "id": "step_02",
+      "skill": "fastq_qc",
+      "inputs": [
+        {"source": "uploaded", "ref": "crypt_library_1.fq"}
+      ],
+      "parameters": {},
+      "outputs": [
+        {"name": "crypt_library_1_fastqc.html", "format": "html"},
+        {"name": "crypt_library_1_fastqc.zip", "format": "zip"}
+      ],
+      "reason": "Produce an independent FastQC report and ZIP archive for crypt_library_1.fq."
+    },
+    {
+      "id": "step_03",
+      "skill": "fastq_qc",
+      "inputs": [
+        {"source": "uploaded", "ref": "crypt_library_2.fq"}
+      ],
+      "parameters": {},
+      "outputs": [
+        {"name": "crypt_library_2_fastqc.html", "format": "html"},
+        {"name": "crypt_library_2_fastqc.zip", "format": "zip"}
+      ],
+      "reason": "Produce an independent FastQC report and ZIP archive for crypt_library_2.fq."
+    },
+    {
+      "id": "step_04",
+      "skill": "multiqc_summary",
+      "inputs": [
+        {"source": "step", "ref": "crypt_library_1_fastqc.zip"},
+        {"source": "step", "ref": "crypt_library_2_fastqc.zip"}
+      ],
+      "parameters": {},
+      "outputs": [
+        {"name": "multiqc_report.html", "format": "html"},
+        {"name": "multiqc_report.json", "format": "json"}
+      ],
+      "reason": "Summarize both FastQC ZIP archives into a single MultiQC report while retaining all QC evidence."
+    }
+  ]
+}

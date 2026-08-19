@@ -1,0 +1,11 @@
+metric,value
+total_rows,5.0
+unique_sequences,5.0
+length_min,13.0
+length_median,20.0
+length_mean,25.2
+length_max,37.0
+label_0_count,2.0
+label_1_count,3.0
+label_0_proportion,0.4
+label_1_proportion,0.6

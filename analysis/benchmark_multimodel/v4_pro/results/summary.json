@@ -1,0 +1,127 @@
+{
+  "pairs": 24,
+  "arms": {
+    "paleorigor": {
+      "successes": 24,
+      "total": 24,
+      "rate": 1.0,
+      "wilson_95": [
+        0.8620237953250198,
+        1.0
+      ]
+    },
+    "raw_llm": {
+      "successes": 19,
+      "total": 24,
+      "rate": 0.7916666666666666,
+      "wilson_95": [
+        0.5952954674681133,
+        0.9075517464714814
+      ]
+    }
+  },
+  "paired_rate_difference": 0.20833333333333337,
+  "discordant": {
+    "paleorigor_only": 5,
+    "raw_only": 0
+  },
+  "mcnemar_exact_two_sided_p": 0.0625,
+  "by_scenario": {
+    "H5-B1": {
+      "paleorigor": {
+        "successes": 3,
+        "total": 3,
+        "rate": 1.0
+      },
+      "raw_llm": {
+        "successes": 2,
+        "total": 3,
+        "rate": 0.6666666666666666
+      }
+    },
+    "H5-B2": {
+      "paleorigor": {
+        "successes": 3,
+        "total": 3,
+        "rate": 1.0
+      },
+      "raw_llm": {
+        "successes": 3,
+        "total": 3,
+        "rate": 1.0
+      }
+    },
+    "H5-B3": {
+      "paleorigor": {
+        "successes": 3,
+        "total": 3,
+        "rate": 1.0
+      },
+      "raw_llm": {
+        "successes": 3,
+        "total": 3,
+        "rate": 1.0
+      }
+    },
+    "H5-B4": {
+      "paleorigor": {
+        "successes": 3,
+        "total": 3,
+        "rate": 1.0
+      },
+      "raw_llm": {
+        "successes": 3,
+        "total": 3,
+        "rate": 1.0
+      }
+    },
+    "H5-S1": {
+      "paleorigor": {
+        "successes": 3,
+        "total": 3,
+        "rate": 1.0
+      },
+      "raw_llm": {
+        "successes": 0,
+        "total": 3,
+        "rate": 0.0
+      }
+    },
+    "H5-S2": {
+      "paleorigor": {
+        "successes": 3,
+        "total": 3,
+        "rate": 1.0
+      },
+      "raw_llm": {
+        "successes": 3,
+        "total": 3,
+        "rate": 1.0
+      }
+    },
+    "H5-S3": {
+      "paleorigor": {
+        "successes": 3,
+        "total": 3,
+        "rate": 1.0
+      },
+      "raw_llm": {
+        "successes": 2,
+        "total": 3,
+        "rate": 0.6666666666666666
+      }
+    },
+    "H5-S4": {
+      "paleorigor": {
+        "successes": 3,
+        "total": 3,
+        "rate": 1.0
+      },
+      "raw_llm": {
+        "successes": 3,
+        "total": 3,
+        "rate": 1.0
+      }
+    }
+  }
+}

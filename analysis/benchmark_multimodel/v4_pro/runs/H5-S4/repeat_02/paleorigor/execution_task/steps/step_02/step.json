@@ -1,0 +1,25 @@
+{
+  "id": "step_02",
+  "skill": "sample_sheet_prepare",
+  "status": "succeeded",
+  "parameters": {},
+  "metrics": {
+    "samples": 3,
+    "runs": 3,
+    "paired_runs": 2,
+    "single_runs": 1
+  },
+  "warnings": [],
+  "error": null,
+  "started_at": "2026-08-19T07:11:23.271631+00:00",
+  "ended_at": "2026-08-19T07:11:23.275257+00:00",
+  "inputs": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v5/fixtures/depository_metadata.tsv"
+  ],
+  "outputs": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_multimodel/v4_pro/runs/H5-S4/repeat_02/paleorigor/execution_task/steps/step_02/samplesheet.csv",
+      "sha256": "6dbe86c6f8aaa1a6d62ef5edea92a409c85d101b2523dd3d3bc500ea47d0a41b"
+    }
+  ]
+}

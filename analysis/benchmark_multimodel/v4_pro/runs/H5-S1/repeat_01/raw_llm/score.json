@@ -1,0 +1,111 @@
+{
+  "strict_success": false,
+  "decision": "workflow",
+  "failure_codes": [
+    "missing_required_skill:file_type_detect",
+    "production_validation_failed"
+  ],
+  "workflow": {
+    "schema_version": "1.0",
+    "task_summary": "Deduplicate ancient-sediment FASTA sequences, retain records 15-22 nucleotides, and generate SeqKit statistics.",
+    "steps": [
+      {
+        "id": "step_01",
+        "skill": "seqkit_deduplicate",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "sediment_amplicons.fna"
+          }
+        ],
+        "parameters": {
+          "by_sequence": true
+        },
+        "outputs": [
+          {
+            "name": "sediment_dedup.fasta",
+            "format": "fasta"
+          }
+        ],
+        "reason": "Remove duplicate sequences from the input ancient-sediment FASTA."
+      },
+      {
+        "id": "step_02",
+        "skill": "seqkit_length_filter",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "step_01"
+          }
+        ],
+        "parameters": {
+          "min_length": 15,
+          "max_length": 22
+        },
+        "outputs": [
+          {
+            "name": "sediment_dedup_15_22.fasta",
+            "format": "fasta"
+          }
+        ],
+        "reason": "Keep only deduplicated records between 15 and 22 nucleotides in length."
+      },
+      {
+        "id": "step_03",
+        "skill": "seqkit_stats",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "step_02"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "sediment_seqkit_stats.json",
+            "format": "json"
+          }
+        ],
+        "reason": "Generate machine-readable SeqKit statistics for the retained sequence set."
+      }
+    ]
+  },
+  "validation": {
+    "valid": false,
+    "errors": [
+      "step_02: input format directory is incompatible with seqkit_length_filter",
+      "step_03: input format directory is incompatible with seqkit_stats"
+    ],
+    "warnings": [],
+    "issues": [
+      {
+        "code": "input_format_incompatible",
+        "message": "step_02: input format directory is incompatible with seqkit_length_filter",
+        "step_id": "step_02",
+        "skill": "seqkit_length_filter",
+        "reference": "step_01",
+        "parameter": null,
+        "expected": [
+          "fasta",
+          "fastq"
+        ],
+        "observed": "directory",
+        "hint": "Provide a FASTA/FASTQ input or choose a skill compatible with DIRECTORY."
+      },
+      {
+        "code": "input_format_incompatible",
+        "message": "step_03: input format directory is incompatible with seqkit_stats",
+        "step_id": "step_03",
+        "skill": "seqkit_stats",
+        "reference": "step_02",
+        "parameter": null,
+        "expected": [
+          "fasta",
+          "fastq"
+        ],
+        "observed": "directory",
+        "hint": "Provide a FASTA/FASTQ input or choose a skill compatible with DIRECTORY."
+      }
+    ]
+  }
+}

@@ -1,0 +1,53 @@
+{
+  "strict_success": true,
+  "decision": "workflow",
+  "failure_codes": [],
+  "workflow": {
+    "schema_version": "1.0",
+    "task_summary": "Normalize uploaded repository metadata TSV into a FASTQ sample-sheet CSV without validating referenced reads.",
+    "steps": [
+      {
+        "id": "step_01",
+        "skill": "file_type_detect",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "depository_metadata.tsv"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "detected_file_type",
+            "format": "json"
+          }
+        ],
+        "reason": "Confirm the uploaded file type before parsing the metadata table."
+      },
+      {
+        "id": "step_02",
+        "skill": "sample_sheet_prepare",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "depository_metadata.tsv"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "normalized_sample_sheet",
+            "format": "csv"
+          }
+        ],
+        "reason": "Transform metadata into a normalized FASTQ sample sheet while preserving sample/run identifiers, layout, predicted FASTQ paths, and organism metadata; no path validation is requested."
+      }
+    ]
+  },
+  "validation": {
+    "valid": true,
+    "errors": [],
+    "warnings": [],
+    "issues": []
+  }
+}

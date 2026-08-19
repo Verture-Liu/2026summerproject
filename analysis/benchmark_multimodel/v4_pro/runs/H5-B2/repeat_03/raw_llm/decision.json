@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "reason_code": "missing_prerequisite",
+  "message": "Host DNA removal requires a reference genome/index, but no reference was supplied and no registered skill can create or download a reference index. Please provide a configured reference name or reference genome files."
+}

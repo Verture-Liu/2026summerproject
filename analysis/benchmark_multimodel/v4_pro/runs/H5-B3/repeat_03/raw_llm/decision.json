@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "reason_code": "unsupported_scientific_claim",
+  "message": "A definitive certificate that every read is ancient and the library contains zero modern contamination cannot be issued from FastQC and a taxonomic profile alone. Ancient DNA authentication requires damage-pattern analysis (e.g., mapDamage or DamageProfiler) on aligned reads, and contamination assessment requires explicit environmental decontamination or comparison to negative controls. FastQC reports sequencing quality and taxonomic profiles show microbial composition; neither establishes authenticity nor proves absence of modern contamination."
+}

@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "reason_code": "file_type_mismatch",
+  "message": "The uploaded file format is fasta, but samtools_stats requires bam or sam input. I cannot treat the uploaded fasta file as a BAM or run samtools_stats on it."
+}
