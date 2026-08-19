@@ -46,6 +46,8 @@ def build_system_prompt(file_summaries, skill_descriptors) -> str:
             "For paired-end reads, use one separate fastq_qc step per mate, then pass both FastQC ZIP outputs to multiqc_summary. Do not combine both mates into one fastq_qc step.",
             "For uploaded raw peptide CSV or TSV files, normalize before peptide operations.",
             "Validate canonical peptide tables before filtering, statistics, charts, or export.",
+            "peptide_validate has two canonical CSV outputs: validated_csv (valid rows) and rejected_csv (rejected rows). Use validated_csv for downstream steps and declare rejected_csv when an audit table is needed.",
+            "peptide_statistics canonical summary outputs are statistics_json and statistics_csv; length_distribution_csv and amino_acid_composition_csv are optional detail tables.",
             "Use only optional peptide operations requested by the user.",
             "Do not invent peptide prediction or machine-learning steps.",
             f"WORKFLOW_JSON_SCHEMA={json.dumps(Workflow.model_json_schema(), ensure_ascii=False)}",

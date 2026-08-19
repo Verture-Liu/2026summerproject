@@ -32,7 +32,9 @@ def _require_seqkit_command():
 
 def _sequence_suffix(path: Path) -> str:
     name = path.name.lower()
-    if any(token in name for token in (".fa", ".fasta", ".fna", ".faa")):
+    if name.endswith(".gz"):
+        name = name[:-3]
+    if name.endswith((".fa", ".fasta", ".fna", ".faa")):
         return ".fasta"
     return ".fastq"
 

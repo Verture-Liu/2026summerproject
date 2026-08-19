@@ -47,6 +47,30 @@ class AmbiguousCsvRegistry:
         return AmbiguousCsvSkill()
 
 
+class CanonicalCsvSkill:
+    def run(self, context, parameters):
+        valid = context.work_dir / "valid_peptides.csv"
+        rejected = context.work_dir / "rejected_peptides.csv"
+        valid.write_text("label,sequence\n1,ACDE\n", encoding="utf-8")
+        rejected.write_text("label,sequence\n", encoding="utf-8")
+        return SkillResult(
+            "succeeded",
+            [str(valid), str(rejected)],
+            {},
+            [],
+            named_outputs={
+                "valid": str(valid),
+                "validated": str(valid),
+                "rejected": str(rejected),
+            },
+        )
+
+
+class CanonicalCsvRegistry:
+    def get(self, name):
+        return CanonicalCsvSkill()
+
+
 def test_executor_maps_equal_count_same_format_outputs_in_declared_order(tmp_path):
     uploaded = tmp_path / "table.csv"
     uploaded.write_text("value\ninput\n", encoding="utf-8")
@@ -75,6 +99,37 @@ def test_executor_maps_equal_count_same_format_outputs_in_declared_order(tmp_pat
         tmp_path / "task",
         {"table": uploaded},
         AmbiguousCsvRegistry(),
+        {},
+    )
+
+    assert summary.status == "succeeded"
+
+
+def test_executor_resolves_semantic_canonical_named_output(tmp_path):
+    uploaded = tmp_path / "table.csv"
+    uploaded.write_text("label,sequence\n1,ACDE\n", encoding="utf-8")
+    workflow = Workflow.model_validate(
+        {
+            "schema_version": "1.0",
+            "task_summary": "validate peptides",
+            "steps": [
+                {
+                    "id": "step_01",
+                    "skill": "peptide_validate",
+                    "inputs": [{"source": "uploaded", "ref": "table"}],
+                    "parameters": {},
+                    "outputs": [{"name": "validated_peptides.csv", "format": "csv"}],
+                    "reason": "use the valid subset",
+                }
+            ],
+        }
+    )
+
+    summary = execute_workflow(
+        workflow,
+        tmp_path / "task",
+        {"table": uploaded},
+        CanonicalCsvRegistry(),
         {},
     )
 

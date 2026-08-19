@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import json
 import sys
 from pathlib import Path
@@ -14,11 +15,16 @@ from analysis.benchmark_v2.scoring import score_completion
 
 
 def main() -> int:
-    scenarios = {item.id: item for item in load_scenarios(PROJECT_ROOT)}
-    runs_root = PROJECT_ROOT / "analysis" / "benchmark_v2" / "runs"
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--manifest")
+    parser.add_argument("--runs-root", default="analysis/benchmark_v2/runs")
+    args = parser.parse_args()
+    manifest = (PROJECT_ROOT / args.manifest).resolve() if args.manifest else None
+    scenarios = {item.id: item for item in load_scenarios(PROJECT_ROOT, manifest_path=manifest)}
+    runs_root = (PROJECT_ROOT / args.runs_root).resolve()
     checked = 0
     discrepancies = []
-    for bundle in sorted(path.parent for path in runs_root.glob("V2-*/repeat_*/*/score.json")):
+    for bundle in sorted(path.parent for path in runs_root.glob("*/repeat_*/*/score.json")):
         scenario_id = bundle.parents[1].name
         content_path = bundle / ("repair_completion.txt" if (bundle / "repair_completion.txt").exists() else "raw_completion.txt")
         if not content_path.exists():

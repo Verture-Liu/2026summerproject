@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import json
 import shutil
 import sys
@@ -19,9 +20,29 @@ from research_agent.skills.registry import build_default_registry
 
 
 def main() -> int:
-    formal_root = PROJECT_ROOT / "analysis" / "benchmark_v2" / "runs"
-    output_root = PROJECT_ROOT / "analysis" / "benchmark_v2" / "development_runs" / "round_01_contract_replay"
-    scenarios = {item.id: item for item in load_scenarios(PROJECT_ROOT) if item.kind == "supported"}
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--manifest")
+    parser.add_argument("--runs-root", default="analysis/benchmark_v2/runs")
+    parser.add_argument(
+        "--output-root",
+        default="analysis/benchmark_v2/development_runs/round_01_contract_replay",
+    )
+    parser.add_argument("--scenario", action="append")
+    args = parser.parse_args()
+    formal_root = (PROJECT_ROOT / args.runs_root).resolve()
+    output_root = (PROJECT_ROOT / args.output_root).resolve()
+    manifest = (PROJECT_ROOT / args.manifest).resolve() if args.manifest else None
+    scenarios = {
+        item.id: item
+        for item in load_scenarios(PROJECT_ROOT, manifest_path=manifest)
+        if item.kind == "supported"
+    }
+    if args.scenario:
+        requested = set(args.scenario)
+        unknown = requested - set(scenarios)
+        if unknown:
+            parser.error(f"Unknown supported scenario(s): {', '.join(sorted(unknown))}")
+        scenarios = {key: value for key, value in scenarios.items() if key in requested}
     records = []
     for scenario_id, scenario in scenarios.items():
         for repeat in range(1, 4):

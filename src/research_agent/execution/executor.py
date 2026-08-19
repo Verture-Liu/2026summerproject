@@ -2,6 +2,7 @@ import hashlib
 import html
 import json
 import platform
+import re
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -127,6 +128,36 @@ def _resolve_declared_outputs(
             )
         resolved[declared_index] = explicit_path
         used.add(result_index)
+
+    def normalized_alias(value: str) -> str:
+        stem = Path(value).stem.lower()
+        return re.sub(r"[^a-z0-9]+", "_", stem).strip("_")
+
+    for declared_index, output in enumerate(declared_outputs):
+        if resolved[declared_index] is not None:
+            continue
+        declared_alias = normalized_alias(output.name)
+        semantic_candidates: dict[Path, int] = {}
+        for alias, named_path in named_outputs.items():
+            alias_normalized = normalized_alias(alias)
+            if not alias_normalized or not (
+                declared_alias == alias_normalized
+                or declared_alias.startswith(f"{alias_normalized}_")
+                or alias_normalized.startswith(f"{declared_alias}_")
+            ):
+                continue
+            path = Path(named_path)
+            try:
+                result_index = result_paths.index(path)
+            except ValueError:
+                continue
+            if result_index in used or not _path_matches_format(path, output.format):
+                continue
+            semantic_candidates[path] = result_index
+        if len(semantic_candidates) == 1:
+            path, result_index = next(iter(semantic_candidates.items()))
+            resolved[declared_index] = path
+            used.add(result_index)
 
     formats = dict.fromkeys(output.format for output in declared_outputs)
     for output_format in formats:

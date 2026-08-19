@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import csv
 import json
 import sys
@@ -15,7 +16,7 @@ from analysis.benchmark_v2.summary import summarize_records
 
 def collect_records(runs_root: Path) -> list[dict]:
     records = []
-    for score_path in sorted(Path(runs_root).glob("V2-*/repeat_*/*/score.json")):
+    for score_path in sorted(Path(runs_root).glob("*/repeat_*/*/score.json")):
         bundle = score_path.parent
         score = json.loads(score_path.read_text(encoding="utf-8"))
         provenance_path = bundle / "provenance.json"
@@ -36,9 +37,13 @@ def collect_records(runs_root: Path) -> list[dict]:
 
 
 def main() -> int:
-    output = PROJECT_ROOT / "analysis" / "benchmark_v2" / "results"
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--runs-root", default="analysis/benchmark_v2/runs")
+    parser.add_argument("--results-root", default="analysis/benchmark_v2/results")
+    args = parser.parse_args()
+    output = (PROJECT_ROOT / args.results_root).resolve()
     output.mkdir(parents=True, exist_ok=True)
-    records = collect_records(PROJECT_ROOT / "analysis" / "benchmark_v2" / "runs")
+    records = collect_records((PROJECT_ROOT / args.runs_root).resolve())
     fields = ["scenario_id", "repeat", "arm", "strict_success", "decision", "failure_codes", "latency_seconds", "total_tokens"]
     with (output / "run_level.csv").open("w", newline="", encoding="utf-8") as handle:
         writer = csv.DictWriter(handle, fieldnames=fields)

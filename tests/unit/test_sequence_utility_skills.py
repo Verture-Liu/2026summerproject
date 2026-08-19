@@ -8,7 +8,14 @@ from research_agent.skills.sequence_utilities import (
     SeqkitLengthFilterSkill,
     SeqkitStatsSkill,
     SeqtkSampleSkill,
+    _sequence_suffix,
 )
+
+
+def test_sequence_suffix_does_not_misclassify_fastq_as_fasta():
+    assert _sequence_suffix(Path("reads.fastq")) == ".fastq"
+    assert _sequence_suffix(Path("reads.fastq.gz")) == ".fastq"
+    assert _sequence_suffix(Path("reads.fasta")) == ".fasta"
 
 
 def test_seqkit_stats_reports_missing_seqkit(tmp_path, monkeypatch):

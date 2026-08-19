@@ -24,5 +24,7 @@ def test_calculates_descriptive_statistics_and_composition(tmp_path):
     assert stats["unique_sequences"] == 3
     assert stats["label_counts"] == {"0": 1, "1": 2}
     assert stats["length"]["mean"] == 3.0
-    composition = pd.read_csv(result.outputs[2]).set_index("amino_acid")
+    summary = pd.read_csv(result.named_outputs["statistics_csv"])
+    assert {"total_rows", "unique_sequences", "length_mean"} <= set(summary["metric"])
+    composition = pd.read_csv(result.named_outputs["amino_acid_composition_csv"]).set_index("amino_acid")
     assert composition.loc["A", "count"] == 4

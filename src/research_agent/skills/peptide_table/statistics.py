@@ -51,6 +51,22 @@ class PeptideStatisticsSkill:
             json.dumps(stats, ensure_ascii=False, indent=2, sort_keys=True),
             encoding="utf-8",
         )
+        summary_rows = [
+            {"metric": "total_rows", "value": stats["total_rows"]},
+            {"metric": "unique_sequences", "value": stats["unique_sequences"]},
+        ]
+        summary_rows.extend(
+            {"metric": f"length_{key}", "value": value}
+            for key, value in stats["length"].items()
+        )
+        for label, value in stats.get("label_counts", {}).items():
+            summary_rows.append({"metric": f"label_{label}_count", "value": value})
+        for label, value in stats.get("label_proportions", {}).items():
+            summary_rows.append(
+                {"metric": f"label_{label}_proportion", "value": value}
+            )
+        summary_path = context.work_dir / "peptide_statistics.csv"
+        write_table(pd.DataFrame(summary_rows, columns=["metric", "value"]), summary_path)
         distribution = (
             lengths.value_counts()
             .sort_index()
@@ -59,10 +75,13 @@ class PeptideStatisticsSkill:
         )
         distribution_path = context.work_dir / "length_distribution.csv"
         write_table(distribution, distribution_path)
-        outputs = [str(stats_path), str(distribution_path)]
+        outputs = [str(stats_path), str(summary_path), str(distribution_path)]
         named_outputs = {
             "statistics": str(stats_path),
             "statistics_json": str(stats_path),
+            "statistics_csv": str(summary_path),
+            "peptide_statistics": str(summary_path),
+            "peptide_statistics_csv": str(summary_path),
             "lengths": str(distribution_path),
             "length_distribution": str(distribution_path),
             "length_distribution_csv": str(distribution_path),
