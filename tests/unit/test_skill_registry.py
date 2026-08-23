@@ -1,9 +1,32 @@
+from types import SimpleNamespace
+
 import pytest
 
 from research_agent.skills.amplit.skill import AmplitPredictionSkill
 from research_agent.skills import registry as registry_module
 from research_agent.skills.registry import build_default_registry
 from tests.unit.test_skill_router import ADAPTER, MANIFEST, write_package
+
+
+def test_skill_roots_use_packaged_resources_and_runtime_application_paths(
+    tmp_path, monkeypatch
+):
+    resources = tmp_path / "resources"
+    installed = tmp_path / "application-support" / "skills"
+    unrelated_cwd = tmp_path / "unrelated-cwd"
+    unrelated_cwd.mkdir()
+    monkeypatch.chdir(unrelated_cwd)
+    monkeypatch.setattr(registry_module, "resource_root", lambda: resources)
+    monkeypatch.setattr(
+        registry_module,
+        "AppPaths",
+        SimpleNamespace(
+            for_runtime=lambda: SimpleNamespace(installed_skill_root=installed)
+        ),
+    )
+
+    assert registry_module.builtin_skill_root() == resources / "skill_packages" / "builtin"
+    assert registry_module.installed_skill_root() == installed
 
 
 def test_registry_exposes_only_registered_skills():

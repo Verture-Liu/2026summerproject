@@ -1,11 +1,136 @@
+import json
+import os
+import stat
 from pathlib import Path
 from subprocess import CompletedProcess
 
 from research_agent.skills.conda_tools import (
     ToolCommand,
+    bundled_tool_root,
     resolve_tool,
     run_tool_command,
 )
+from research_agent.runtime.paths import resource_root
+
+
+EXPECTED_BUNDLED_TOOLS = [
+    ("fastqc", "0.12.1", "bin/fastqc"),
+    ("multiqc", "1.35", "bin/multiqc"),
+    ("seqkit", "2.13.0", "bin/seqkit"),
+    ("seqtk", "1.5-r133", "bin/seqtk"),
+    ("samtools", "1.23.1", "bin/samtools"),
+    ("bwa", "0.7.19-r1273", "bin/bwa"),
+    ("bowtie2", "2.5.5", "bin/bowtie2"),
+]
+
+
+def _make_executable(path: Path) -> Path:
+    path.parent.mkdir(parents=True)
+    path.write_text("#!/bin/sh\n", encoding="utf-8")
+    path.chmod(path.stat().st_mode | stat.S_IXUSR)
+    return path
+
+
+def test_tool_manifest_declares_exact_bundled_tools_and_versions():
+    manifest_path = resource_root() / "resources" / "tool_manifest.json"
+
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+
+    assert [
+        (tool["id"], tool["version"], tool["command"])
+        for tool in manifest["tools"]
+    ] == EXPECTED_BUNDLED_TOOLS
+    assert all(set(tool) == {"id", "version", "command", "license_file"} for tool in manifest["tools"])
+    assert all(tool["license_file"] for tool in manifest["tools"])
+
+
+def test_bundled_tool_root_uses_environment_override(tmp_path):
+    tools = tmp_path / "tools"
+    tools.mkdir()
+
+    assert bundled_tool_root({"PALEORIGOR_TOOL_ROOT": str(tools)}) == tools
+
+
+def test_resolve_tool_prefers_explicit_bundle_over_environment_and_path(
+    tmp_path, monkeypatch
+):
+    explicit_executable = _make_executable(tmp_path / "explicit" / "bin" / "fastqc")
+    environment_executable = _make_executable(tmp_path / "environment" / "bin" / "fastqc")
+    monkeypatch.setenv("PALEORIGOR_TOOL_ROOT", str(environment_executable.parents[1]))
+    monkeypatch.setattr(
+        "research_agent.skills.conda_tools.shutil.which",
+        lambda name: "/usr/local/bin/fastqc" if name == "fastqc" else None,
+    )
+
+    command = resolve_tool(("fastqc",), bundle_root=explicit_executable.parents[1])
+
+    assert command == ToolCommand(
+        tool="fastqc", command=[str(explicit_executable)], source="bundle"
+    )
+
+
+def test_resolve_tool_uses_environment_bundle_before_path(tmp_path, monkeypatch):
+    executable = _make_executable(tmp_path / "tools" / "bin" / "fastqc")
+    monkeypatch.setenv("PALEORIGOR_TOOL_ROOT", str(executable.parents[1]))
+    monkeypatch.setattr(
+        "research_agent.skills.conda_tools.shutil.which",
+        lambda name: "/usr/local/bin/fastqc" if name == "fastqc" else None,
+    )
+
+    command = resolve_tool(("fastqc",))
+
+    assert command == ToolCommand(
+        tool="fastqc", command=[str(executable)], source="bundle"
+    )
+
+
+def test_packaged_resolver_never_falls_back_to_path_or_conda(tmp_path, monkeypatch):
+    bundle_root = tmp_path / "missing-tools"
+    monkeypatch.setattr(
+        "research_agent.skills.conda_tools.shutil.which",
+        lambda name: "/usr/local/bin/fastqc" if name == "fastqc" else "/usr/local/bin/conda",
+    )
+
+    command = resolve_tool(
+        ("fastqc",),
+        {"fastqc": "fastqc_env"},
+        bundle_root=bundle_root,
+        packaged=True,
+    )
+
+    assert command is None
+
+
+def test_resolve_tool_rejects_bundle_command_that_escapes_tool_root(
+    tmp_path, monkeypatch
+):
+    resources = tmp_path / "resources"
+    resources.mkdir()
+    (resources / "tool_manifest.json").write_text(
+        json.dumps(
+            {
+                "tools": [
+                    {
+                        "id": "fastqc",
+                        "version": "0",
+                        "command": "../outside/fastqc",
+                        "license_file": "licenses/fastqc.txt",
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    _make_executable(tmp_path / "outside" / "fastqc")
+    monkeypatch.setattr(
+        "research_agent.skills.conda_tools.resource_root", lambda: tmp_path
+    )
+
+    command = resolve_tool(
+        ("fastqc",), bundle_root=tmp_path / "tools", packaged=True
+    )
+
+    assert command is None
 
 
 def test_resolve_tool_uses_path_before_conda(monkeypatch):

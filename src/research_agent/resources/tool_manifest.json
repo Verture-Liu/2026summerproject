@@ -1,0 +1,46 @@
+{
+  "tools": [
+    {
+      "id": "fastqc",
+      "version": "0.12.1",
+      "command": "bin/fastqc",
+      "license_file": "licenses/fastqc.txt"
+    },
+    {
+      "id": "multiqc",
+      "version": "1.35",
+      "command": "bin/multiqc",
+      "license_file": "licenses/multiqc.txt"
+    },
+    {
+      "id": "seqkit",
+      "version": "2.13.0",
+      "command": "bin/seqkit",
+      "license_file": "licenses/seqkit.txt"
+    },
+    {
+      "id": "seqtk",
+      "version": "1.5-r133",
+      "command": "bin/seqtk",
+      "license_file": "licenses/seqtk.txt"
+    },
+    {
+      "id": "samtools",
+      "version": "1.23.1",
+      "command": "bin/samtools",
+      "license_file": "licenses/samtools.txt"
+    },
+    {
+      "id": "bwa",
+      "version": "0.7.19-r1273",
+      "command": "bin/bwa",
+      "license_file": "licenses/bwa.txt"
+    },
+    {
+      "id": "bowtie2",
+      "version": "2.5.5",
+      "command": "bin/bowtie2",
+      "license_file": "licenses/bowtie2.txt"
+    }
+  ]
+}

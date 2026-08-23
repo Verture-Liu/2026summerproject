@@ -1,12 +1,15 @@
 from __future__ import annotations
 
 import json
+import os
 import shutil
 import subprocess
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
 from typing import Mapping, Sequence
+
+from research_agent.runtime.paths import resource_root
 
 
 @dataclass(frozen=True)
@@ -18,6 +21,44 @@ class ToolCommand:
 
 def _config_path() -> Path:
     return Path.cwd() / "config" / "tool_envs.json"
+
+
+def bundled_tool_root(env: Mapping[str, str] | None = None) -> Path | None:
+    source = os.environ if env is None else env
+    configured_root = source.get("PALEORIGOR_TOOL_ROOT")
+    if configured_root:
+        root = Path(configured_root).expanduser()
+        return root if root.is_dir() else None
+    packaged_root = resource_root() / "tools"
+    return packaged_root if packaged_root.is_dir() else None
+
+
+def _bundled_tool_command(
+    executable_candidates: Sequence[str], bundle_root: Path
+) -> ToolCommand | None:
+    manifest_path = resource_root() / "resources" / "tool_manifest.json"
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return None
+    tools = manifest.get("tools") if isinstance(manifest, dict) else None
+    if not isinstance(tools, list):
+        return None
+
+    resolved_root = bundle_root.resolve()
+    for name in executable_candidates:
+        for entry in tools:
+            if not isinstance(entry, dict) or entry.get("id") != name:
+                continue
+            command = entry.get("command")
+            if not isinstance(command, str):
+                continue
+            candidate = (bundle_root / command).resolve()
+            if resolved_root not in candidate.parents:
+                continue
+            if candidate.is_file() and os.access(candidate, os.X_OK):
+                return ToolCommand(tool=name, command=[str(candidate)], source="bundle")
+    return None
 
 
 @lru_cache(maxsize=1)
@@ -34,7 +75,17 @@ def load_tool_envs() -> dict[str, str]:
 def resolve_tool(
     executable_candidates: Sequence[str],
     tool_envs: Mapping[str, str] | None = None,
+    bundle_root: Path | str | None = None,
+    packaged: bool = False,
 ) -> ToolCommand | None:
+    root = Path(bundle_root).expanduser() if bundle_root is not None else bundled_tool_root()
+    if root is not None:
+        bundled = _bundled_tool_command(executable_candidates, root)
+        if bundled is not None:
+            return bundled
+    if packaged:
+        return None
+
     mapping = load_tool_envs() if tool_envs is None else dict(tool_envs)
     for name in executable_candidates:
         executable = shutil.which(name)
