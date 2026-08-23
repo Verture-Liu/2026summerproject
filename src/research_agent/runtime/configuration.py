@@ -38,15 +38,37 @@ class RuntimeConfiguration:
         if not normalized_model:
             raise ValueError("Model must not be empty")
 
-        preferences = self._preferences.load()
-        preferences["api_base_url"] = normalized_base_url
-        preferences["model"] = normalized_model
-        self._preferences.save(preferences)
+        old_preferences = self._preferences.load()
+        updated_preferences = dict(old_preferences)
+        updated_preferences["api_base_url"] = normalized_base_url
+        updated_preferences["model"] = normalized_model
 
-        if api_key is not None:
-            normalized_api_key = api_key.strip()
-            if normalized_api_key:
-                self._secret_store.set(_API_KEY_ACCOUNT, normalized_api_key)
+        normalized_api_key = api_key.strip() if api_key is not None else ""
+        key_will_change = bool(normalized_api_key)
+        old_api_key = self._secret_store.get(_API_KEY_ACCOUNT) if key_will_change else None
+
+        if key_will_change:
+            self._secret_store.set(_API_KEY_ACCOUNT, normalized_api_key)
+
+        try:
+            self._preferences.save(updated_preferences)
+        except Exception as preference_error:
+            rollback_errors = []
+            if key_will_change:
+                try:
+                    if old_api_key:
+                        self._secret_store.set(_API_KEY_ACCOUNT, old_api_key)
+                    else:
+                        self._secret_store.delete(_API_KEY_ACCOUNT)
+                except Exception as exc:
+                    rollback_errors.append(exc)
+            try:
+                self._preferences.save(old_preferences)
+            except Exception as exc:
+                rollback_errors.append(exc)
+            if rollback_errors:
+                raise RuntimeError("Configuration rollback failed") from preference_error
+            raise
 
         return self._redacted(self.get())
 

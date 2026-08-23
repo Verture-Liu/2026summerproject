@@ -33,7 +33,7 @@ async def test_planner_parses_json_workflow():
     planner = Planner(
         client=client,
         base_url="https://example.test/v1",
-        api_key="x",
+        api_key="planner-test-api-key",
         model="m",
     )
     workflow = await planner.plan("filter peptides", [], [])

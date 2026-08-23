@@ -43,6 +43,10 @@ def test_desktop_token_is_taken_from_fragment_then_removed_from_url():
     assert "localStorage" not in javascript
     assert "sessionStorage" not in javascript
     assert "document.cookie" not in javascript
+    assert "invalid_session" in javascript
+    assert "response.clone()" in javascript
+    assert "Quit and relaunch PaleoRigor" in javascript
+    assert "退出并重新启动 PaleoRigor" in javascript
 
 
 def test_every_api_fetch_uses_the_fragment_token_header():
@@ -74,7 +78,7 @@ def test_first_run_stays_blocking_until_key_and_connection_test_pass():
     assert "let configurationReady = false" in javascript
     assert "api_key_present" in javascript
     assert 'apiFetch("/api/config/test"' in javascript
-    assert '$("plan").disabled = !(configurationReady && hasFiles);' in javascript
+    assert '$("plan").disabled = sessionInvalid || !(configurationReady && hasFiles);' in javascript
     assert '$("api-key").value = ""' in javascript
 
 
@@ -100,10 +104,10 @@ def test_initial_configuration_response_cannot_overwrite_newer_configuration_sta
     javascript = read_web_files()["javascript"]
 
     assert "let configurationGeneration = 0" in javascript
-    assert "const beginConfigurationAction = (buttonId, label) => {" in javascript
+    assert "const beginConfigurationAction = (buttonId, label, mutatesConfiguration = false) => {" in javascript
     assert "const requestGeneration = configurationGeneration" in javascript
     assert "if (!isCurrentConfigurationAction(requestGeneration)) return;" in javascript
-    assert "beginConfigurationAction(\"save-api-config\", t(\"saveConfiguration\"))" in javascript
+    assert "beginConfigurationAction(\"save-api-config\", t(\"saveConfiguration\"), true)" in javascript
 
 
 def test_configuration_actions_cannot_restore_stale_ui_after_a_newer_action():
@@ -123,10 +127,10 @@ def test_configuration_actions_cannot_restore_stale_ui_after_a_newer_action():
     initial_second_guard = initial_load.index("if (!isCurrentConfigurationAction(requestGeneration)) return;", initial_first_guard + 1)
     assert initial_fetch < initial_first_guard < initial_json < initial_second_guard
 
-    for action, next_action in (
-        ('$("save-api-config").onclick = async () => {', '$("test-api-config").onclick'),
-        ('$("test-api-config").onclick = async () => {', '$("delete-api-key").onclick'),
-        ('$("delete-api-key").onclick = async () => {', '$("upload").onclick'),
+    for mutates_configuration, action, next_action in (
+        (True, '$("save-api-config").onclick = async () => {', '$("test-api-config").onclick'),
+        (False, '$("test-api-config").onclick = async () => {', '$("delete-api-key").onclick'),
+        (True, '$("delete-api-key").onclick = async () => {', '$("upload").onclick'),
     ):
         handler = javascript.split(action, 1)[1].split(next_action, 1)[0]
         assert "const requestGeneration = beginConfigurationAction(" in handler
@@ -139,7 +143,12 @@ def test_configuration_actions_cannot_restore_stale_ui_after_a_newer_action():
         json_index = handler.index("await safeResponseJson")
         first_guard = handler.index("if (!isCurrentConfigurationAction(requestGeneration)) return;", fetch_index)
         second_guard = handler.index("if (!isCurrentConfigurationAction(requestGeneration)) return;", first_guard + 1)
-        finally_guard = handler.index("finally {\n    completeConfigurationAction(requestGeneration);")
+        completion = (
+            "finally {\n    completeConfigurationAction(requestGeneration, true);"
+            if mutates_configuration
+            else "finally {\n    completeConfigurationAction(requestGeneration);"
+        )
+        finally_guard = handler.index(completion)
         assert fetch_index < first_guard < json_index < second_guard
         assert finally_guard < handler.index("completeConfigurationAction", finally_guard)
 
@@ -159,7 +168,7 @@ def test_configuration_actions_cannot_restore_stale_ui_after_a_newer_action():
     )[0]
     assert "configurationActionButtonIds.forEach((buttonId) => setButtonLoading(buttonId, false));" in reset_manager
 
-    start_manager = javascript.split("const beginConfigurationAction = (buttonId, label) => {", 1)[1].split(
+    start_manager = javascript.split("const beginConfigurationAction = (buttonId, label, mutatesConfiguration = false) => {", 1)[1].split(
         "const completeConfigurationAction", 1
     )[0]
     assert "const generation = ++configurationGeneration;" in start_manager
@@ -167,21 +176,60 @@ def test_configuration_actions_cannot_restore_stale_ui_after_a_newer_action():
         "setButtonLoading(buttonId, true, label);"
     )
     assert "return generation;" in start_manager
+    assert "if (mutatesConfiguration) setConfigurationMutationPending(true);" in start_manager
 
-    finish_manager = javascript.split("const completeConfigurationAction = (generation) => {", 1)[1].split(
+    finish_manager = javascript.split("const completeConfigurationAction = (generation, mutatesConfiguration = false) => {", 1)[1].split(
         "const refreshPlanningControls", 1
     )[0]
     assert "if (!isCurrentConfigurationAction(generation)) return;" in finish_manager
     assert "resetConfigurationActionButtons();" in finish_manager
+    assert "if (mutatesConfiguration) setConfigurationMutationPending(false);" in finish_manager
 
-    for button_id, label_key, action, next_action in (
-        ("save-api-config", "saveConfiguration", '$("save-api-config").onclick = async () => {', '$("test-api-config").onclick'),
-        ("test-api-config", "testConnection", '$("test-api-config").onclick = async () => {', '$("delete-api-key").onclick'),
-        ("delete-api-key", "deleteApiKey", '$("delete-api-key").onclick = async () => {', '$("upload").onclick'),
+    assert "const configurationMutationControlIds = [" in javascript
+    mutation_controls = javascript.split("const configurationMutationControlIds = [", 1)[1].split(
+        "];", 1
+    )[0]
+    for control_id in (
+        "api-base-url",
+        "api-model",
+        "api-key",
+        "save-api-config",
+        "test-api-config",
+        "delete-api-key",
+    ):
+        assert f'"{control_id}"' in mutation_controls
+    assert "const setConfigurationMutationPending = (pending) => {" in javascript
+
+    for button_id, label_key, mutation, action, next_action in (
+        ("save-api-config", "saveConfiguration", True, '$("save-api-config").onclick = async () => {', '$("test-api-config").onclick'),
+        ("test-api-config", "testConnection", False, '$("test-api-config").onclick = async () => {', '$("delete-api-key").onclick'),
+        ("delete-api-key", "deleteApiKey", True, '$("delete-api-key").onclick = async () => {', '$("upload").onclick'),
     ):
         handler = javascript.split(action, 1)[1].split(next_action, 1)[0]
-        assert f'beginConfigurationAction("{button_id}", t("{label_key}"))' in handler
-        assert "finally {\n    completeConfigurationAction(requestGeneration);" in handler
+        mutation_argument = ", true" if mutation else ""
+        assert f'beginConfigurationAction("{button_id}", t("{label_key}"){mutation_argument})' in handler
+        complete_argument = ", true" if mutation else ""
+        assert f"finally {{\n    completeConfigurationAction(requestGeneration{complete_argument});" in handler
+
+
+def test_connection_test_is_read_only_while_save_and_delete_are_mutations():
+    javascript = read_web_files()["javascript"]
+
+    test_handler = javascript.split('$("test-api-config").onclick = async () => {', 1)[1].split(
+        '$("delete-api-key").onclick', 1
+    )[0]
+    assert 'apiFetch("/api/config/test", {method: "POST"})' in test_handler
+    assert 'beginConfigurationAction("test-api-config", t("testConnection"))' in test_handler
+    assert 'beginConfigurationAction("test-api-config", t("testConnection"), true)' not in test_handler
+
+    save_handler = javascript.split('$("save-api-config").onclick = async () => {', 1)[1].split(
+        '$("test-api-config").onclick', 1
+    )[0]
+    delete_handler = javascript.split('$("delete-api-key").onclick = async () => {', 1)[1].split(
+        '$("upload").onclick', 1
+    )[0]
+    assert 'beginConfigurationAction("save-api-config", t("saveConfiguration"), true)' in save_handler
+    assert 'beginConfigurationAction("delete-api-key", t("deleteApiKey"), true)' in delete_handler
 
 
 def test_about_renders_the_packaged_tool_versions():

@@ -5,6 +5,7 @@ from pydantic import ValidationError
 
 from research_agent.agent.models import Workflow
 from research_agent.agent.prompts import build_system_prompt
+from research_agent.runtime.secret_guard import assert_no_secret_contamination
 
 
 class Planner:
@@ -46,8 +47,9 @@ class Planner:
             {"role": "user", "content": instruction},
         ]
         content = await self._complete(messages)
+        assert_no_secret_contamination(content, self.api_key)
         try:
-            return Workflow.model_validate_json(content)
+            workflow = Workflow.model_validate_json(content)
         except ValidationError as error:
             repair_messages = [
                 {"role": "system", "content": system_prompt},
@@ -62,4 +64,7 @@ class Planner:
                 },
             ]
             repaired = await self._complete(repair_messages)
-            return Workflow.model_validate_json(repaired)
+            assert_no_secret_contamination(repaired, self.api_key)
+            workflow = Workflow.model_validate_json(repaired)
+        assert_no_secret_contamination(workflow.model_dump(mode="json"), self.api_key)
+        return workflow

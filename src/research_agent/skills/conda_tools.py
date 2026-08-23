@@ -9,7 +9,7 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Mapping, Sequence
 
-from research_agent.runtime.paths import resource_root
+from research_agent.runtime.paths import is_packaged_runtime, resource_root
 
 
 @dataclass(frozen=True)
@@ -76,14 +76,14 @@ def resolve_tool(
     executable_candidates: Sequence[str],
     tool_envs: Mapping[str, str] | None = None,
     bundle_root: Path | str | None = None,
-    packaged: bool = False,
+    packaged: bool | None = None,
 ) -> ToolCommand | None:
     root = Path(bundle_root).expanduser() if bundle_root is not None else bundled_tool_root()
     if root is not None:
         bundled = _bundled_tool_command(executable_candidates, root)
         if bundled is not None:
             return bundled
-    if packaged:
+    if is_packaged_runtime(packaged):
         return None
 
     mapping = load_tool_envs() if tool_envs is None else dict(tool_envs)

@@ -1,10 +1,13 @@
 import json
 from collections.abc import Mapping
+from concurrent.futures import ThreadPoolExecutor
+from threading import Event
 
 import httpx
 import pytest
 from fastapi.testclient import TestClient
 
+from research_agent.files.output_destination import save_output_directory
 from research_agent.main import create_app
 from research_agent.runtime.configuration import RuntimeConfiguration
 from research_agent.runtime.preferences import JsonPreferences
@@ -248,6 +251,170 @@ def test_planning_uses_stored_credentials_and_rejects_request_supplied_api_field
     assert_secret_absent(rejected.text)
     assert_secret_absent(planned.json())
     assert_secret_absent(planned.text)
+
+
+def test_planning_rejects_provider_workflow_that_echoes_the_configured_key(tmp_path):
+    contaminated_workflow = {
+        "schema_version": "1.0",
+        "task_summary": "filter peptides",
+        "steps": [
+            {
+                "id": "step_01",
+                "skill": "peptide_filter",
+                "inputs": [{"source": "uploaded", "ref": "peptides"}],
+                "parameters": {
+                    "min_length": 13,
+                    "provider_note": {"echo": f"seen:{TEST_API_KEY}"},
+                },
+                "outputs": [{"name": "filtered", "format": "fasta"}],
+                "reason": "filter peptide lengths",
+            }
+        ],
+    }
+
+    def handler(_request):
+        return httpx.Response(
+            200,
+            json={
+                "choices": [
+                    {"message": {"content": json.dumps(contaminated_workflow)}}
+                ]
+            },
+        )
+
+    client, _ = make_client(tmp_path, handler)
+    client.put(
+        "/api/config",
+        json={
+            "base_url": "https://provider.example/v1",
+            "model": "provider-model",
+            "api_key": TEST_API_KEY,
+        },
+    )
+    task_id = client.post("/api/tasks").json()["task_id"]
+
+    response = client.post(
+        f"/api/tasks/{task_id}/plan",
+        json={"instruction": "filter the uploaded peptide sequences"},
+    )
+
+    assert response.status_code == 502
+    assert response.json() == {"detail": {"error": "planning_failed"}}
+    assert_secret_absent(response.text)
+    task_dir = tmp_path / "tasks" / task_id
+    assert not (task_dir / "workflow.draft.json").exists()
+    assert not (task_dir / "workflow.json").exists()
+    assert not (task_dir / "manifest.json").exists()
+    assert not (task_dir / "report.html").exists()
+    for artifact in task_dir.rglob("*"):
+        if artifact.is_file():
+            assert TEST_API_KEY.encode() not in artifact.read_bytes()
+
+
+def test_execution_rejects_a_workflow_containing_the_configured_key_before_records(tmp_path):
+    client, _ = make_client(tmp_path, lambda _request: httpx.Response(500))
+    client.put(
+        "/api/config",
+        json={
+            "base_url": "https://provider.example/v1",
+            "model": "provider-model",
+            "api_key": TEST_API_KEY,
+        },
+    )
+    task_id = client.post("/api/tasks").json()["task_id"]
+    task_dir = tmp_path / "tasks" / task_id
+    destination = tmp_path / "results"
+    destination.mkdir()
+    save_output_directory(task_dir, destination)
+    workflow = {
+        "schema_version": "1.0",
+        "task_summary": "filter peptides",
+        "steps": [
+            {
+                "id": "step_01",
+                "skill": "peptide_filter",
+                "inputs": [],
+                "parameters": {"provider_echo": TEST_API_KEY},
+                "outputs": [{"name": "filtered", "format": "fasta"}],
+                "reason": "filter peptide lengths",
+            }
+        ],
+    }
+
+    response = client.post(
+        f"/api/tasks/{task_id}/execute",
+        json={"approved": True, "workflow": workflow},
+    )
+
+    assert response.status_code == 400
+    assert response.json() == {"detail": {"error": "workflow_rejected"}}
+    assert_secret_absent(response.text)
+    assert not (task_dir / "workflow.json").exists()
+    assert not (task_dir / "manifest.json").exists()
+    assert not (task_dir / "report.html").exists()
+    assert not list(destination.glob("ResearchAgent_Result_*"))
+
+
+class BlockingSecretStore(MemorySecretStore):
+    def __init__(self):
+        super().__init__()
+        self.set_started = Event()
+        self.release_set = Event()
+        self.delete_called = Event()
+        self.operations = []
+
+    def set(self, name, value):
+        self.operations.append(("set-started", value))
+        self.set_started.set()
+        if not self.release_set.wait(timeout=5):
+            raise RuntimeError("test set timed out")
+        super().set(name, value)
+        self.operations.append(("set-finished", value))
+
+    def delete(self, name):
+        self.operations.append(("delete", name))
+        self.delete_called.set()
+        super().delete(name)
+
+
+def test_config_save_and_delete_endpoints_are_serialized_in_arrival_order(tmp_path):
+    secret_store = BlockingSecretStore()
+    configuration = RuntimeConfiguration(
+        JsonPreferences(tmp_path / "preferences.json"),
+        secret_store,
+    )
+    app = create_app(
+        task_root=tmp_path / "tasks",
+        runtime_configuration=configuration,
+        planner_client_factory=lambda: httpx.AsyncClient(
+            transport=httpx.MockTransport(lambda _request: httpx.Response(500))
+        ),
+    )
+
+    with TestClient(app) as client, ThreadPoolExecutor(max_workers=2) as pool:
+        save = pool.submit(
+            client.put,
+            "/api/config",
+            json={
+                "base_url": "https://provider.example/v1",
+                "model": "new-model",
+                "api_key": TEST_API_KEY,
+            },
+        )
+        assert secret_store.set_started.wait(timeout=2)
+        delete = pool.submit(client.delete, "/api/config/key")
+        secret_store.delete_called.wait(timeout=0.2)
+        secret_store.release_set.set()
+
+        assert save.result(timeout=5).status_code == 200
+        assert delete.result(timeout=5).status_code == 200
+
+    assert configuration.get().api_key == ""
+    assert secret_store.operations == [
+        ("set-started", TEST_API_KEY),
+        ("set-finished", TEST_API_KEY),
+        ("delete", "api_key"),
+    ]
 
 
 def test_about_returns_the_pinned_tool_manifest(tmp_path):

@@ -1,3 +1,4 @@
+import asyncio
 import json
 from collections.abc import Callable
 from pathlib import Path
@@ -8,6 +9,7 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict
+from starlette.concurrency import run_in_threadpool
 
 from research_agent.agent.models import Workflow
 from research_agent.agent.planner import Planner
@@ -24,6 +26,11 @@ from research_agent.files.task_store import TaskStore
 from research_agent.runtime.configuration import RuntimeConfiguration
 from research_agent.runtime.paths import AppPaths, resource_root
 from research_agent.runtime.preferences import JsonPreferences
+from research_agent.runtime.secret_guard import (
+    SecretContaminationError,
+    assert_no_secret_contamination,
+    write_guarded_json,
+)
 from research_agent.runtime.secrets import MacOSKeychainSecretStore
 from research_agent.runtime.session import install_api_token_guard
 from research_agent.skills.registry import build_default_registry
@@ -92,6 +99,7 @@ def create_app(
     web_dir = Path(__file__).parent / "web"
     directory_selector = directory_chooser or choose_directory
     configuration = runtime_configuration or _default_runtime_configuration()
+    configuration_mutation_lock = asyncio.Lock()
     client_factory = planner_client_factory or httpx.AsyncClient
     install_api_token_guard(app, session_token)
 
@@ -99,36 +107,44 @@ def create_app(
     async def invalid_request(_request, _exc):
         return JSONResponse(status_code=422, content={"detail": {"error": "invalid_request"}})
 
-    def configuration_response() -> dict[str, object]:
+    async def configuration_snapshot():
+        async with configuration_mutation_lock:
+            return await run_in_threadpool(configuration.get)
+
+    @app.get("/api/config")
+    async def get_configuration():
         try:
-            return _redacted_config(configuration)
+            return RuntimeConfiguration._redacted(await configuration_snapshot())
         except Exception as exc:
             raise HTTPException(503, detail={"error": "configuration_unavailable"}) from exc
 
-    @app.get("/api/config")
-    def get_configuration():
-        return configuration_response()
-
     @app.put("/api/config")
-    def update_configuration(request: RuntimeConfigRequest):
+    async def update_configuration(request: RuntimeConfigRequest):
         try:
-            return configuration.update(request.base_url, request.model, request.api_key)
+            async with configuration_mutation_lock:
+                return await run_in_threadpool(
+                    configuration.update,
+                    request.base_url,
+                    request.model,
+                    request.api_key,
+                )
         except ValueError as exc:
             raise HTTPException(422, detail={"error": "invalid_configuration"}) from exc
         except Exception as exc:
             raise HTTPException(503, detail={"error": "configuration_unavailable"}) from exc
 
     @app.delete("/api/config/key")
-    def delete_configuration_key():
+    async def delete_configuration_key():
         try:
-            configuration.delete_api_key()
-            return _redacted_config(configuration)
+            async with configuration_mutation_lock:
+                await run_in_threadpool(configuration.delete_api_key)
+                return await run_in_threadpool(_redacted_config, configuration)
         except Exception as exc:
             raise HTTPException(503, detail={"error": "configuration_unavailable"}) from exc
 
     @app.post("/api/config/test")
     async def test_configuration():
-        config = configuration.get()
+        config = await configuration_snapshot()
         if not config.api_key:
             raise HTTPException(401, detail={"error": "invalid_api_credentials"})
         try:
@@ -222,11 +238,16 @@ def create_app(
         task_dir = store.task_dir(task_id)
         index = _load_index(task_dir)
         summaries = [{"ref": ref, **item["summary"]} for ref, item in index.items()]
-        config = configuration.get()
+        try:
+            config = await configuration_snapshot()
+        except Exception as exc:
+            raise HTTPException(503, detail={"error": "configuration_unavailable"}) from exc
         try:
             async with client_factory() as client:
                 planner = Planner(client, config.base_url, config.api_key, config.model)
                 workflow = await planner.plan(request.instruction, summaries, registry.catalog())
+            workflow_payload = workflow.model_dump(mode="json")
+            assert_no_secret_contamination(workflow_payload, config.api_key)
         except Exception as exc:
             raise HTTPException(502, detail={"error": "planning_failed"}) from exc
         uploaded_formats = {ref: item["summary"]["format"] for ref, item in index.items()}
@@ -238,9 +259,8 @@ def create_app(
             uploaded_paths=uploaded_paths,
             check_dependencies=True,
         )
-        (task_dir / "workflow.draft.json").write_text(workflow.model_dump_json(indent=2), encoding="utf-8")
-        return {
-            "workflow": workflow.model_dump(),
+        response_payload = {
+            "workflow": workflow_payload,
             "validation": {
                 "valid": report.valid,
                 "errors": report.errors,
@@ -248,6 +268,16 @@ def create_app(
                 "issues": [issue.to_dict() for issue in report.issues],
             },
         }
+        try:
+            assert_no_secret_contamination(response_payload, config.api_key)
+            write_guarded_json(
+                task_dir / "workflow.draft.json",
+                workflow_payload,
+                config.api_key,
+            )
+        except SecretContaminationError as exc:
+            raise HTTPException(502, detail={"error": "planning_failed"}) from exc
+        return response_payload
 
     @app.post("/api/tasks/{task_id}/select-output-directory")
     def select_output_directory(task_id: str):
@@ -268,10 +298,19 @@ def create_app(
         return {"path": str(load_output_directory(task_dir))}
 
     @app.post("/api/tasks/{task_id}/execute")
-    def execute_task(task_id: str, request: ExecuteRequest):
+    async def execute_task(task_id: str, request: ExecuteRequest):
         if not request.approved:
             raise HTTPException(400, detail={"error": "approval_required"})
         task_dir = store.task_dir(task_id)
+        try:
+            config = await configuration_snapshot()
+        except Exception as exc:
+            raise HTTPException(503, detail={"error": "configuration_unavailable"}) from exc
+        workflow_payload = request.workflow.model_dump(mode="json")
+        try:
+            assert_no_secret_contamination(workflow_payload, config.api_key)
+        except SecretContaminationError as exc:
+            raise HTTPException(400, detail={"error": "workflow_rejected"}) from exc
         output_directory = load_output_directory(task_dir)
         if output_directory is None:
             raise HTTPException(400, detail={"error": "output_directory_required"})
@@ -294,14 +333,26 @@ def create_app(
                     "issues": [issue.to_dict() for issue in report.issues],
                 },
             )
-        (task_dir / "workflow.json").write_text(request.workflow.model_dump_json(indent=2), encoding="utf-8")
+        write_guarded_json(
+            task_dir / "workflow.json",
+            workflow_payload,
+            config.api_key,
+        )
         uploaded_files = uploaded_paths
-        summary = execute_workflow(request.workflow, task_dir, uploaded_files, registry, {"api_key": ""})
-        export = export_task_results(
-            outputs=[Path(path) for path in summary.outputs],
-            task_dir=task_dir,
-            destination=output_directory,
-            task_id=task_id,
+        summary = await run_in_threadpool(
+            execute_workflow,
+            request.workflow,
+            task_dir,
+            uploaded_files,
+            registry,
+            {"api_key": ""},
+        )
+        export = await run_in_threadpool(
+            export_task_results,
+            [Path(path) for path in summary.outputs],
+            task_dir,
+            output_directory,
+            task_id,
         )
         return {
             "status": summary.status,

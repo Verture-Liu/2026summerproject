@@ -10,6 +10,7 @@ let hasFiles = false;
 let configStatusKey = "";
 let aboutData = null;
 let sessionToken = "";
+let sessionInvalid = false;
 let reportObjectUrl = null;
 
 const consumeSessionToken = () => {
@@ -27,10 +28,17 @@ const consumeSessionToken = () => {
 consumeSessionToken();
 
 const $ = (id) => document.getElementById(id);
-const apiFetch = (path, options = {}) => fetch(path, {
-  ...options,
-  headers: {...options.headers, "X-PaleoRigor-Token": sessionToken}
-});
+const apiFetch = async (path, options = {}) => {
+  const response = await fetch(path, {
+    ...options,
+    headers: {...options.headers, "X-PaleoRigor-Token": sessionToken}
+  });
+  if (response.status === 401) {
+    const error = await response.clone().json().catch(() => ({}));
+    if (error.detail?.error === "invalid_session") markSessionInvalid();
+  }
+  return response;
+};
 const translations = {
   en: {
     eyebrow: "LOCAL RESEARCH AGENT",
@@ -63,6 +71,7 @@ const translations = {
     configurationMissing: "Complete and test the API configuration before planning a workflow.",
     configurationUnavailable: "Configuration is unavailable. Try again.",
     connectionFailed: "The connection test failed. Check the API configuration.",
+    invalidSession: "This browser session is no longer valid. Quit and relaunch PaleoRigor to continue.",
     aboutTitle: "Included Tools",
     toolName: "Tool",
     toolVersion: "Pinned version",
@@ -124,6 +133,7 @@ const translations = {
     configurationMissing: "请先完成并测试 API 配置，再生成 workflow。",
     configurationUnavailable: "配置暂时不可用，请重试。",
     connectionFailed: "连接测试失败，请检查 API 配置。",
+    invalidSession: "此浏览器会话已失效。请退出并重新启动 PaleoRigor 后继续。",
     aboutTitle: "内置工具",
     toolName: "工具",
     toolVersion: "固定版本",
@@ -158,6 +168,7 @@ const translations = {
 const t = (key) => translations[currentLanguage][key] || translations.en[key] || key;
 const show = (id, value) => { $(id).textContent = typeof value === "string" ? value : JSON.stringify(value, null, 2); };
 const setConfigStatus = (key) => {
+  if (sessionInvalid && key !== "invalidSession") return;
   configStatusKey = key;
   show("config-status", t(key));
 };
@@ -167,21 +178,46 @@ const configurationActionButtonIds = [
   "test-api-config",
   "delete-api-key",
 ];
+const configurationMutationControlIds = [
+  "api-base-url",
+  "api-model",
+  "api-key",
+  "save-api-config",
+  "test-api-config",
+  "delete-api-key",
+];
+const setConfigurationMutationPending = (pending) => {
+  configurationMutationControlIds.forEach((controlId) => {
+    $(controlId).disabled = pending || sessionInvalid;
+  });
+};
 const resetConfigurationActionButtons = () => {
   configurationActionButtonIds.forEach((buttonId) => setButtonLoading(buttonId, false));
 };
-const beginConfigurationAction = (buttonId, label) => {
+const beginConfigurationAction = (buttonId, label, mutatesConfiguration = false) => {
   const generation = ++configurationGeneration;
   resetConfigurationActionButtons();
+  if (mutatesConfiguration) setConfigurationMutationPending(true);
   setButtonLoading(buttonId, true, label);
   return generation;
 };
-const completeConfigurationAction = (generation) => {
+const completeConfigurationAction = (generation, mutatesConfiguration = false) => {
   if (!isCurrentConfigurationAction(generation)) return;
   resetConfigurationActionButtons();
+  if (mutatesConfiguration) setConfigurationMutationPending(false);
 };
 const refreshPlanningControls = () => {
-  $("plan").disabled = !(configurationReady && hasFiles);
+  $("plan").disabled = sessionInvalid || !(configurationReady && hasFiles);
+};
+const markSessionInvalid = () => {
+  if (sessionInvalid) return;
+  sessionInvalid = true;
+  configurationReady = false;
+  setConfigStatus("invalidSession");
+  setConfigurationMutationPending(true);
+  ["upload", "plan", "selectOutput", "execute", "approved", "files"].forEach((controlId) => {
+    $(controlId).disabled = true;
+  });
 };
 const renderAboutTools = () => {
   const body = $("about-tools").querySelector("tbody");
@@ -290,11 +326,11 @@ const summarizeRun = (data) => {
   return `Run ${status}. ${outputs} output(s), ${exported} exported file(s).`;
 };
 const refreshExecuteButton = () => {
-  $("execute").disabled = !(workflowValid && outputDirectorySelected && $("approved").checked);
+  $("execute").disabled = sessionInvalid || !(workflowValid && outputDirectorySelected && $("approved").checked);
 };
 
 $("save-api-config").onclick = async () => {
-  const requestGeneration = beginConfigurationAction("save-api-config", t("saveConfiguration"));
+  const requestGeneration = beginConfigurationAction("save-api-config", t("saveConfiguration"), true);
   configurationReady = false;
   refreshPlanningControls();
   try {
@@ -320,7 +356,7 @@ $("save-api-config").onclick = async () => {
     if (!isCurrentConfigurationAction(requestGeneration)) return;
     setConfigStatus("configurationUnavailable");
   } finally {
-    completeConfigurationAction(requestGeneration);
+    completeConfigurationAction(requestGeneration, true);
   }
 };
 
@@ -358,7 +394,7 @@ $("test-api-config").onclick = async () => {
 };
 
 $("delete-api-key").onclick = async () => {
-  const requestGeneration = beginConfigurationAction("delete-api-key", t("deleteApiKey"));
+  const requestGeneration = beginConfigurationAction("delete-api-key", t("deleteApiKey"), true);
   configurationReady = false;
   $("api-key").value = "";
   refreshPlanningControls();
@@ -380,7 +416,7 @@ $("delete-api-key").onclick = async () => {
     if (!isCurrentConfigurationAction(requestGeneration)) return;
     setConfigStatus("apiKeyDeleteFailed");
   } finally {
-    completeConfigurationAction(requestGeneration);
+    completeConfigurationAction(requestGeneration, true);
   }
 };
 

@@ -1,6 +1,7 @@
 import json
 import os
 import stat
+import sys
 from pathlib import Path
 from subprocess import CompletedProcess
 
@@ -99,6 +100,30 @@ def test_packaged_resolver_never_falls_back_to_path_or_conda(tmp_path, monkeypat
     )
 
     assert command is None
+
+
+def test_resolver_infers_packaged_mode_and_preserves_explicit_developer_override(
+    tmp_path, monkeypatch
+):
+    monkeypatch.setattr(sys, "frozen", True, raising=False)
+    monkeypatch.setattr(
+        "research_agent.skills.conda_tools.shutil.which",
+        lambda name: "/developer/bin/fastqc" if name == "fastqc" else None,
+    )
+
+    inferred = resolve_tool(("fastqc",), bundle_root=tmp_path / "missing")
+    explicit_developer = resolve_tool(
+        ("fastqc",),
+        bundle_root=tmp_path / "missing",
+        packaged=False,
+    )
+
+    assert inferred is None
+    assert explicit_developer == ToolCommand(
+        tool="fastqc",
+        command=["/developer/bin/fastqc"],
+        source="path",
+    )
 
 
 def test_resolve_tool_rejects_bundle_command_that_escapes_tool_root(

@@ -146,3 +146,67 @@ def test_update_rejects_an_empty_model_after_whitespace_is_removed(tmp_path):
 
     with pytest.raises(ValueError):
         config.update("https://example.test", "   ", None)
+
+
+class FailingSetSecretStore(MemorySecretStore):
+    def set(self, name, value):
+        raise RuntimeError("secret store unavailable")
+
+
+def test_update_keeps_old_preferences_when_secret_store_set_fails(tmp_path):
+    preferences = JsonPreferences(tmp_path / "preferences.json")
+    preferences.save(
+        {"api_base_url": "https://old.example/v1", "model": "old-model"}
+    )
+    secrets = FailingSetSecretStore()
+    MemorySecretStore.set(secrets, "api_key", "old-secret")
+    configuration = RuntimeConfiguration(preferences, secrets)
+
+    with pytest.raises(RuntimeError, match="secret store unavailable"):
+        configuration.update(
+            "https://new.example/v1",
+            "new-model",
+            "new-secret",
+        )
+
+    assert preferences.load() == {
+        "api_base_url": "https://old.example/v1",
+        "model": "old-model",
+    }
+    assert configuration.get().api_key == "old-secret"
+
+
+class FailAfterSavingOncePreferences(JsonPreferences):
+    def __init__(self, path):
+        super().__init__(path)
+        self.fail_next_save = False
+
+    def save(self, values):
+        super().save(values)
+        if self.fail_next_save:
+            self.fail_next_save = False
+            raise OSError("preference commit failed")
+
+
+def test_update_rolls_back_key_and_preferences_when_preference_commit_fails(tmp_path):
+    preferences = FailAfterSavingOncePreferences(tmp_path / "preferences.json")
+    preferences.save(
+        {"api_base_url": "https://old.example/v1", "model": "old-model"}
+    )
+    secrets = MemorySecretStore()
+    secrets.set("api_key", "old-secret")
+    configuration = RuntimeConfiguration(preferences, secrets)
+    preferences.fail_next_save = True
+
+    with pytest.raises(OSError, match="preference commit failed"):
+        configuration.update(
+            "https://new.example/v1",
+            "new-model",
+            "new-secret",
+        )
+
+    assert preferences.load() == {
+        "api_base_url": "https://old.example/v1",
+        "model": "old-model",
+    }
+    assert configuration.get().api_key == "old-secret"

@@ -1,6 +1,7 @@
+import sys
 from pathlib import Path
 
-from research_agent.runtime.paths import AppPaths, resource_root
+from research_agent.runtime.paths import AppPaths, is_packaged_runtime, resource_root
 
 
 def test_app_paths_use_macos_user_directories(tmp_path):
@@ -19,3 +20,20 @@ def test_app_paths_allow_isolated_test_root(tmp_path):
 
 def test_source_resource_root_contains_web_assets():
     assert (resource_root() / "web/index.html").is_file()
+
+
+def test_resource_root_uses_simulated_meipass_bundle(tmp_path, monkeypatch):
+    bundle = tmp_path / "pyinstaller"
+    packaged_resources = bundle / "research_agent"
+    packaged_resources.mkdir(parents=True)
+    monkeypatch.setattr(sys, "_MEIPASS", str(bundle), raising=False)
+
+    assert resource_root() == packaged_resources
+    assert is_packaged_runtime() is True
+
+
+def test_packaged_runtime_explicit_override_wins_over_frozen_inference(monkeypatch):
+    monkeypatch.setattr(sys, "frozen", True, raising=False)
+
+    assert is_packaged_runtime() is True
+    assert is_packaged_runtime(False) is False

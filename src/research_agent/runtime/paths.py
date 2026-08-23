@@ -7,6 +7,12 @@ from pathlib import Path
 from typing import Mapping
 
 
+def is_packaged_runtime(packaged: bool | None = None) -> bool:
+    if packaged is not None:
+        return packaged
+    return bool(getattr(sys, "frozen", False) or getattr(sys, "_MEIPASS", None))
+
+
 def resource_root() -> Path:
     frozen_root = getattr(sys, "_MEIPASS", None)
     return Path(frozen_root) / "research_agent" if frozen_root else Path(__file__).resolve().parents[1]

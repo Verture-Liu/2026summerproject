@@ -1,7 +1,8 @@
 {
   "phase": "Phase 1",
-  "task": "Task 8: Tokenized launcher and portable backend smoke test",
-  "executed_at": "2026-08-23T16:25:42+10:00",
+  "task": "Final-review Critical/Important fix wave",
+  "base_commit": "718eb33a9de46e14ab3cc225a99e17111beee66f",
+  "executed_at": "2026-08-23T17:08:07+10:00",
   "status": "passed",
   "environment": {
     "macos": {
@@ -33,71 +34,106 @@
     "upload_performed": false
   },
   "gates": {
-    "tdd": {
-      "red": "Focused test run before implementation: 5 failed and 2 passed; four failures were the missing Task 8 helpers/composition, and the existing port test was blocked by the sandbox loopback restriction.",
-      "green": "Focused launcher and desktop runtime smoke tests: 7 passed, 1 existing Starlette deprecation warning."
+    "adversarial_tdd": {
+      "red": [
+        "Provider-echo workflow returned HTTP 200 and reached workflow.draft.json creation.",
+        "Contaminated execution input reached workflow validation instead of a pre-write rejection.",
+        "Concurrent older Save/newer Delete restored the deleted API key.",
+        "Secret-store set failure left new non-secret preferences committed.",
+        "Packaged inference API and real Skill-call-path isolation were absent.",
+        "Refresh had no explicit invalid-session/relaunch state.",
+        "Wheel/sdist metadata had no bytecode exclusions."
+      ],
+      "green_command": "env PYTHONPATH=src ../../.venv/bin/pytest -q tests/unit/test_secret_guard.py tests/integration/test_runtime_config_api.py tests/unit/test_runtime_configuration.py tests/unit/test_runtime_paths.py tests/unit/test_conda_tool_resolver.py tests/unit/test_skill_readiness_contracts.py tests/unit/test_desktop_ui_contract.py tests/unit/test_english_ui.py tests/unit/test_package_metadata.py",
+      "green_result": "65 passed, 1 existing Starlette deprecation warning",
+      "status": "passed"
     },
     "full_test_suite": {
       "command": "env PYTHONPATH=src ../../.venv/bin/pytest -q tests",
-      "result": "250 passed, 1 existing Starlette deprecation warning",
+      "result": "263 passed, 1 existing Starlette deprecation warning",
       "status": "passed"
     },
     "build": {
       "command": "env PYTHONPATH=src ../../.venv/bin/python -m build",
-      "result": "wheel and source distribution created",
+      "result": "wheel and source distribution rebuilt from removed build/dist/egg-info directories",
       "wheel": {
         "path": "dist/local_research_agent-0.2.0-py3-none-any.whl",
-        "sha256": "5282627c0aad8786f195a1aeb201ece8e997bdf38f249132491824d39575df4e"
+        "size": "107K",
+        "sha256": "7c95dc11ff0339dbad5c9a51160c9672e1bf2701c43049a2c0e7030b8b4eef28"
       },
       "sdist": {
         "path": "dist/local_research_agent-0.2.0.tar.gz",
-        "sha256": "0143faed2ddd4273e4386aeebad42b43d97437d863c8783da3a13adfc994cffa"
+        "size": "73K",
+        "sha256": "573f71fc796a6baffa195aec1e54d8c738aac9400d05d650720b242b5e4a2a18"
       },
       "status": "passed",
       "warnings": [
-        "setuptools sdist emitted a non-fatal missing README warning"
+        "setuptools sdist emitted the existing non-fatal missing README warning"
       ]
     },
+    "archive_scan": {
+      "artifacts": [
+        "dist/local_research_agent-0.2.0-py3-none-any.whl",
+        "dist/local_research_agent-0.2.0.tar.gz"
+      ],
+      "pyc_or_pyo_entries": 0,
+      "pycache_directories": 0,
+      "developer_path_findings": 0,
+      "known_test_secret_findings": 0,
+      "status": "passed"
+    },
     "clean_wheel_install": {
-      "location": "/private/tmp/paleorigor-phase1-runtime-final.bVOJ0W/venv",
-      "result": "wheel and all declared dependencies installed successfully",
+      "location": "/tmp/paleorigor-phase1-final-smoke/venv",
+      "result": "wheel and all declared dependencies installed successfully into a newly created Python 3.13.9 virtual environment",
       "status": "passed"
     },
     "installed_no_browser_smoke": {
-      "command": "installed research-agent --no-browser on an ephemeral 127.0.0.1 port",
-      "authenticated_endpoints": [
-        "/api/health",
-        "/api/config",
-        "/api/about"
-      ],
+      "command": "installed research-agent --no-browser --port 18765",
+      "authenticated_endpoints": {
+        "/api/health": 200,
+        "/api/config": 200,
+        "/api/about": 200
+      },
       "unauthenticated_health_status": 401,
+      "unauthenticated_health_error": "invalid_session",
       "tool_manifest_entries": 7,
+      "web_resource_present": true,
       "resource_manifest_present": true,
+      "shutdown_clean": true,
       "real_keychain_touched": false,
-      "isolation": "temporary sitecustomize replaced MacOSKeychainSecretStore operations and the session-token generator only for the smoke subprocess",
+      "isolation": "temporary sitecustomize replaced Keychain operations and generated one known session token only inside the smoke subprocess",
       "status": "passed"
     },
-    "manual_browser": {
-      "status": "automated_equivalent",
-      "result": "No GUI browser was opened. The installed --no-browser process and authenticated endpoint/resource checks provide the required safe automated equivalent."
+    "installed_adversarial_provider_echo": {
+      "result": "HTTP 502 planning_failed; no workflow.draft.json, workflow.json, manifest, report, result records, response echo, or canary-bearing artifact",
+      "persisted_canary_findings": 0,
+      "status": "passed"
+    },
+    "browser_session_security": {
+      "persistent_storage_used": false,
+      "cookie_used": false,
+      "fragment_removed_after_consumption": true,
+      "refresh_behavior": "A refresh intentionally loses the in-memory launch token, receives invalid_session, disables controls, and tells the user to quit and relaunch PaleoRigor.",
+      "tradeoff": "Requiring relaunch after refresh is deliberate: seamless refresh would require persisting the bearer token in browser storage or a cookie.",
+      "status": "passed"
     },
     "secret_scan": {
       "scopes": [
-        "src",
-        "tests",
-        "pyproject.toml",
-        "packaging metadata",
-        "distribution artifacts",
-        "installed-smoke launcher log and endpoint responses"
+        "provider-echo HTTP response and task tree",
+        "execution pre-write propagation guard",
+        "wheel and sdist extracted trees",
+        "installed-smoke application data and environment"
       ],
-      "result": "0 persisted API-key, Authorization-header, or session-token-value findings. Source and tests intentionally contain the fragment construction shape and test fixtures only.",
+      "result": "0 persisted configured-provider-key or session-token-value findings outside the explicit temporary smoke harness source",
       "status": "passed"
     }
   },
   "gate_concerns": [
-    "The worktree has no local .venv; commands used ../../.venv after confirming it is the repository virtual environment.",
-    "The shared test environment emits one Starlette TestClient deprecation warning.",
-    "The sdist build emits a non-fatal missing README warning."
+    "The worktree has no local .venv; tests and builds used the repository virtual environment at ../../.venv.",
+    "The test environments emit one Starlette TestClient deprecation warning.",
+    "The sdist build emits a non-fatal missing README warning.",
+    "Node.js is unavailable, so JavaScript verification used static UI contracts and the installed authenticated browser-backend smoke rather than node --check.",
+    "The clean-installed smoke deliberately substituted an in-memory secret store and did not touch the real macOS Keychain."
   ],
   "phase2_started": false
 }

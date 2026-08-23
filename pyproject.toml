@@ -29,3 +29,6 @@ where = ["src"]
 
 [tool.setuptools.package-data]
 research_agent = ["web/*", "resources/*.json", "skill_packages/**/*"]
+
+[tool.setuptools.exclude-package-data]
+research_agent = ["**/__pycache__/*", "**/*.pyc", "**/*.pyo"]

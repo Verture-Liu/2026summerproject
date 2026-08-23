@@ -9,7 +9,7 @@ import uvicorn
 
 from research_agent.main import create_app
 from research_agent.runtime.configuration import RuntimeConfiguration
-from research_agent.runtime.paths import AppPaths
+from research_agent.runtime.paths import AppPaths, is_packaged_runtime
 from research_agent.runtime.preferences import JsonPreferences
 from research_agent.runtime.secrets import MacOSKeychainSecretStore
 from research_agent.runtime.session import generate_session_token
@@ -54,7 +54,7 @@ def launch(open_browser: bool = True, port: int | None = None) -> None:
     if open_browser:
         threading.Timer(1.0, lambda: webbrowser.open(build_browser_url(host, port, token))).start()
     kwargs = {"host": host, "port": port}
-    if getattr(sys, "frozen", False):
+    if is_packaged_runtime():
         kwargs["log_config"] = None
     uvicorn.run(app, **kwargs)
 

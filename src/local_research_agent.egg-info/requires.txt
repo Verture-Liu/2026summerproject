@@ -7,7 +7,3 @@ pandas<3,>=2.2
 openpyxl<4,>=3.1
 matplotlib<4,>=3.9
 pyyaml<7,>=6.0
-
-[dev]
-pytest<9,>=8.3
-pytest-asyncio<1,>=0.25
