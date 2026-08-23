@@ -272,6 +272,65 @@ p { margin: 0; color: var(--muted); }
   gap: 14px;
 }
 
+#api-config-panel {
+  border-color: rgba(31, 109, 84, .3);
+}
+
+.config-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.config-actions button { margin-top: 12px; }
+
+.secondary-button {
+  color: var(--green-dark);
+  background: #e3f2e9;
+  border: 1px solid rgba(31, 109, 84, .22);
+  box-shadow: none;
+}
+
+.config-status {
+  min-height: 24px;
+  margin-top: 14px;
+  color: #285944;
+  font-weight: 720;
+}
+
+.about-panel {
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid var(--line);
+}
+
+.about-panel h3 {
+  margin: 0 0 10px;
+  font-size: 1rem;
+}
+
+#about-tools {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: .9rem;
+}
+
+#about-tools th,
+#about-tools td {
+  padding: 9px 10px;
+  text-align: left;
+  border-bottom: 1px solid #e0e9e3;
+}
+
+#about-tools th {
+  color: #547064;
+  background: var(--soft);
+  font-size: .78rem;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+}
+
 label {
   display: grid;
   gap: 7px;

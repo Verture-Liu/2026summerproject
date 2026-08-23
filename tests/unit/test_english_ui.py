@@ -65,3 +65,21 @@ def test_web_ui_shows_loading_and_running_feedback():
         assert message in javascript
     assert "setStepState" in javascript
     assert "setButtonLoading" in javascript
+
+
+def test_web_ui_has_bilingual_first_run_configuration_feedback():
+    javascript = Path("src/research_agent/web/app.js").read_text(encoding="utf-8")
+
+    for message in (
+        "Configuration saved.",
+        "Connection passed.",
+        "Invalid API credentials.",
+        "The API could not be reached.",
+        "Complete and test the API configuration before planning a workflow.",
+        "配置已保存。",
+        "连接测试通过。",
+        "API 凭据无效。",
+        "无法连接 API。",
+        "请先完成并测试 API 配置，再生成 workflow。",
+    ):
+        assert message in javascript

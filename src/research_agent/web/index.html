@@ -41,19 +41,31 @@
       <span id="activityText">Working...</span>
     </div>
 
-    <section class="card">
+    <section id="api-config-panel" class="card">
       <div class="section-heading">
         <span class="section-number">1</span>
         <div>
-          <h2 data-i18n="apiTitle">Model API</h2>
-          <p data-i18n="apiHelp">Enter the API endpoint, model, and temporary session key.</p>
+          <h2 data-i18n="configurationTitle">API Configuration</h2>
+          <p data-i18n="configurationHelp">Save the API endpoint, model, and key securely before planning a workflow.</p>
         </div>
       </div>
       <div class="grid">
-        <label><span data-i18n="baseUrl">Base URL</span><input id="baseUrl" value="https://api.openai.com/v1"></label>
-        <label><span data-i18n="model">Model</span><input id="model" placeholder="Model name" data-i18n-placeholder="modelPlaceholder"></label>
-        <label><span data-i18n="apiKey">API Key</span><input id="apiKey" type="password" placeholder="Used for this session only" data-i18n-placeholder="apiKeyPlaceholder"></label>
+        <label><span data-i18n="baseUrl">Base URL</span><input id="api-base-url" placeholder="https://api.example.com/v1" data-i18n-placeholder="baseUrlPlaceholder"></label>
+        <label><span data-i18n="model">Model</span><input id="api-model" placeholder="Model name" data-i18n-placeholder="modelPlaceholder"></label>
+        <label><span data-i18n="apiKey">API Key</span><input id="api-key" type="password" autocomplete="off" placeholder="Saved securely and never shown again" data-i18n-placeholder="apiKeyPlaceholder"></label>
       </div>
+      <div class="config-actions">
+        <button id="save-api-config" type="button" data-i18n="saveConfiguration">Save Configuration</button>
+        <button id="test-api-config" type="button" class="secondary-button" data-i18n="testConnection">Test Connection</button>
+      </div>
+      <div id="config-status" class="config-status" role="status" aria-live="polite"></div>
+      <section class="about-panel" aria-labelledby="about-title">
+        <h3 id="about-title" data-i18n="aboutTitle">Included Tools</h3>
+        <table id="about-tools">
+          <thead><tr><th data-i18n="toolName">Tool</th><th data-i18n="toolVersion">Pinned version</th></tr></thead>
+          <tbody></tbody>
+        </table>
+      </section>
     </section>
 
     <section class="card">
