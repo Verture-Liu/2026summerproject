@@ -1,9 +1,11 @@
 import json
+from collections.abc import Callable
 from pathlib import Path
 
 import httpx
 from fastapi import FastAPI, File, HTTPException, UploadFile
-from fastapi.responses import FileResponse
+from fastapi.exceptions import RequestValidationError
+from fastapi.responses import FileResponse, JSONResponse
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict
 
@@ -20,23 +22,29 @@ from research_agent.files.output_destination import (
 )
 from research_agent.files.task_store import TaskStore
 from research_agent.runtime.configuration import RuntimeConfiguration
+from research_agent.runtime.paths import AppPaths, resource_root
+from research_agent.runtime.preferences import JsonPreferences
+from research_agent.runtime.secrets import MacOSKeychainSecretStore
 from research_agent.runtime.session import install_api_token_guard
 from research_agent.skills.registry import build_default_registry
+
+
+APPLICATION_VERSION = "0.2.0"
+GITHUB_URL = "https://github.com/Verture-Liu/2026summerproject"
 
 
 class StrictRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
 
-class ApiConfig(StrictRequest):
+class RuntimeConfigRequest(StrictRequest):
     base_url: str
-    api_key: str
     model: str
+    api_key: str | None
 
 
 class PlanRequest(StrictRequest):
     instruction: str
-    api: ApiConfig
 
 
 class ExecuteRequest(StrictRequest):
@@ -57,18 +65,107 @@ def _save_index(task_dir: Path, index: dict) -> None:
     _index_path(task_dir).write_text(json.dumps(index, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
+def _default_runtime_configuration() -> RuntimeConfiguration:
+    preferences = JsonPreferences(AppPaths.for_runtime().preferences_file)
+    return RuntimeConfiguration(preferences, MacOSKeychainSecretStore())
+
+
+def _redacted_config(configuration: RuntimeConfiguration) -> dict[str, object]:
+    config = configuration.get()
+    return {
+        "base_url": config.base_url,
+        "model": config.model,
+        "api_key_present": bool(config.api_key),
+    }
+
+
 def create_app(
     task_root: Path | str | None = None,
     directory_chooser=None,
     runtime_configuration: RuntimeConfiguration | None = None,
     session_token: str | None = None,
+    planner_client_factory: Callable[[], httpx.AsyncClient] | None = None,
 ) -> FastAPI:
-    app = FastAPI(title="Local Research Agent")
+    app = FastAPI(title="Local Research Agent", version=APPLICATION_VERSION)
     store = TaskStore(Path(task_root or "workspace/tasks"))
     registry = build_default_registry()
     web_dir = Path(__file__).parent / "web"
     directory_selector = directory_chooser or choose_directory
+    configuration = runtime_configuration or _default_runtime_configuration()
+    client_factory = planner_client_factory or httpx.AsyncClient
     install_api_token_guard(app, session_token)
+
+    @app.exception_handler(RequestValidationError)
+    async def invalid_request(_request, _exc):
+        return JSONResponse(status_code=422, content={"detail": {"error": "invalid_request"}})
+
+    def configuration_response() -> dict[str, object]:
+        try:
+            return _redacted_config(configuration)
+        except Exception as exc:
+            raise HTTPException(503, detail={"error": "configuration_unavailable"}) from exc
+
+    @app.get("/api/config")
+    def get_configuration():
+        return configuration_response()
+
+    @app.put("/api/config")
+    def update_configuration(request: RuntimeConfigRequest):
+        try:
+            return configuration.update(request.base_url, request.model, request.api_key)
+        except ValueError as exc:
+            raise HTTPException(422, detail={"error": "invalid_configuration"}) from exc
+        except Exception as exc:
+            raise HTTPException(503, detail={"error": "configuration_unavailable"}) from exc
+
+    @app.delete("/api/config/key")
+    def delete_configuration_key():
+        try:
+            configuration.delete_api_key()
+            return _redacted_config(configuration)
+        except Exception as exc:
+            raise HTTPException(503, detail={"error": "configuration_unavailable"}) from exc
+
+    @app.post("/api/config/test")
+    async def test_configuration():
+        config = configuration.get()
+        if not config.api_key:
+            raise HTTPException(401, detail={"error": "invalid_api_credentials"})
+        try:
+            async with client_factory() as client:
+                planner = Planner(client, config.base_url, config.api_key, config.model)
+                response_content = await planner._complete(
+                    [
+                        {
+                            "role": "user",
+                            "content": "Return a JSON object with a status field.",
+                        }
+                    ]
+                )
+            if not isinstance(json.loads(response_content), dict):
+                raise ValueError("Expected a JSON object")
+        except httpx.HTTPStatusError as exc:
+            if exc.response.status_code in {401, 403}:
+                raise HTTPException(401, detail={"error": "invalid_api_credentials"}) from exc
+            raise HTTPException(503, detail={"error": "api_unreachable"}) from exc
+        except httpx.RequestError as exc:
+            raise HTTPException(503, detail={"error": "api_unreachable"}) from exc
+        except (KeyError, TypeError, ValueError, json.JSONDecodeError) as exc:
+            raise HTTPException(502, detail={"error": "invalid_api_response"}) from exc
+        return {"status": "ok", "model": config.model}
+
+    @app.get("/api/about")
+    def about():
+        manifest_path = resource_root() / "resources" / "tool_manifest.json"
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+        return {
+            "version": APPLICATION_VERSION,
+            "github_url": GITHUB_URL,
+            "tools": [
+                {"id": tool["id"], "version": tool["version"]}
+                for tool in manifest["tools"]
+            ],
+        }
 
     @app.get("/api/health")
     def health():
@@ -125,17 +222,13 @@ def create_app(
         task_dir = store.task_dir(task_id)
         index = _load_index(task_dir)
         summaries = [{"ref": ref, **item["summary"]} for ref, item in index.items()]
-        async with httpx.AsyncClient() as client:
-            planner = Planner(
-                client,
-                request.api.base_url,
-                request.api.api_key,
-                request.api.model,
-            )
-            try:
+        config = configuration.get()
+        try:
+            async with client_factory() as client:
+                planner = Planner(client, config.base_url, config.api_key, config.model)
                 workflow = await planner.plan(request.instruction, summaries, registry.catalog())
-            except Exception as exc:
-                raise HTTPException(502, detail={"error": "planning_failed", "message": str(exc)}) from exc
+        except Exception as exc:
+            raise HTTPException(502, detail={"error": "planning_failed"}) from exc
         uploaded_formats = {ref: item["summary"]["format"] for ref, item in index.items()}
         uploaded_paths = {ref: Path(item["path"]) for ref, item in index.items()}
         report = validate_workflow(
@@ -164,10 +257,7 @@ def create_app(
         except Exception as exc:
             raise HTTPException(
                 500,
-                detail={
-                    "error": "output_directory_dialog_failed",
-                    "message": str(exc),
-                },
+                detail={"error": "output_directory_dialog_failed"},
             ) from exc
         if not selected:
             raise HTTPException(400, detail={"error": "output_directory_not_selected"})

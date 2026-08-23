@@ -1,6 +1,22 @@
+import pytest
 from fastapi.testclient import TestClient
+from pydantic import ValidationError
 
-from research_agent.main import create_app
+from research_agent.main import PlanRequest, create_app
+
+
+def test_plan_request_forbids_legacy_request_supplied_api_configuration():
+    with pytest.raises(ValidationError):
+        PlanRequest.model_validate(
+            {
+                "instruction": "filter peptides",
+                "api": {
+                    "base_url": "https://provider.example/v1",
+                    "model": "provider-model",
+                    "api_key": "must-not-be-accepted",
+                },
+            }
+        )
 
 
 def test_create_task(tmp_path):
@@ -75,6 +91,27 @@ def test_select_output_directory_reports_chooser_failure(tmp_path):
     response = client.post(f"/api/tasks/{task_id}/select-output-directory")
     assert response.status_code == 500
     assert response.json()["detail"]["error"] == "output_directory_dialog_failed"
+
+
+def test_select_output_directory_does_not_echo_chooser_exception_details(tmp_path):
+    provider_secret = "provider-secret-that-must-not-be-returned"
+
+    def broken_chooser():
+        raise RuntimeError(provider_secret)
+
+    client = TestClient(
+        create_app(
+            task_root=tmp_path / "tasks",
+            directory_chooser=broken_chooser,
+        )
+    )
+    task_id = client.post("/api/tasks").json()["task_id"]
+
+    response = client.post(f"/api/tasks/{task_id}/select-output-directory")
+
+    assert response.status_code == 500
+    assert response.json() == {"detail": {"error": "output_directory_dialog_failed"}}
+    assert provider_secret not in response.text
 
 
 def test_execute_requires_output_directory(tmp_path):
