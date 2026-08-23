@@ -5,6 +5,7 @@ let outputDirectorySelected = false;
 let currentLanguage = "en";
 let configurationReady = false;
 let apiKeyPresent = false;
+let configurationGeneration = 0;
 let hasFiles = false;
 let configStatusKey = "";
 let aboutData = null;
@@ -52,7 +53,10 @@ const translations = {
     apiKeyPlaceholder: "Saved securely and never shown again",
     saveConfiguration: "Save Configuration",
     testConnection: "Test Connection",
+    deleteApiKey: "Delete API Key",
     configurationSaved: "Configuration saved.",
+    apiKeyDeleted: "API key deleted.",
+    apiKeyDeleteFailed: "The API key could not be deleted. Try again.",
     connectionPassed: "Connection passed.",
     invalidCredentials: "Invalid API credentials.",
     apiUnreachable: "The API could not be reached.",
@@ -110,7 +114,10 @@ const translations = {
     apiKeyPlaceholder: "安全保存，且不会再次显示",
     saveConfiguration: "保存配置",
     testConnection: "测试连接",
+    deleteApiKey: "删除 API 密钥",
     configurationSaved: "配置已保存。",
+    apiKeyDeleted: "API 密钥已删除。",
+    apiKeyDeleteFailed: "无法删除 API 密钥，请重试。",
     connectionPassed: "连接测试通过。",
     invalidCredentials: "API 凭据无效。",
     apiUnreachable: "无法连接 API。",
@@ -154,6 +161,7 @@ const setConfigStatus = (key) => {
   configStatusKey = key;
   show("config-status", t(key));
 };
+const beginConfigurationAction = () => ++configurationGeneration;
 const refreshPlanningControls = () => {
   $("plan").disabled = !(configurationReady && hasFiles);
 };
@@ -205,7 +213,7 @@ const setLanguage = (language) => {
   document.querySelectorAll(".lang-option").forEach((button) => {
     button.classList.toggle("active", button.dataset.language === currentLanguage);
   });
-  ["save-api-config", "test-api-config", "upload", "plan", "selectOutput", "execute"].forEach((id) => {
+  ["save-api-config", "test-api-config", "delete-api-key", "upload", "plan", "selectOutput", "execute"].forEach((id) => {
     const button = $(id);
     button.dataset.defaultLabel = button.textContent;
   });
@@ -221,6 +229,7 @@ const setButtonLoading = (buttonId, loading, label) => {
   if (!button.dataset.defaultLabel) button.dataset.defaultLabel = button.textContent;
   if (loading) button.dataset.wasDisabled = String(button.disabled);
   button.disabled = loading ? true : button.dataset.wasDisabled === "true";
+  button.setAttribute("aria-busy", String(loading));
   button.classList.toggle("loading", loading);
   button.textContent = loading ? label : button.dataset.defaultLabel;
   if (!loading) delete button.dataset.wasDisabled;
@@ -267,6 +276,7 @@ const refreshExecuteButton = () => {
 };
 
 $("save-api-config").onclick = async () => {
+  beginConfigurationAction();
   configurationReady = false;
   refreshPlanningControls();
   setButtonLoading("save-api-config", true, t("saveConfiguration"));
@@ -295,6 +305,7 @@ $("save-api-config").onclick = async () => {
 };
 
 $("test-api-config").onclick = async () => {
+  beginConfigurationAction();
   configurationReady = false;
   refreshPlanningControls();
   if (!apiKeyPresent) {
@@ -320,6 +331,31 @@ $("test-api-config").onclick = async () => {
   } finally {
     setButtonLoading("test-api-config", false);
     refreshPlanningControls();
+  }
+};
+
+$("delete-api-key").onclick = async () => {
+  beginConfigurationAction();
+  configurationReady = false;
+  $("api-key").value = "";
+  refreshPlanningControls();
+  setButtonLoading("delete-api-key", true, t("deleteApiKey"));
+  try {
+    const response = await apiFetch("/api/config/key", {method: "DELETE"});
+    const data = await safeResponseJson(response);
+    if (!response.ok) {
+      setConfigStatus("apiKeyDeleteFailed");
+      return;
+    }
+    applyConfiguration(data);
+    apiKeyPresent = false;
+    configurationReady = false;
+    refreshPlanningControls();
+    setConfigStatus("apiKeyDeleted");
+  } catch (_error) {
+    setConfigStatus("apiKeyDeleteFailed");
+  } finally {
+    setButtonLoading("delete-api-key", false);
   }
 };
 
@@ -455,16 +491,23 @@ document.querySelectorAll(".lang-option").forEach((button) => {
   button.onclick = () => setLanguage(button.dataset.language);
 });
 
-const initializeDesktopInterface = async () => {
-  setLanguage("en");
+const loadInitialConfiguration = async () => {
+  const requestGeneration = configurationGeneration;
   try {
     const response = await apiFetch("/api/config");
     if (!response.ok) throw new Error("configuration unavailable");
+    if (requestGeneration !== configurationGeneration) return;
     applyConfiguration(await safeResponseJson(response));
     setConfigStatus("configurationMissing");
   } catch (_error) {
+    if (requestGeneration !== configurationGeneration) return;
     setConfigStatus("configurationUnavailable");
   }
+};
+
+const initializeDesktopInterface = async () => {
+  setLanguage("en");
+  await loadInitialConfiguration();
   try {
     const response = await apiFetch("/api/about");
     if (!response.ok) return;

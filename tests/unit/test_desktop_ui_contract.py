@@ -78,6 +78,34 @@ def test_first_run_stays_blocking_until_key_and_connection_test_pass():
     assert '$("api-key").value = ""' in javascript
 
 
+def test_desktop_can_delete_a_saved_key_without_exposing_it_or_enabling_planning():
+    files = read_web_files()
+    html = files["html"]
+    javascript = files["javascript"]
+
+    assert 'id="delete-api-key"' in html
+    assert 'data-i18n="deleteApiKey"' in html
+    assert 'aria-describedby="config-status"' in html
+    assert "Delete API Key" in javascript
+    assert "删除 API 密钥" in javascript
+    assert 'apiFetch("/api/config/key", {method: "DELETE"})' in javascript
+    assert '$("api-key").value = ""' in javascript
+    assert "apiKeyPresent = false" in javascript
+    assert "configurationReady = false" in javascript
+    assert "apiKeyDeleted" in javascript
+    assert "apiKeyDeleteFailed" in javascript
+
+
+def test_initial_configuration_response_cannot_overwrite_newer_configuration_state():
+    javascript = read_web_files()["javascript"]
+
+    assert "let configurationGeneration = 0" in javascript
+    assert "const beginConfigurationAction = () => ++configurationGeneration" in javascript
+    assert "const requestGeneration = configurationGeneration" in javascript
+    assert "if (requestGeneration !== configurationGeneration) return;" in javascript
+    assert "beginConfigurationAction();" in javascript
+
+
 def test_about_renders_the_packaged_tool_versions():
     javascript = read_web_files()["javascript"]
 
