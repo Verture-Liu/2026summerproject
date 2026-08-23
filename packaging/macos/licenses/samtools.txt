@@ -1,0 +1,2 @@
+Samtools 1.23.1 is redistributed under the MIT/Expat License.
+The complete upstream license is copied into the generated application bundle.

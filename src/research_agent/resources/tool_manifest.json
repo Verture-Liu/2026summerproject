@@ -4,42 +4,49 @@
       "id": "fastqc",
       "version": "0.12.1",
       "command": "bin/fastqc",
+      "upstream": "https://www.bioinformatics.babraham.ac.uk/projects/fastqc/",
       "license_file": "licenses/fastqc.txt"
     },
     {
       "id": "multiqc",
       "version": "1.35",
       "command": "bin/multiqc",
+      "upstream": "https://github.com/MultiQC/MultiQC",
       "license_file": "licenses/multiqc.txt"
     },
     {
       "id": "seqkit",
       "version": "2.13.0",
       "command": "bin/seqkit",
+      "upstream": "https://github.com/shenwei356/seqkit",
       "license_file": "licenses/seqkit.txt"
     },
     {
       "id": "seqtk",
       "version": "1.5-r133",
       "command": "bin/seqtk",
+      "upstream": "https://github.com/lh3/seqtk",
       "license_file": "licenses/seqtk.txt"
     },
     {
       "id": "samtools",
       "version": "1.23.1",
       "command": "bin/samtools",
+      "upstream": "https://github.com/samtools/samtools",
       "license_file": "licenses/samtools.txt"
     },
     {
       "id": "bwa",
       "version": "0.7.19-r1273",
       "command": "bin/bwa",
+      "upstream": "https://github.com/lh3/bwa",
       "license_file": "licenses/bwa.txt"
     },
     {
       "id": "bowtie2",
       "version": "2.5.5",
       "command": "bin/bowtie2",
+      "upstream": "https://github.com/BenLangmead/bowtie2",
       "license_file": "licenses/bowtie2.txt"
     }
   ]

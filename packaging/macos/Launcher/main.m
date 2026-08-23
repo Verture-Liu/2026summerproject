@@ -80,7 +80,12 @@
     NSTask *task = [[NSTask alloc] init];
     task.executableURL = executable;
     task.arguments = @[@"--no-browser", @"--port", [NSString stringWithFormat:@"%u", self.port], @"--session-token-file", tokenFile.path];
-    task.environment = @{@"HOME": NSHomeDirectory(), @"TMPDIR": NSTemporaryDirectory(), @"LANG": @"en_US.UTF-8"};
+    task.environment = @{
+        @"HOME": NSHomeDirectory(),
+        @"TMPDIR": NSTemporaryDirectory(),
+        @"LANG": @"en_US.UTF-8",
+        @"PATH": @"/usr/bin:/bin"
+    };
     NSFileHandle *nullDevice = [NSFileHandle fileHandleForWritingAtPath:@"/dev/null"];
     task.standardOutput = nullDevice;
     task.standardError = nullDevice;

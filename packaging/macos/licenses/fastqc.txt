@@ -1,0 +1,2 @@
+FastQC 0.12.1 is redistributed under the GNU General Public License v3.0.
+The complete upstream license is copied into the generated application bundle.

@@ -1,0 +1,2 @@
+MultiQC 1.35 is redistributed under the GNU General Public License v3.0.
+The complete upstream license is copied into the generated application bundle.
