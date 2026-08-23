@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "local-research-agent"
+version = "0.2.0"
+requires-python = ">=3.11,<3.14"
+dependencies = [
+    "fastapi<1,>=0.115",
+    "uvicorn<1,>=0.34",
+    "pydantic<3,>=2.10",
+    "httpx<1,>=0.28",
+    "python-multipart<1,>=0.0.20",
+    "pandas<3,>=2.2",
+    "openpyxl<4,>=3.1",
+    "matplotlib<4,>=3.9",
+    "pyyaml<7,>=6.0",
+]
+
+[project.scripts]
+research-agent = "research_agent.launcher:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+research_agent = ["web/*", "resources/*.json", "skill_packages/**/*"]
