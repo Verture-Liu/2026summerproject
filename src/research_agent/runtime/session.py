@@ -12,6 +12,8 @@ def generate_session_token() -> str:
 def install_api_token_guard(app: FastAPI, expected_token: str | None) -> None:
     if expected_token is None:
         return
+    if expected_token == "":
+        raise ValueError("expected_token must be non-empty or None")
 
     @app.middleware("http")
     async def api_token_guard(request: Request, call_next):

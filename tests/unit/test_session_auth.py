@@ -1,5 +1,7 @@
 import logging
 
+import pytest
+
 from fastapi.testclient import TestClient
 
 from research_agent.main import create_app
@@ -41,3 +43,32 @@ def test_generate_session_token_returns_a_nonempty_url_safe_token():
 
     assert token
     assert all(character.isalnum() or character in {"-", "_"} for character in token)
+
+
+def test_empty_session_token_is_rejected_during_app_creation(tmp_path):
+    with pytest.raises(ValueError):
+        create_app(task_root=tmp_path, session_token="")
+
+
+def test_session_token_guard_protects_non_health_api_route(tmp_path):
+    client = TestClient(create_app(task_root=tmp_path, session_token="fixed-token"))
+
+    response = client.get("/api/skills")
+
+    assert response.status_code == 401
+    assert response.json() == {"detail": {"error": "invalid_session"}}
+
+
+def test_generate_session_token_delegates_to_token_urlsafe(monkeypatch):
+    from research_agent.runtime import session
+
+    calls = []
+
+    def fake_token_urlsafe(size):
+        calls.append(size)
+        return "patched-token"
+
+    monkeypatch.setattr(session.secrets, "token_urlsafe", fake_token_urlsafe)
+
+    assert session.generate_session_token() == "patched-token"
+    assert calls == [32]
