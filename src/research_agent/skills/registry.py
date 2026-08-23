@@ -2,7 +2,11 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Iterable
 
-from research_agent.runtime.paths import AppPaths, resource_root
+from research_agent.runtime.paths import (
+    AppPaths,
+    is_packaged_runtime,
+    resource_root,
+)
 from research_agent.skills.peptide_filter.skill import PeptideFilterSkill
 from research_agent.skills.peptide_table import peptide_table_skills
 from research_agent.skills.amplit.skill import AmplitPredictionSkill
@@ -65,4 +69,7 @@ def installed_skill_root() -> Path:
 
 
 def build_default_registry() -> SkillRegistry:
-    return SkillRouter([builtin_skill_root(), installed_skill_root()])
+    roots = [builtin_skill_root()]
+    if not is_packaged_runtime():
+        roots.append(installed_skill_root())
+    return SkillRouter(roots)

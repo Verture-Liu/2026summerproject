@@ -83,6 +83,38 @@ def test_configuration_endpoints_redact_and_delete_the_stored_api_key(tmp_path):
         assert_secret_absent(response.text)
 
 
+@pytest.mark.parametrize(
+    "base_url",
+    [
+        f"https://user:{TEST_API_KEY}@provider.example/v1",
+        f"https://provider.example/v1?api_key={TEST_API_KEY}",
+        f"https://provider.example/v1#{TEST_API_KEY}",
+    ],
+)
+def test_configuration_endpoint_rejects_url_credentials_without_persisting_or_returning_them(
+    tmp_path, base_url
+):
+    client, configuration = make_client(
+        tmp_path, lambda request: httpx.Response(500)
+    )
+
+    response = client.put(
+        "/api/config",
+        json={
+            "base_url": base_url,
+            "model": "provider-model",
+            "api_key": None,
+        },
+    )
+
+    assert response.status_code == 422
+    assert response.json() == {"detail": {"error": "invalid_configuration"}}
+    assert_secret_absent(response.text)
+    assert configuration.get().base_url == "https://api.deepseek.com"
+    preferences_path = tmp_path / "preferences.json"
+    assert not preferences_path.exists()
+
+
 def test_connection_test_uses_stored_configuration_and_returns_only_safe_fields(tmp_path):
     received = []
 

@@ -141,6 +141,49 @@ def test_update_rejects_non_http_base_urls(tmp_path, base_url):
         config.update(base_url, "model-a", None)
 
 
+@pytest.mark.parametrize(
+    "base_url",
+    [
+        "https://user@example.test/v1",
+        "https://user:password@example.test/v1",
+        "https://example.test/v1?api_key=secret",
+        "https://example.test/v1#access-token",
+        "https://example.test/v1?",
+        "https://example.test/v1#",
+    ],
+)
+def test_update_rejects_userinfo_query_and_fragment_without_persisting_them(
+    tmp_path, base_url
+):
+    config = make_configuration(tmp_path)
+
+    with pytest.raises(ValueError):
+        config.update(base_url, "model-a", None)
+
+    preferences_path = tmp_path / "preferences.json"
+    assert not preferences_path.exists()
+    assert base_url not in repr(config.get())
+
+
+def test_get_scrubs_a_legacy_credential_bearing_base_url(tmp_path):
+    preferences_path = tmp_path / "preferences.json"
+    preferences = JsonPreferences(preferences_path)
+    credentials = "legacy-user:legacy-password"
+    preferences.save(
+        {
+            "api_base_url": f"https://{credentials}@example.test/v1",
+            "model": "model-a",
+        }
+    )
+    config = RuntimeConfiguration(preferences, MemorySecretStore())
+
+    current = config.get()
+
+    assert current.base_url == "https://api.deepseek.com"
+    assert credentials not in repr(current)
+    assert credentials not in preferences_path.read_text(encoding="utf-8")
+
+
 def test_update_rejects_an_empty_model_after_whitespace_is_removed(tmp_path):
     config = make_configuration(tmp_path)
 

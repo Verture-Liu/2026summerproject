@@ -1,4 +1,5 @@
 from types import SimpleNamespace
+from pathlib import Path
 
 import pytest
 
@@ -66,3 +67,22 @@ def test_default_registry_loads_installed_package_without_agent_code_change(
     monkeypatch.setattr(registry_module, "installed_skill_root", lambda: installed)
     registry = build_default_registry()
     assert registry.get("demo_skill").name == "demo_skill"
+
+
+def test_packaged_registry_does_not_load_unsigned_installed_python_adapters(
+    tmp_path, monkeypatch
+):
+    installed = tmp_path / "installed"
+    write_package(installed, manifest=MANIFEST, adapter=ADAPTER)
+    monkeypatch.setattr(registry_module, "installed_skill_root", lambda: installed)
+    monkeypatch.setattr(
+        registry_module,
+        "builtin_skill_root",
+        lambda: Path("src/research_agent/skill_packages/builtin"),
+    )
+    monkeypatch.setattr("research_agent.runtime.paths.sys.frozen", True, raising=False)
+
+    registry = build_default_registry()
+
+    with pytest.raises(KeyError):
+        registry.get("demo_skill")

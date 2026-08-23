@@ -32,8 +32,8 @@ def test_resource_root_uses_simulated_meipass_bundle(tmp_path, monkeypatch):
     assert is_packaged_runtime() is True
 
 
-def test_packaged_runtime_explicit_override_wins_over_frozen_inference(monkeypatch):
+def test_frozen_runtime_cannot_be_forced_into_developer_mode(monkeypatch):
     monkeypatch.setattr(sys, "frozen", True, raising=False)
 
     assert is_packaged_runtime() is True
-    assert is_packaged_runtime(False) is False
+    assert is_packaged_runtime(False) is True

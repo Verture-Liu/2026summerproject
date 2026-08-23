@@ -238,3 +238,26 @@ def test_about_renders_the_packaged_tool_versions():
     assert 'apiFetch("/api/about")' in javascript
     assert '$("about-tools")' in javascript
     assert "data.tools" in javascript
+
+
+def test_session_invalid_is_an_invariant_for_every_control_restoration():
+    javascript = read_web_files()["javascript"]
+
+    loading_manager = javascript.split(
+        "const setButtonLoading = (buttonId, loading, label) => {", 1
+    )[1].split("const setStepState", 1)[0]
+    assert (
+        'button.disabled = sessionInvalid || (loading ? true : button.dataset.wasDisabled === "true");'
+        in loading_manager
+    )
+
+    disabled_assignments = [
+        line.strip()
+        for line in javascript.splitlines()
+        if ".disabled =" in line
+    ]
+    assert disabled_assignments
+    assert all(
+        "sessionInvalid" in assignment or assignment.endswith("= true;")
+        for assignment in disabled_assignments
+    )

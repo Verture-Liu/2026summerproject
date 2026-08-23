@@ -1,5 +1,3 @@
-import shutil
-
 from research_agent.skills.base import SkillContext, SkillResult
 from research_agent.skills.conda_tools import resolve_tool
 
@@ -54,8 +52,8 @@ class ExternalToolSkill:
         }
 
     def run(self, context: SkillContext, parameters: dict) -> SkillResult:
-        executable = shutil.which(self.executable)
-        if executable is None:
+        tool_command = resolve_tool((self.executable,))
+        if tool_command is None:
             return SkillResult(
                 status="dependency_missing",
                 outputs=[],
@@ -66,7 +64,10 @@ class ExternalToolSkill:
         return SkillResult(
             status="not_configured",
             outputs=[],
-            metrics={"executable": executable},
+            metrics={
+                "executable": " ".join(tool_command.command),
+                "source": tool_command.source,
+            },
             warnings=[],
             error=(
                 f"{self.name} is registered for planning, but its version-specific "

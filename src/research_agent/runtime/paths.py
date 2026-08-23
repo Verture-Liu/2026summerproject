@@ -8,9 +8,10 @@ from typing import Mapping
 
 
 def is_packaged_runtime(packaged: bool | None = None) -> bool:
-    if packaged is not None:
-        return packaged
-    return bool(getattr(sys, "frozen", False) or getattr(sys, "_MEIPASS", None))
+    detected = bool(
+        getattr(sys, "frozen", False) or getattr(sys, "_MEIPASS", None)
+    )
+    return detected or packaged is True
 
 
 def resource_root() -> Path:

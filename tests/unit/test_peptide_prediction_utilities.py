@@ -55,8 +55,8 @@ def test_external_amp_predictors_report_missing_environment(tmp_path, monkeypatc
     source = tmp_path / "peptides.fasta"
     source.write_text(">p1\nACDEFGHIKLM\n", encoding="utf-8")
     monkeypatch.setattr(
-        "research_agent.skills.amplit.external_predictors.shutil.which",
-        lambda name: None,
+        "research_agent.skills.amplit.external_predictors.resolve_tool",
+        lambda candidates: None,
     )
 
     for skill in (AmplifyPredictionSkill(), AmpScannerPredictionSkill(), ModlampDescriptorSkill()):

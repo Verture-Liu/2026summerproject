@@ -45,11 +45,32 @@ def test_tool_manifest_declares_exact_bundled_tools_and_versions():
     assert all(tool["license_file"] for tool in manifest["tools"])
 
 
-def test_bundled_tool_root_uses_environment_override(tmp_path):
+def test_bundled_tool_root_uses_environment_override_in_developer_mode(tmp_path):
     tools = tmp_path / "tools"
     tools.mkdir()
 
-    assert bundled_tool_root({"PALEORIGOR_TOOL_ROOT": str(tools)}) == tools
+    assert bundled_tool_root(
+        {"PALEORIGOR_TOOL_ROOT": str(tools)}, packaged=False
+    ) == tools
+
+
+def test_packaged_tool_root_ignores_environment_and_uses_signed_resources(
+    tmp_path, monkeypatch
+):
+    signed_resources = tmp_path / "signed" / "research_agent"
+    signed_tools = signed_resources / "tools"
+    signed_tools.mkdir(parents=True)
+    malicious_tools = tmp_path / "malicious" / "tools"
+    malicious_tools.mkdir(parents=True)
+    monkeypatch.setattr(sys, "frozen", True, raising=False)
+    monkeypatch.setattr(
+        "research_agent.skills.conda_tools.resource_root",
+        lambda: signed_resources,
+    )
+
+    assert bundled_tool_root(
+        {"PALEORIGOR_TOOL_ROOT": str(malicious_tools)}
+    ) == signed_tools
 
 
 def test_resolve_tool_prefers_explicit_bundle_over_environment_and_path(
@@ -102,7 +123,52 @@ def test_packaged_resolver_never_falls_back_to_path_or_conda(tmp_path, monkeypat
     assert command is None
 
 
-def test_resolver_infers_packaged_mode_and_preserves_explicit_developer_override(
+def test_packaged_resolver_ignores_environment_and_explicit_external_roots(
+    tmp_path, monkeypatch
+):
+    signed_resources = tmp_path / "signed" / "research_agent"
+    signed_executable = _make_executable(
+        signed_resources / "tools" / "bin" / "fastqc"
+    )
+    (signed_resources / "resources").mkdir(parents=True)
+    (signed_resources / "resources" / "tool_manifest.json").write_text(
+        json.dumps(
+            {
+                "tools": [
+                    {
+                        "id": "fastqc",
+                        "version": "0.12.1",
+                        "command": "bin/fastqc",
+                        "license_file": "licenses/fastqc.txt",
+                    }
+                ]
+            }
+        ),
+        encoding="utf-8",
+    )
+    malicious_environment = tmp_path / "malicious-environment"
+    malicious_explicit = tmp_path / "malicious-explicit"
+    _make_executable(malicious_environment / "bin" / "fastqc")
+    _make_executable(malicious_explicit / "bin" / "fastqc")
+    monkeypatch.setattr(sys, "frozen", True, raising=False)
+    monkeypatch.setenv("PALEORIGOR_TOOL_ROOT", str(malicious_environment))
+    monkeypatch.setattr(
+        "research_agent.skills.conda_tools.resource_root",
+        lambda: signed_resources,
+    )
+
+    command = resolve_tool(
+        ("fastqc",),
+        bundle_root=malicious_explicit,
+        packaged=False,
+    )
+
+    assert command == ToolCommand(
+        tool="fastqc", command=[str(signed_executable)], source="bundle"
+    )
+
+
+def test_resolver_infers_packaged_mode_and_rejects_explicit_developer_override(
     tmp_path, monkeypatch
 ):
     monkeypatch.setattr(sys, "frozen", True, raising=False)
@@ -119,11 +185,7 @@ def test_resolver_infers_packaged_mode_and_preserves_explicit_developer_override
     )
 
     assert inferred is None
-    assert explicit_developer == ToolCommand(
-        tool="fastqc",
-        command=["/developer/bin/fastqc"],
-        source="path",
-    )
+    assert explicit_developer is None
 
 
 def test_resolve_tool_rejects_bundle_command_that_escapes_tool_root(

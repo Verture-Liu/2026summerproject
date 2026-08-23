@@ -23,7 +23,13 @@ def _config_path() -> Path:
     return Path.cwd() / "config" / "tool_envs.json"
 
 
-def bundled_tool_root(env: Mapping[str, str] | None = None) -> Path | None:
+def bundled_tool_root(
+    env: Mapping[str, str] | None = None,
+    packaged: bool | None = None,
+) -> Path | None:
+    if is_packaged_runtime(packaged):
+        packaged_root = (resource_root() / "tools").resolve()
+        return packaged_root if packaged_root.is_dir() else None
     source = os.environ if env is None else env
     configured_root = source.get("PALEORIGOR_TOOL_ROOT")
     if configured_root:
@@ -78,12 +84,20 @@ def resolve_tool(
     bundle_root: Path | str | None = None,
     packaged: bool | None = None,
 ) -> ToolCommand | None:
-    root = Path(bundle_root).expanduser() if bundle_root is not None else bundled_tool_root()
+    packaged_runtime = is_packaged_runtime(packaged)
+    if packaged_runtime:
+        root = bundled_tool_root(packaged=True)
+    else:
+        root = (
+            Path(bundle_root).expanduser()
+            if bundle_root is not None
+            else bundled_tool_root(packaged=False)
+        )
     if root is not None:
         bundled = _bundled_tool_command(executable_candidates, root)
         if bundled is not None:
             return bundled
-    if is_packaged_runtime(packaged):
+    if packaged_runtime:
         return None
 
     mapping = load_tool_envs() if tool_envs is None else dict(tool_envs)

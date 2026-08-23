@@ -10,6 +10,7 @@ from typing import Any, Mapping
 
 import pandas as pd
 
+from research_agent.runtime.paths import is_packaged_runtime
 from research_agent.skills.base import SkillContext, SkillResult
 from research_agent.skills.peptide_table.common import CANONICAL_AMINO_ACIDS
 
@@ -97,6 +98,21 @@ class AmplitPredictionSkill:
         self._env = os.environ if env is None else env
 
     def check_dependencies(self, work_dir: Path) -> dict[str, Any]:
+        if is_packaged_runtime():
+            return {
+                "ready": False,
+                "tool": "AMPLiT",
+                "home": "",
+                "python": "",
+                "missing": [
+                    "AMPLiT is not included in this packaged application"
+                ],
+                "incompatible": [],
+                "installation_instructions": [
+                    "Run AMPLiT only from a developer installation."
+                ],
+                "official_url": OFFICIAL_REPOSITORY,
+            }
         missing, incompatible = [], []
         home_text = self._env.get("AMPLIT_HOME", "").strip()
         python_text = self._env.get("AMPLIT_PYTHON", "").strip()

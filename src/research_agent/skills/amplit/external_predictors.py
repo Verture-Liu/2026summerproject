@@ -1,12 +1,12 @@
 from __future__ import annotations
 
-import shutil
 import subprocess
 from abc import ABC, abstractmethod
 from pathlib import Path
 
 from research_agent.skills.ancient_dna.common import run_command, write_metadata
 from research_agent.skills.base import SkillContext, SkillResult
+from research_agent.skills.conda_tools import ToolCommand, resolve_tool
 
 
 def _schema(properties: dict | None = None, required: list[str] | None = None) -> dict:
@@ -29,12 +29,12 @@ class PeptideExternalCliSkill(ABC):
     input_formats = {"csv", "fasta"}
     output_formats = {"csv", "json"}
 
+    def find_tool_command(self) -> ToolCommand | None:
+        return resolve_tool(self.executable_candidates)
+
     def find_executable(self) -> str | None:
-        for name in self.executable_candidates:
-            executable = shutil.which(name)
-            if executable:
-                return executable
-        return None
+        tool_command = self.find_tool_command()
+        return tool_command.command[-1] if tool_command else None
 
     @abstractmethod
     def build_command(self, context: SkillContext, parameters: dict, executable: str) -> list[str]:
@@ -45,8 +45,8 @@ class PeptideExternalCliSkill(ABC):
         raise NotImplementedError
 
     def run(self, context: SkillContext, parameters: dict) -> SkillResult:
-        executable = self.find_executable()
-        if executable is None:
+        tool_command = self.find_tool_command()
+        if tool_command is None:
             tool = self.executable_candidates[0]
             return SkillResult(
                 "dependency_missing",
@@ -70,7 +70,11 @@ class PeptideExternalCliSkill(ABC):
                 if not source.exists():
                     raise ValueError(f"Input does not exist: {source}")
             context.work_dir.mkdir(parents=True, exist_ok=True)
-            command = self.build_command(context, parameters, executable)
+            command = self.build_command(
+                context, parameters, tool_command.tool
+            )
+            if command and command[0] == tool_command.tool:
+                command = [*tool_command.command, *command[1:]]
             completed = run_command(
                 command,
                 cwd=context.work_dir,
@@ -90,6 +94,7 @@ class PeptideExternalCliSkill(ABC):
                 {
                     "skill": self.name,
                     "tool": self.executable_candidates[0],
+                    "tool_source": tool_command.source,
                     "official_url": self.official_url,
                     "command": command,
                     "outputs": [str(path) for path in outputs],

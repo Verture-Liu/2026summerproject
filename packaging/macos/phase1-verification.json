@@ -1,8 +1,8 @@
 {
   "phase": "Phase 1",
-  "task": "Final-review Critical/Important fix wave",
-  "base_commit": "718eb33a9de46e14ab3cc225a99e17111beee66f",
-  "executed_at": "2026-08-23T17:08:07+10:00",
+  "task": "Second final-review security and packaged-isolation fix wave",
+  "base_commit": "7fe8b6e1a89c6932b752e4e316a15edfc65a3880",
+  "executed_at": "2026-08-23T17:43:58+10:00",
   "status": "passed",
   "environment": {
     "macos": {
@@ -45,12 +45,12 @@
         "Wheel/sdist metadata had no bytecode exclusions."
       ],
       "green_command": "env PYTHONPATH=src ../../.venv/bin/pytest -q tests/unit/test_secret_guard.py tests/integration/test_runtime_config_api.py tests/unit/test_runtime_configuration.py tests/unit/test_runtime_paths.py tests/unit/test_conda_tool_resolver.py tests/unit/test_skill_readiness_contracts.py tests/unit/test_desktop_ui_contract.py tests/unit/test_english_ui.py tests/unit/test_package_metadata.py",
-      "green_result": "65 passed, 1 existing Starlette deprecation warning",
+      "green_result": "76 focused tests passed, 1 existing Starlette deprecation warning",
       "status": "passed"
     },
     "full_test_suite": {
       "command": "env PYTHONPATH=src ../../.venv/bin/pytest -q tests",
-      "result": "263 passed, 1 existing Starlette deprecation warning",
+      "result": "278 passed, 1 existing Starlette deprecation warning",
       "status": "passed"
     },
     "build": {
@@ -59,12 +59,12 @@
       "wheel": {
         "path": "dist/local_research_agent-0.2.0-py3-none-any.whl",
         "size": "107K",
-        "sha256": "7c95dc11ff0339dbad5c9a51160c9672e1bf2701c43049a2c0e7030b8b4eef28"
+        "sha256": "094513e5526f3cb17d38d9ecfc5346fd87c309fc4321b554730497e7767dced3"
       },
       "sdist": {
         "path": "dist/local_research_agent-0.2.0.tar.gz",
         "size": "73K",
-        "sha256": "573f71fc796a6baffa195aec1e54d8c738aac9400d05d650720b242b5e4a2a18"
+        "sha256": "d2a979d32dbf132bd4720d1cac2141720f9d2532ed7c83b5cdc52b04757130e7"
       },
       "status": "passed",
       "warnings": [
@@ -124,7 +124,7 @@
         "wheel and sdist extracted trees",
         "installed-smoke application data and environment"
       ],
-      "result": "0 persisted configured-provider-key or session-token-value findings outside the explicit temporary smoke harness source",
+      "result": "0 configured-provider-key or session-token-value findings in application source, wheel, sdist, or persisted application data; temporary smoke-harness files are excluded from application-artifact claims",
       "status": "passed"
     }
   },

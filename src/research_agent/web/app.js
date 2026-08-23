@@ -282,7 +282,7 @@ const setButtonLoading = (buttonId, loading, label) => {
   const button = $(buttonId);
   if (!button.dataset.defaultLabel) button.dataset.defaultLabel = button.textContent;
   if (loading) button.dataset.wasDisabled = String(button.disabled);
-  button.disabled = loading ? true : button.dataset.wasDisabled === "true";
+  button.disabled = sessionInvalid || (loading ? true : button.dataset.wasDisabled === "true");
   button.setAttribute("aria-busy", String(loading));
   button.classList.toggle("loading", loading);
   button.textContent = loading ? label : button.dataset.defaultLabel;
@@ -435,7 +435,7 @@ $("upload").onclick = async () => {
     show("fileList", data.files || data);
     hasFiles = Boolean(data.files?.length);
     refreshPlanningControls();
-    $("selectOutput").disabled = !data.files?.length;
+    $("selectOutput").disabled = sessionInvalid || !data.files?.length;
     setStepState("upload", response.ok && data.files?.length ? "done" : "failed");
     if (data.files?.length) setStepState("plan", "active");
   } catch (error) {
