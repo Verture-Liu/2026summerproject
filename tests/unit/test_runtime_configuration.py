@@ -9,6 +9,8 @@ from research_agent.runtime.secrets import MemorySecretStore
 
 
 TEST_API_KEY = "task-3-test-api-key"
+OLD_API_KEY = "task-3-old-api-key"
+NEW_API_KEY = "task-3-new-api-key"
 
 
 def make_configuration(tmp_path, store=None):
@@ -43,41 +45,57 @@ def test_get_reloads_preferences_and_retrieves_key_from_secret_store(tmp_path):
     preferences = JsonPreferences(tmp_path / "preferences.json")
     preferences.save(
         {
-            "api_base_url": "https://example.test/v1",
-            "model": "model-a",
+            "api_base_url": "https://initial.example/v1",
+            "model": "initial-model",
             "language": "zh",
         }
     )
     store = MemorySecretStore()
-    store.set("api_key", TEST_API_KEY)
-
     config = RuntimeConfiguration(preferences, store)
 
     assert config.get() == RuntimeApiConfig(
-        base_url="https://example.test/v1",
-        model="model-a",
+        base_url="https://initial.example/v1",
+        model="initial-model",
+        api_key="",
+    )
+
+    preferences.save(
+        {
+            "api_base_url": "https://updated.example/v1",
+            "model": "updated-model",
+            "language": "zh",
+        }
+    )
+    store.set("api_key", TEST_API_KEY)
+
+    assert config.get() == RuntimeApiConfig(
+        base_url="https://updated.example/v1",
+        model="updated-model",
         api_key=TEST_API_KEY,
     )
 
 
-def test_update_strips_values_replaces_key_and_returns_a_redacted_response(tmp_path):
+def test_update_replaces_an_existing_key_and_returns_a_redacted_response(tmp_path):
     preferences_path = tmp_path / "preferences.json"
     preferences = JsonPreferences(preferences_path)
     preferences.save({"language": "zh"})
     store = MemorySecretStore()
+    store.set("api_key", OLD_API_KEY)
     config = RuntimeConfiguration(preferences, store)
 
     response = config.update(
         "  https://example.test/v1  ",
         "  model-a  ",
-        f"  {TEST_API_KEY}  ",
+        f"  {NEW_API_KEY}  ",
     )
 
     assert config.get() == RuntimeApiConfig(
         base_url="https://example.test/v1",
         model="model-a",
-        api_key=TEST_API_KEY,
+        api_key=NEW_API_KEY,
     )
+    assert store.get("api_key") == NEW_API_KEY
+    assert store.get("api_key") != OLD_API_KEY
     assert json.loads(preferences_path.read_text(encoding="utf-8")) == {
         "api_base_url": "https://example.test/v1",
         "model": "model-a",
