@@ -161,8 +161,25 @@ const setConfigStatus = (key) => {
   configStatusKey = key;
   show("config-status", t(key));
 };
-const beginConfigurationAction = () => ++configurationGeneration;
 const isCurrentConfigurationAction = (generation) => generation === configurationGeneration;
+const configurationActionButtonIds = [
+  "save-api-config",
+  "test-api-config",
+  "delete-api-key",
+];
+const resetConfigurationActionButtons = () => {
+  configurationActionButtonIds.forEach((buttonId) => setButtonLoading(buttonId, false));
+};
+const beginConfigurationAction = (buttonId, label) => {
+  const generation = ++configurationGeneration;
+  resetConfigurationActionButtons();
+  setButtonLoading(buttonId, true, label);
+  return generation;
+};
+const completeConfigurationAction = (generation) => {
+  if (!isCurrentConfigurationAction(generation)) return;
+  resetConfigurationActionButtons();
+};
 const refreshPlanningControls = () => {
   $("plan").disabled = !(configurationReady && hasFiles);
 };
@@ -277,10 +294,9 @@ const refreshExecuteButton = () => {
 };
 
 $("save-api-config").onclick = async () => {
-  const requestGeneration = beginConfigurationAction();
+  const requestGeneration = beginConfigurationAction("save-api-config", t("saveConfiguration"));
   configurationReady = false;
   refreshPlanningControls();
-  setButtonLoading("save-api-config", true, t("saveConfiguration"));
   try {
     const response = await apiFetch("/api/config", {
       method: "PUT",
@@ -304,20 +320,19 @@ $("save-api-config").onclick = async () => {
     if (!isCurrentConfigurationAction(requestGeneration)) return;
     setConfigStatus("configurationUnavailable");
   } finally {
-    if (!isCurrentConfigurationAction(requestGeneration)) return;
-    setButtonLoading("save-api-config", false);
+    completeConfigurationAction(requestGeneration);
   }
 };
 
 $("test-api-config").onclick = async () => {
-  const requestGeneration = beginConfigurationAction();
+  const requestGeneration = beginConfigurationAction("test-api-config", t("testConnection"));
   configurationReady = false;
   refreshPlanningControls();
   if (!apiKeyPresent) {
     setConfigStatus("configurationMissing");
+    completeConfigurationAction(requestGeneration);
     return;
   }
-  setButtonLoading("test-api-config", true, t("testConnection"));
   try {
     const response = await apiFetch("/api/config/test", {method: "POST"});
     if (!isCurrentConfigurationAction(requestGeneration)) return;
@@ -337,18 +352,16 @@ $("test-api-config").onclick = async () => {
     if (!isCurrentConfigurationAction(requestGeneration)) return;
     setConfigStatus("apiUnreachable");
   } finally {
-    if (!isCurrentConfigurationAction(requestGeneration)) return;
-    setButtonLoading("test-api-config", false);
+    completeConfigurationAction(requestGeneration);
     refreshPlanningControls();
   }
 };
 
 $("delete-api-key").onclick = async () => {
-  const requestGeneration = beginConfigurationAction();
+  const requestGeneration = beginConfigurationAction("delete-api-key", t("deleteApiKey"));
   configurationReady = false;
   $("api-key").value = "";
   refreshPlanningControls();
-  setButtonLoading("delete-api-key", true, t("deleteApiKey"));
   try {
     const response = await apiFetch("/api/config/key", {method: "DELETE"});
     if (!isCurrentConfigurationAction(requestGeneration)) return;
@@ -367,8 +380,7 @@ $("delete-api-key").onclick = async () => {
     if (!isCurrentConfigurationAction(requestGeneration)) return;
     setConfigStatus("apiKeyDeleteFailed");
   } finally {
-    if (!isCurrentConfigurationAction(requestGeneration)) return;
-    setButtonLoading("delete-api-key", false);
+    completeConfigurationAction(requestGeneration);
   }
 };
 

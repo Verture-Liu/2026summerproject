@@ -451,6 +451,12 @@ git add src/research_agent/web tests/unit/test_desktop_ui_contract.py tests/unit
 git commit -m "feat: add secure desktop first-run interface"
 ```
 
+#### Final regression report (2026-08-23)
+
+- Superseding a pending Save or Test action with another configuration action now clears the prior button's loading and disabled state before the newer action becomes busy.
+- Save, Test, and Delete share one generation-aware busy-state manager. Only the current action can restore the complete configuration control group; stale responses still cannot alter configuration readiness, status, or data.
+- Verification: `env PYTHONPATH=src /Users/tianaoliu/Documents/vscode/2026summerproject/.venv/bin/pytest -q tests/integration/test_api.py tests/integration/test_runtime_config_api.py tests/unit/test_config.py tests/unit/test_desktop_ui_contract.py tests/unit/test_english_ui.py tests/unit/test_preferences.py tests/unit/test_runtime_configuration.py tests/unit/test_secrets.py tests/unit/test_session_auth.py` — 59 passed (one third-party TestClient deprecation warning).
+
 ---
 
 ### Task 8: Tokenized launcher and portable backend smoke test

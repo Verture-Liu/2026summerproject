@@ -100,10 +100,10 @@ def test_initial_configuration_response_cannot_overwrite_newer_configuration_sta
     javascript = read_web_files()["javascript"]
 
     assert "let configurationGeneration = 0" in javascript
-    assert "const beginConfigurationAction = () => ++configurationGeneration" in javascript
+    assert "const beginConfigurationAction = (buttonId, label) => {" in javascript
     assert "const requestGeneration = configurationGeneration" in javascript
     assert "if (!isCurrentConfigurationAction(requestGeneration)) return;" in javascript
-    assert "beginConfigurationAction();" in javascript
+    assert "beginConfigurationAction(\"save-api-config\", t(\"saveConfiguration\"))" in javascript
 
 
 def test_configuration_actions_cannot_restore_stale_ui_after_a_newer_action():
@@ -129,20 +129,19 @@ def test_configuration_actions_cannot_restore_stale_ui_after_a_newer_action():
         ('$("delete-api-key").onclick = async () => {', '$("upload").onclick'),
     ):
         handler = javascript.split(action, 1)[1].split(next_action, 1)[0]
-        assert "const requestGeneration = beginConfigurationAction();" in handler
+        assert "const requestGeneration = beginConfigurationAction(" in handler
         assert handler.index("const requestGeneration") < handler.index("await apiFetch")
         assert "await apiFetch" in handler
         assert "await safeResponseJson" in handler
-        assert handler.count("if (!isCurrentConfigurationAction(requestGeneration)) return;") >= 4
+        assert handler.count("if (!isCurrentConfigurationAction(requestGeneration)) return;") >= 3
         assert "catch (_error) {\n    if (!isCurrentConfigurationAction(requestGeneration)) return;" in handler
-        assert "finally {\n    if (!isCurrentConfigurationAction(requestGeneration)) return;" in handler
         fetch_index = handler.index("await apiFetch")
         json_index = handler.index("await safeResponseJson")
         first_guard = handler.index("if (!isCurrentConfigurationAction(requestGeneration)) return;", fetch_index)
         second_guard = handler.index("if (!isCurrentConfigurationAction(requestGeneration)) return;", first_guard + 1)
-        finally_guard = handler.index("finally {\n    if (!isCurrentConfigurationAction(requestGeneration)) return;")
+        finally_guard = handler.index("finally {\n    completeConfigurationAction(requestGeneration);")
         assert fetch_index < first_guard < json_index < second_guard
-        assert finally_guard < handler.index("setButtonLoading", finally_guard)
+        assert finally_guard < handler.index("completeConfigurationAction", finally_guard)
 
     test_handler = javascript.split('$("test-api-config").onclick = async () => {', 1)[1].split(
         '$("delete-api-key").onclick', 1
@@ -150,6 +149,39 @@ def test_configuration_actions_cannot_restore_stale_ui_after_a_newer_action():
     response_guard = test_handler.index("if (!isCurrentConfigurationAction(requestGeneration)) return;")
     json_guard = test_handler.index("if (!isCurrentConfigurationAction(requestGeneration)) return;", response_guard + 1)
     assert json_guard < test_handler.index("configurationReady = true")
+
+    assert "const configurationActionButtonIds = [" in javascript
+    for button_id in ("save-api-config", "test-api-config", "delete-api-key"):
+        assert f'"{button_id}"' in javascript
+
+    reset_manager = javascript.split("const resetConfigurationActionButtons = () => {", 1)[1].split(
+        "const beginConfigurationAction", 1
+    )[0]
+    assert "configurationActionButtonIds.forEach((buttonId) => setButtonLoading(buttonId, false));" in reset_manager
+
+    start_manager = javascript.split("const beginConfigurationAction = (buttonId, label) => {", 1)[1].split(
+        "const completeConfigurationAction", 1
+    )[0]
+    assert "const generation = ++configurationGeneration;" in start_manager
+    assert start_manager.index("resetConfigurationActionButtons();") < start_manager.index(
+        "setButtonLoading(buttonId, true, label);"
+    )
+    assert "return generation;" in start_manager
+
+    finish_manager = javascript.split("const completeConfigurationAction = (generation) => {", 1)[1].split(
+        "const refreshPlanningControls", 1
+    )[0]
+    assert "if (!isCurrentConfigurationAction(generation)) return;" in finish_manager
+    assert "resetConfigurationActionButtons();" in finish_manager
+
+    for button_id, label_key, action, next_action in (
+        ("save-api-config", "saveConfiguration", '$("save-api-config").onclick = async () => {', '$("test-api-config").onclick'),
+        ("test-api-config", "testConnection", '$("test-api-config").onclick = async () => {', '$("delete-api-key").onclick'),
+        ("delete-api-key", "deleteApiKey", '$("delete-api-key").onclick = async () => {', '$("upload").onclick'),
+    ):
+        handler = javascript.split(action, 1)[1].split(next_action, 1)[0]
+        assert f'beginConfigurationAction("{button_id}", t("{label_key}"))' in handler
+        assert "finally {\n    completeConfigurationAction(requestGeneration);" in handler
 
 
 def test_about_renders_the_packaged_tool_versions():
