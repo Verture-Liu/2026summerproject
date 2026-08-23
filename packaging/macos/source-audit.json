@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "tools": {
+    "fastqc": {
+      "version": "0.12.1",
+      "source": "/opt/homebrew/opt/fastqc/libexec",
+      "upstream": "https://www.bioinformatics.babraham.ac.uk/projects/fastqc/",
+      "sha256": null,
+      "architecture": "directory"
+    },
+    "multiqc": {
+      "version": "1.35",
+      "source": "/opt/miniconda3/envs/multiqc_env",
+      "upstream": "https://github.com/MultiQC/MultiQC",
+      "sha256": null,
+      "architecture": "directory"
+    },
+    "seqkit": {
+      "version": "2.13.0",
+      "source": "/opt/miniconda3/bin/seqkit",
+      "upstream": "https://github.com/shenwei356/seqkit",
+      "sha256": "326d5e82a1b0aba125eedd93a3d2fc0404f8995daf468989cc883e960a1b8102",
+      "architecture": "arm64"
+    },
+    "seqtk": {
+      "version": "1.5-r133",
+      "source": "/opt/miniconda3/bin/seqtk",
+      "upstream": "https://github.com/lh3/seqtk",
+      "sha256": "9e8cb7f0507083fec13aef4d935d59ac22f0ccf6833fc4db5ac27d2830f67e25",
+      "architecture": "arm64"
+    },
+    "samtools": {
+      "version": "1.23.1",
+      "source": "/opt/miniconda3/envs/samtools_env/bin/samtools",
+      "upstream": "https://github.com/samtools/samtools",
+      "sha256": "6eae0516de826354e1b48f1d645d04af482bc933eb81d8112f977504ed741608",
+      "architecture": "arm64"
+    },
+    "bwa": {
+      "version": "0.7.19-r1273",
+      "source": "/opt/miniconda3/envs/bwa_env/bin/bwa",
+      "upstream": "https://github.com/lh3/bwa",
+      "sha256": "34f338e639956e9d14d582283c44a8b52ad0fff8944ccd1dabaeb8d651bcf04e",
+      "architecture": "arm64"
+    },
+    "bowtie2": {
+      "version": "2.5.5",
+      "source": "/opt/miniconda3/envs/bowtie2_env",
+      "upstream": "https://github.com/BenLangmead/bowtie2",
+      "sha256": null,
+      "architecture": "directory"
+    },
+    "java": {
+      "version": "21.0.8",
+      "source": "/Library/Java/JavaVirtualMachines/zulu-21.jdk/Contents/Home",
+      "upstream": "https://www.azul.com/downloads/",
+      "sha256": null,
+      "architecture": "directory"
+    }
+  }
+}

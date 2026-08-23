@@ -1,0 +1,44 @@
+{
+  "fastqc": {
+    "version": "0.12.1",
+    "source": "/opt/homebrew/opt/fastqc/libexec",
+    "upstream": "https://www.bioinformatics.babraham.ac.uk/projects/fastqc/"
+  },
+  "multiqc": {
+    "version": "1.35",
+    "source": "/opt/miniconda3/envs/multiqc_env",
+    "upstream": "https://github.com/MultiQC/MultiQC"
+  },
+  "seqkit": {
+    "version": "2.13.0",
+    "source": "/opt/miniconda3/bin/seqkit",
+    "upstream": "https://github.com/shenwei356/seqkit"
+  },
+  "seqtk": {
+    "version": "1.5-r133",
+    "source": "/opt/miniconda3/bin/seqtk",
+    "upstream": "https://github.com/lh3/seqtk"
+  },
+  "samtools": {
+    "version": "1.23.1",
+    "source": "/opt/miniconda3/envs/samtools_env/bin/samtools",
+    "environment": "/opt/miniconda3/envs/samtools_env",
+    "upstream": "https://github.com/samtools/samtools"
+  },
+  "bwa": {
+    "version": "0.7.19-r1273",
+    "source": "/opt/miniconda3/envs/bwa_env/bin/bwa",
+    "environment": "/opt/miniconda3/envs/bwa_env",
+    "upstream": "https://github.com/lh3/bwa"
+  },
+  "bowtie2": {
+    "version": "2.5.5",
+    "source": "/opt/miniconda3/envs/bowtie2_env",
+    "upstream": "https://github.com/BenLangmead/bowtie2"
+  },
+  "java": {
+    "version": "21.0.8",
+    "source": "/Library/Java/JavaVirtualMachines/zulu-21.jdk/Contents/Home",
+    "upstream": "https://www.azul.com/downloads/"
+  }
+}
