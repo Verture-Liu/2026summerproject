@@ -150,7 +150,7 @@ def create_app(
             raise HTTPException(503, detail={"error": "api_unreachable"}) from exc
         except httpx.RequestError as exc:
             raise HTTPException(503, detail={"error": "api_unreachable"}) from exc
-        except (KeyError, TypeError, ValueError, json.JSONDecodeError) as exc:
+        except (IndexError, KeyError, TypeError, ValueError, json.JSONDecodeError) as exc:
             raise HTTPException(502, detail={"error": "invalid_api_response"}) from exc
         return {"status": "ok", "model": config.model}
 

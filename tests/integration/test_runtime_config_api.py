@@ -116,6 +116,29 @@ def test_connection_test_uses_stored_configuration_and_returns_only_safe_fields(
     assert_secret_absent(response.text)
 
 
+def test_connection_test_maps_empty_provider_choices_to_invalid_api_response(tmp_path):
+    client, _ = make_client(
+        tmp_path,
+        lambda request: httpx.Response(200, json={"choices": []}),
+    )
+    configured = client.put(
+        "/api/config",
+        json={
+            "base_url": "https://provider.example/v1",
+            "model": "provider-model",
+            "api_key": TEST_API_KEY,
+        },
+    )
+    assert configured.status_code == 200
+
+    response = client.post("/api/config/test")
+
+    assert response.status_code == 502
+    assert response.json() == {"detail": {"error": "invalid_api_response"}}
+    assert_secret_absent(response.json())
+    assert_secret_absent(response.text)
+
+
 @pytest.mark.parametrize(
     ("handler", "status_code", "error"),
     [
