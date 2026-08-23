@@ -39,6 +39,9 @@ def test_assembler_creates_expected_bundle_layout(tmp_path):
     (backend / "PaleoRigorBackend").chmod(0o755)
     (backend / "_internal").mkdir()
     (backend / "_internal/example").write_text("resource")
+    cache = backend / "_internal/__pycache__"
+    cache.mkdir()
+    (cache / "example.pyc").write_bytes(b"developer cache")
     destination = tmp_path / "PaleoRigor.app"
 
     assembler.assemble(destination, launcher, backend, PACKAGING / "Info.plist")
@@ -46,6 +49,7 @@ def test_assembler_creates_expected_bundle_layout(tmp_path):
     assert (destination / "Contents/MacOS/PaleoRigor").stat().st_mode & 0o111
     assert (destination / "Contents/Resources/backend/PaleoRigorBackend").stat().st_mode & 0o111
     assert (destination / "Contents/Resources/backend/_internal/example").read_text() == "resource"
+    assert not (destination / "Contents/Resources/backend/_internal/__pycache__").exists()
     assert (destination / "Contents/Frameworks").is_dir()
     assert (destination / "Contents/Info.plist").is_file()
 

@@ -41,7 +41,11 @@ def test_tool_manifest_declares_exact_bundled_tools_and_versions():
         (tool["id"], tool["version"], tool["command"])
         for tool in manifest["tools"]
     ] == EXPECTED_BUNDLED_TOOLS
-    assert all(set(tool) == {"id", "version", "command", "license_file"} for tool in manifest["tools"])
+    assert all(
+        set(tool) == {"id", "version", "command", "upstream", "license_file"}
+        for tool in manifest["tools"]
+    )
+    assert all(tool["upstream"].startswith("https://") for tool in manifest["tools"])
     assert all(tool["license_file"] for tool in manifest["tools"])
 
 

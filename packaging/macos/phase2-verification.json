@@ -1,0 +1,58 @@
+{
+  "build": {
+    "architecture": "arm64",
+    "minimum_macos": "13.0",
+    "signing": "ad-hoc development signature",
+    "notarized": false,
+    "source_commit_before_release_gate": "bdeaf29"
+  },
+  "artifacts": {
+    "application": {
+      "path": "dist/macos/PaleoRigor.app",
+      "expanded_kib": 1089224,
+      "codesign_deep_strict": true
+    },
+    "dmg": {
+      "path": "dist/macos/PaleoRigor-dev-arm64.dmg",
+      "bytes": 417638704,
+      "sha256": "527548e3c40fa0c29c1721b91746e3ca28ff4489d81e66c629caa734d46db8d8",
+      "mounted_read_only": true,
+      "contains_applications_symlink": true,
+      "smoke_tested_from_mounted_image": true
+    }
+  },
+  "native_launcher": {
+    "opened_browser_after_authenticated_health": true,
+    "token_file_deleted_after_read": true,
+    "backend_terminated_on_app_quit": true
+  },
+  "health": {
+    "status": "ok",
+    "version": "0.2.0"
+  },
+  "unauthorized_status": 401,
+  "about_status": 200,
+  "about_tools": {
+    "fastqc": "0.12.1",
+    "multiqc": "1.35",
+    "seqkit": "2.13.0",
+    "seqtk": "1.5-r133",
+    "samtools": "1.23.1",
+    "bwa": "0.7.19-r1273",
+    "bowtie2": "2.5.5"
+  },
+  "config_status": 200,
+  "api_key_present": false,
+  "token_file_deleted": true,
+  "tool_commands": {
+    "fastqc": true,
+    "multiqc": true,
+    "seqkit": true,
+    "seqtk": true,
+    "samtools": true,
+    "bwa": true,
+    "bowtie2": true
+  },
+  "bundle_scan_errors": [],
+  "passed": true
+}
