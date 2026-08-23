@@ -102,8 +102,54 @@ def test_initial_configuration_response_cannot_overwrite_newer_configuration_sta
     assert "let configurationGeneration = 0" in javascript
     assert "const beginConfigurationAction = () => ++configurationGeneration" in javascript
     assert "const requestGeneration = configurationGeneration" in javascript
-    assert "if (requestGeneration !== configurationGeneration) return;" in javascript
+    assert "if (!isCurrentConfigurationAction(requestGeneration)) return;" in javascript
     assert "beginConfigurationAction();" in javascript
+
+
+def test_configuration_actions_cannot_restore_stale_ui_after_a_newer_action():
+    javascript = read_web_files()["javascript"]
+
+    assert "const isCurrentConfigurationAction = (generation) => generation === configurationGeneration" in javascript
+
+    initial_load = javascript.split("const loadInitialConfiguration = async () => {", 1)[1].split(
+        "const initializeDesktopInterface", 1
+    )[0]
+    assert "const requestGeneration = configurationGeneration;" in initial_load
+    assert initial_load.index("const requestGeneration") < initial_load.index("await apiFetch")
+    assert initial_load.count("if (!isCurrentConfigurationAction(requestGeneration)) return;") >= 3
+    initial_fetch = initial_load.index("await apiFetch")
+    initial_json = initial_load.index("await safeResponseJson")
+    initial_first_guard = initial_load.index("if (!isCurrentConfigurationAction(requestGeneration)) return;", initial_fetch)
+    initial_second_guard = initial_load.index("if (!isCurrentConfigurationAction(requestGeneration)) return;", initial_first_guard + 1)
+    assert initial_fetch < initial_first_guard < initial_json < initial_second_guard
+
+    for action, next_action in (
+        ('$("save-api-config").onclick = async () => {', '$("test-api-config").onclick'),
+        ('$("test-api-config").onclick = async () => {', '$("delete-api-key").onclick'),
+        ('$("delete-api-key").onclick = async () => {', '$("upload").onclick'),
+    ):
+        handler = javascript.split(action, 1)[1].split(next_action, 1)[0]
+        assert "const requestGeneration = beginConfigurationAction();" in handler
+        assert handler.index("const requestGeneration") < handler.index("await apiFetch")
+        assert "await apiFetch" in handler
+        assert "await safeResponseJson" in handler
+        assert handler.count("if (!isCurrentConfigurationAction(requestGeneration)) return;") >= 4
+        assert "catch (_error) {\n    if (!isCurrentConfigurationAction(requestGeneration)) return;" in handler
+        assert "finally {\n    if (!isCurrentConfigurationAction(requestGeneration)) return;" in handler
+        fetch_index = handler.index("await apiFetch")
+        json_index = handler.index("await safeResponseJson")
+        first_guard = handler.index("if (!isCurrentConfigurationAction(requestGeneration)) return;", fetch_index)
+        second_guard = handler.index("if (!isCurrentConfigurationAction(requestGeneration)) return;", first_guard + 1)
+        finally_guard = handler.index("finally {\n    if (!isCurrentConfigurationAction(requestGeneration)) return;")
+        assert fetch_index < first_guard < json_index < second_guard
+        assert finally_guard < handler.index("setButtonLoading", finally_guard)
+
+    test_handler = javascript.split('$("test-api-config").onclick = async () => {', 1)[1].split(
+        '$("delete-api-key").onclick', 1
+    )[0]
+    response_guard = test_handler.index("if (!isCurrentConfigurationAction(requestGeneration)) return;")
+    json_guard = test_handler.index("if (!isCurrentConfigurationAction(requestGeneration)) return;", response_guard + 1)
+    assert json_guard < test_handler.index("configurationReady = true")
 
 
 def test_about_renders_the_packaged_tool_versions():
