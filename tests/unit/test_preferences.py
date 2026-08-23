@@ -44,3 +44,25 @@ def test_preferences_save_replaces_file_via_sibling_temporary_file(tmp_path, mon
 
     assert replaced == [(replaced[0][0], path)]
     assert replaced[0][0].parent == path.parent
+
+
+def test_preferences_save_removes_temporary_file_when_replace_fails(tmp_path, monkeypatch):
+    path = tmp_path / "preferences.json"
+    preferences = JsonPreferences(path)
+    temporary_paths = []
+
+    def fail_replace(source, destination):
+        temporary_paths.append(source)
+        raise OSError("replace failed")
+
+    monkeypatch.setattr("research_agent.runtime.preferences.os.replace", fail_replace)
+
+    try:
+        preferences.save({"model": "research-model"})
+    except OSError:
+        pass
+    else:
+        raise AssertionError("preferences.save() should propagate replace failure")
+
+    assert temporary_paths
+    assert not temporary_paths[0].exists()

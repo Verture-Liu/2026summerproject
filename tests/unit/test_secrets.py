@@ -51,12 +51,22 @@ def test_keychain_store_uses_exact_security_commands_without_real_keychain():
         ["/usr/bin/security", "add-generic-password", "-U", "-s", "org.paleorigor.app", "-a", "api_key", "-w", SECRET],
         ["/usr/bin/security", "delete-generic-password", "-s", "org.paleorigor.app", "-a", "api_key"],
     ]
+    assert all(
+        call[1] == {"capture_output": True, "text": True, "check": False, "shell": False}
+        for call in runner.calls
+    )
 
 
 def test_keychain_not_found_is_none():
     runner = FakeRunner([subprocess.CompletedProcess([], 44, stdout="", stderr="not found")])
 
     assert MacOSKeychainSecretStore(runner=runner).get("api_key") is None
+
+
+def test_keychain_delete_missing_item_is_idempotent():
+    runner = FakeRunner([subprocess.CompletedProcess([], 44, stdout="", stderr="not found")])
+
+    MacOSKeychainSecretStore(runner=runner).delete("api_key")
 
 
 def test_keychain_errors_and_repr_redact_secret():

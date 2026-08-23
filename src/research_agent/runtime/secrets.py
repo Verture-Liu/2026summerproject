@@ -77,10 +77,12 @@ class MacOSKeychainSecretStore:
                 name,
             ]
         )
+        if result.returncode == 44:
+            return
         self._check_result(result)
 
     def _run(self, args: Sequence[str]) -> subprocess.CompletedProcess[str]:
-        return self._runner(args, capture_output=True, text=True, check=False)
+        return self._runner(args, capture_output=True, text=True, check=False, shell=False)
 
     @staticmethod
     def _check_result(result: subprocess.CompletedProcess[str]) -> None:
