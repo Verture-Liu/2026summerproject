@@ -19,6 +19,8 @@ from research_agent.files.output_destination import (
     save_output_directory,
 )
 from research_agent.files.task_store import TaskStore
+from research_agent.runtime.configuration import RuntimeConfiguration
+from research_agent.runtime.session import install_api_token_guard
 from research_agent.skills.registry import build_default_registry
 
 
@@ -56,14 +58,21 @@ def _save_index(task_dir: Path, index: dict) -> None:
 
 
 def create_app(
-    task_root: Path | str = "workspace/tasks",
+    task_root: Path | str | None = None,
     directory_chooser=None,
+    runtime_configuration: RuntimeConfiguration | None = None,
+    session_token: str | None = None,
 ) -> FastAPI:
     app = FastAPI(title="Local Research Agent")
-    store = TaskStore(Path(task_root))
+    store = TaskStore(Path(task_root or "workspace/tasks"))
     registry = build_default_registry()
     web_dir = Path(__file__).parent / "web"
     directory_selector = directory_chooser or choose_directory
+    install_api_token_guard(app, session_token)
+
+    @app.get("/api/health")
+    def health():
+        return {"status": "ok", "version": "0.2.0"}
 
     @app.post("/api/tasks", status_code=201)
     def create_task():
