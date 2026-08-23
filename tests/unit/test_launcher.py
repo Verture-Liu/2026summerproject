@@ -11,9 +11,35 @@ def test_find_free_port_returns_bindable_port():
 
 
 def test_launcher_parser_supports_no_browser():
-    args = launcher.build_parser().parse_args(["--no-browser", "--port", "8123"])
+    args = launcher.build_parser().parse_args(
+        ["--no-browser", "--port", "8123", "--session-token-file", "/tmp/token"]
+    )
     assert args.no_browser is True
     assert args.port == 8123
+    assert args.session_token_file.as_posix() == "/tmp/token"
+
+
+def test_session_token_file_requires_private_permissions_and_is_deleted(tmp_path):
+    token_file = tmp_path / "launch-token"
+    token_file.write_text("fixed-token\n")
+    token_file.chmod(0o600)
+
+    assert launcher.read_session_token_file(token_file) == "fixed-token"
+    assert not token_file.exists()
+
+
+def test_session_token_file_with_broad_permissions_is_rejected_and_deleted(tmp_path):
+    token_file = tmp_path / "launch-token"
+    token_file.write_text("secret")
+    token_file.chmod(0o644)
+
+    try:
+        launcher.read_session_token_file(token_file)
+    except ValueError as exc:
+        assert "permissions" in str(exc)
+    else:
+        raise AssertionError("Expected broad token-file permissions to be rejected")
+    assert not token_file.exists()
 
 
 def test_build_browser_url_places_an_encoded_token_in_a_fragment():
@@ -57,7 +83,11 @@ def test_launch_passes_one_token_to_the_app_and_tokenized_browser_fragment(monke
     create_calls = []
     uvicorn_calls = []
 
-    monkeypatch.setattr(launcher, "build_runtime", lambda: (paths, configuration, "same token/?"))
+    monkeypatch.setattr(
+        launcher,
+        "build_runtime",
+        lambda session_token=None: (paths, configuration, session_token or "same token/?"),
+    )
     monkeypatch.setattr(
         launcher,
         "create_app",
@@ -96,7 +126,11 @@ def test_packaged_launcher_disables_uvicorn_logging_only_when_frozen(monkeypatch
     paths = AppPaths.for_runtime(home=tmp_path, env={})
     app = FastAPI()
     calls = []
-    monkeypatch.setattr(launcher, "build_runtime", lambda: (paths, object(), "token"))
+    monkeypatch.setattr(
+        launcher,
+        "build_runtime",
+        lambda session_token=None: (paths, object(), session_token or "token"),
+    )
     monkeypatch.setattr(launcher, "create_app", lambda **_kwargs: app)
     monkeypatch.setattr(launcher.sys, "frozen", True, raising=False)
     monkeypatch.setattr(

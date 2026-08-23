@@ -4,9 +4,9 @@
 
 **Goal:** Produce an unsigned Apple Silicon `PaleoRigor.app` and development `.dmg` that run without VS Code, Python, Conda, Homebrew, Java, or bioinformatics tools installed by the user.
 
-**Architecture:** A native Swift launcher owns lifecycle, creates a per-launch token file, starts a PyInstaller onedir backend on `127.0.0.1`, waits for authenticated health, and opens the browser. The app embeds seven tools beneath the backend resource root, a minimal Java runtime for FastQC, and a standalone MultiQC executable. Build scripts stage, inspect, checksum, assemble, ad-hoc sign, and smoke-test every artifact.
+**Architecture:** A native AppKit launcher owns lifecycle, creates a per-launch token file, starts a PyInstaller onedir backend on `127.0.0.1`, waits for authenticated health, and opens the browser. The app embeds seven tools beneath the backend resource root, a minimal Java runtime for FastQC, and a standalone MultiQC executable. Build scripts stage, inspect, checksum, assemble, ad-hoc sign, and smoke-test every artifact.
 
-**Tech Stack:** Swift 6, Python 3.13, PyInstaller, FastAPI/Uvicorn, shell build scripts, `jlink`, `otool`, `install_name_tool`, `codesign`, and `hdiutil`.
+**Tech Stack:** Objective-C/AppKit, Python 3.13, PyInstaller, FastAPI/Uvicorn, shell build scripts, `jlink`, `otool`, `install_name_tool`, `codesign`, and `hdiutil`.
 
 ## Global Constraints
 
@@ -41,7 +41,7 @@
 **Files:**
 - Create: `packaging/macos/backend.spec`
 - Create: `packaging/macos/backend_entry.py`
-- Create: `packaging/macos/Launcher/main.swift`
+- Create: `packaging/macos/Launcher/main.m`
 - Modify: `src/research_agent/launcher.py`
 - Modify: `tests/unit/test_launcher.py`
 - Create: `tests/packaging/test_backend_bundle.py`
@@ -49,11 +49,11 @@
 **Interfaces:**
 - Backend accepts `--host 127.0.0.1`, `--port`, `--session-token-file`, and `--no-browser`.
 - Token file must be mode `0600`, read once, deleted before serving, and never logged.
-- Swift launcher selects a loopback port, writes the token file, launches the child, polls authenticated `/api/health`, opens `/#token=...`, and terminates the child on exit.
+- Native launcher selects a loopback port, writes the token file, launches the child, polls authenticated `/api/health`, opens `/#token=...`, and terminates the child on exit.
 
 - [ ] Add failing launcher/token-file tests.
 - [ ] Implement backend CLI and PyInstaller onedir spec.
-- [ ] Implement and compile Swift launcher with deployment target 13.0.
+- [ ] Implement and compile the AppKit launcher with deployment target 13.0.
 - [ ] Verify backend starts from a temporary directory with empty `PATH`.
 - [ ] Commit `build: add native launcher and frozen backend`.
 

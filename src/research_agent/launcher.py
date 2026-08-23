@@ -3,6 +3,7 @@ import socket
 import sys
 import threading
 import webbrowser
+from pathlib import Path
 from urllib.parse import quote
 
 import uvicorn
@@ -25,6 +26,11 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(description="Start the local Research Agent.")
     parser.add_argument("--no-browser", action="store_true", help="Do not open a browser automatically.")
     parser.add_argument("--port", type=int, help="Use a fixed local port.")
+    parser.add_argument(
+        "--session-token-file",
+        type=Path,
+        help="Read the launch token from this mode-0600 file and delete it immediately.",
+    )
     return parser
 
 
@@ -32,20 +38,37 @@ def build_browser_url(host: str, port: int, token: str) -> str:
     return f"http://{host}:{port}/#token={quote(token, safe='')}"
 
 
-def build_runtime() -> tuple[AppPaths, RuntimeConfiguration, str]:
+def read_session_token_file(path: Path) -> str:
+    try:
+        mode = path.stat().st_mode & 0o777
+        if mode & 0o077:
+            raise ValueError("Session token file permissions are too broad")
+        token = path.read_text(encoding="utf-8").strip()
+        if not token:
+            raise ValueError("Session token file is empty")
+        return token
+    finally:
+        path.unlink(missing_ok=True)
+
+
+def build_runtime(session_token: str | None = None) -> tuple[AppPaths, RuntimeConfiguration, str]:
     paths = AppPaths.for_runtime()
     paths.ensure()
     configuration = RuntimeConfiguration(
         JsonPreferences(paths.preferences_file),
         MacOSKeychainSecretStore(),
     )
-    return paths, configuration, generate_session_token()
+    return paths, configuration, session_token or generate_session_token()
 
 
-def launch(open_browser: bool = True, port: int | None = None) -> None:
+def launch(
+    open_browser: bool = True,
+    port: int | None = None,
+    session_token: str | None = None,
+) -> None:
     host = "127.0.0.1"
     port = port or find_free_port(host)
-    paths, configuration, token = build_runtime()
+    paths, configuration, token = build_runtime(session_token=session_token)
     app = create_app(
         task_root=paths.task_root,
         runtime_configuration=configuration,
@@ -61,4 +84,5 @@ def launch(open_browser: bool = True, port: int | None = None) -> None:
 
 def main() -> None:
     args = build_parser().parse_args()
-    launch(open_browser=not args.no_browser, port=args.port)
+    token = read_session_token_file(args.session_token_file) if args.session_token_file else None
+    launch(open_browser=not args.no_browser, port=args.port, session_token=token)
