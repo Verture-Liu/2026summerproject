@@ -1,0 +1,103 @@
+{
+  "phase": "Phase 1",
+  "task": "Task 8: Tokenized launcher and portable backend smoke test",
+  "executed_at": "2026-08-23T16:25:42+10:00",
+  "status": "passed",
+  "environment": {
+    "macos": {
+      "product_version": "26.5.2",
+      "build_version": "25F84",
+      "architecture": "arm64"
+    },
+    "test_python": "3.13.9",
+    "installed_smoke_python": "3.13.9",
+    "test_dependencies": {
+      "fastapi": "0.137.1",
+      "uvicorn": "0.49.0",
+      "pydantic": "2.13.4",
+      "httpx": "0.28.1",
+      "build": "1.5.0"
+    },
+    "installed_dependencies": {
+      "local_research_agent": "0.2.0",
+      "fastapi": "0.141.1",
+      "uvicorn": "0.52.4",
+      "pydantic": "2.13.4",
+      "httpx": "0.28.1"
+    }
+  },
+  "lfs": {
+    "enabled": false,
+    "git_lfs_available": false,
+    "tracked_files": 0,
+    "upload_performed": false
+  },
+  "gates": {
+    "tdd": {
+      "red": "Focused test run before implementation: 5 failed and 2 passed; four failures were the missing Task 8 helpers/composition, and the existing port test was blocked by the sandbox loopback restriction.",
+      "green": "Focused launcher and desktop runtime smoke tests: 7 passed, 1 existing Starlette deprecation warning."
+    },
+    "full_test_suite": {
+      "command": "env PYTHONPATH=src ../../.venv/bin/pytest -q tests",
+      "result": "250 passed, 1 existing Starlette deprecation warning",
+      "status": "passed"
+    },
+    "build": {
+      "command": "env PYTHONPATH=src ../../.venv/bin/python -m build",
+      "result": "wheel and source distribution created",
+      "wheel": {
+        "path": "dist/local_research_agent-0.2.0-py3-none-any.whl",
+        "sha256": "5282627c0aad8786f195a1aeb201ece8e997bdf38f249132491824d39575df4e"
+      },
+      "sdist": {
+        "path": "dist/local_research_agent-0.2.0.tar.gz",
+        "sha256": "0143faed2ddd4273e4386aeebad42b43d97437d863c8783da3a13adfc994cffa"
+      },
+      "status": "passed",
+      "warnings": [
+        "setuptools sdist emitted a non-fatal missing README warning"
+      ]
+    },
+    "clean_wheel_install": {
+      "location": "/private/tmp/paleorigor-phase1-runtime-final.bVOJ0W/venv",
+      "result": "wheel and all declared dependencies installed successfully",
+      "status": "passed"
+    },
+    "installed_no_browser_smoke": {
+      "command": "installed research-agent --no-browser on an ephemeral 127.0.0.1 port",
+      "authenticated_endpoints": [
+        "/api/health",
+        "/api/config",
+        "/api/about"
+      ],
+      "unauthenticated_health_status": 401,
+      "tool_manifest_entries": 7,
+      "resource_manifest_present": true,
+      "real_keychain_touched": false,
+      "isolation": "temporary sitecustomize replaced MacOSKeychainSecretStore operations and the session-token generator only for the smoke subprocess",
+      "status": "passed"
+    },
+    "manual_browser": {
+      "status": "automated_equivalent",
+      "result": "No GUI browser was opened. The installed --no-browser process and authenticated endpoint/resource checks provide the required safe automated equivalent."
+    },
+    "secret_scan": {
+      "scopes": [
+        "src",
+        "tests",
+        "pyproject.toml",
+        "packaging metadata",
+        "distribution artifacts",
+        "installed-smoke launcher log and endpoint responses"
+      ],
+      "result": "0 persisted API-key, Authorization-header, or session-token-value findings. Source and tests intentionally contain the fragment construction shape and test fixtures only.",
+      "status": "passed"
+    }
+  },
+  "gate_concerns": [
+    "The worktree has no local .venv; commands used ../../.venv after confirming it is the repository virtual environment.",
+    "The shared test environment emits one Starlette TestClient deprecation warning.",
+    "The sdist build emits a non-fatal missing README warning."
+  ],
+  "phase2_started": false
+}
