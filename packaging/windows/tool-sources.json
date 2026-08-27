@@ -5,7 +5,7 @@
       "strategy": "archive",
       "archive": "fastqc_v0.12.1.zip",
       "url": "https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.12.1.zip",
-      "sha256": "92d31ac2433cc181cb30979938ed8f966f5ad6dc54fd7b5217208a64f683586d",
+      "sha256": "5f4dba8780231a25a6b8e11ab2c238601920c9704caa5458d9de559575d58aa7",
       "command": "fastqc.cmd"
     },
     "multiqc": {
@@ -21,7 +21,7 @@
       "strategy": "archive",
       "archive": "seqkit_windows_amd64.exe.tar.gz",
       "url": "https://github.com/shenwei356/seqkit/releases/download/v2.13.0/seqkit_windows_amd64.exe.tar.gz",
-      "sha256": "78e2927b5c3a11fcbf6a63f8ef8f10891fa9ecf2913ba8f61473bf047aa2891a",
+      "sha256": "789a11df5306ae9d8cc0ccc9a11b76b6b8f44c31e6cc3ba3e4bc13db5819b1dd",
       "command": "seqkit.exe"
     },
     "seqtk": {
@@ -37,7 +37,7 @@
       "strategy": "msys2-source",
       "archive": "samtools-1.23.1.tar.bz2",
       "url": "https://github.com/samtools/samtools/releases/download/1.23.1/samtools-1.23.1.tar.bz2",
-      "sha256": "f21a44daa9f5c10f430c4857da72b43d97e2044f4f3b18b26ab36622137ae96f",
+      "sha256": "32266198a4bc6a6df395d8526688c9697d9c8e472f888c749fdde2e08ea88dd2",
       "command": "samtools.exe"
     },
     "bwa": {
@@ -53,7 +53,7 @@
       "strategy": "archive",
       "archive": "bowtie2-2.5.5-mingw-x86_64.zip",
       "url": "https://github.com/BenLangmead/bowtie2/releases/download/v2.5.5/bowtie2-2.5.5-mingw-x86_64.zip",
-      "sha256": "1a8d965369142d213561117ad0e158ff74c166cca065bd68b70c6a73c90fa26f",
+      "sha256": "77bfac3a84c54f4032ee851c19917802decc1b28083ce17a5f92a0c4d729bdba",
       "command": "bowtie2.cmd"
     }
   },

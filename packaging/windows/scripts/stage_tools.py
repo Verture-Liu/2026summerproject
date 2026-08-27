@@ -94,11 +94,12 @@ def stage_from_cache(cache: Path, destination: Path, manifest: dict) -> Path:
 
     for name, item in manifest["tools"].items():
         component = components / name
-        if item["strategy"] in {"msys2-source", "python-wheel"}:
-            prebuilt = cache / "built" / name
+        prebuilt = cache / "built" / name
+        if prebuilt.is_dir():
+            shutil.copytree(prebuilt, component)
+        elif item["strategy"] in {"msys2-source", "python-wheel"}:
             if not prebuilt.is_dir():
                 raise FileNotFoundError(f"prebuilt component is missing for {name}: {prebuilt}")
-            shutil.copytree(prebuilt, component)
         else:
             archive = _verified_archive(cache, name, item)
             extract_archive(archive, component)
