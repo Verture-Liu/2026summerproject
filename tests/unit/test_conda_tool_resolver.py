@@ -295,3 +295,18 @@ def test_run_tool_command_prepends_resolved_command(tmp_path, monkeypatch):
 
     assert completed.returncode == 0
     assert seen["command"] == ["conda", "run", "-n", "multiqc_env", "multiqc", "--version"]
+
+
+def test_windows_bundle_resolves_cmd_suffix(tmp_path, monkeypatch):
+    bundle = tmp_path / "tools"
+    command = bundle / "bin/fastqc.cmd"
+    command.parent.mkdir(parents=True)
+    command.write_text("@echo off\r\n")
+    command.chmod(0o755)
+    monkeypatch.setattr("research_agent.skills.conda_tools.sys.platform", "win32")
+
+    resolved = resolve_tool(["fastqc"], bundle_root=bundle, packaged=False)
+
+    assert resolved is not None
+    assert resolved.command == [str(command)]
+    assert resolved.source == "bundle"

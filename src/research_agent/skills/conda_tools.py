@@ -4,6 +4,7 @@ import json
 import os
 import shutil
 import subprocess
+import sys
 from dataclasses import dataclass
 from functools import lru_cache
 from pathlib import Path
@@ -59,11 +60,16 @@ def _bundled_tool_command(
             command = entry.get("command")
             if not isinstance(command, str):
                 continue
-            candidate = (bundle_root / command).resolve()
-            if resolved_root not in candidate.parents:
-                continue
-            if candidate.is_file() and os.access(candidate, os.X_OK):
-                return ToolCommand(tool=name, command=[str(candidate)], source="bundle")
+            base_candidate = bundle_root / command
+            candidates = [base_candidate]
+            if sys.platform == "win32" and base_candidate.suffix == "":
+                candidates.extend(base_candidate.with_suffix(suffix) for suffix in (".exe", ".cmd", ".bat"))
+            for unresolved in candidates:
+                candidate = unresolved.resolve()
+                if resolved_root not in candidate.parents:
+                    continue
+                if candidate.is_file() and os.access(candidate, os.X_OK):
+                    return ToolCommand(tool=name, command=[str(candidate)], source="bundle")
     return None
 
 
