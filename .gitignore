@@ -15,3 +15,4 @@ build/
 *.tmp
 *.log
 .worktrees/
+paleorigor/windows/PaleoRigor-Setup.exe

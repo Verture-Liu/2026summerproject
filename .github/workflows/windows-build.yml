@@ -1,0 +1,61 @@
+name: Windows development installer
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - "packaging/windows/**"
+      - "src/research_agent/**"
+      - "tests/packaging/test_windows_*.py"
+      - "pyproject.toml"
+      - ".github/workflows/windows-build.yml"
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: "8.0.x"
+
+      - uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          update: true
+          install: >-
+            base-devel
+            mingw-w64-ucrt-x86_64-toolchain
+            mingw-w64-ucrt-x86_64-zlib
+
+      - name: Install Inno Setup
+        shell: powershell
+        run: choco install innosetup --no-progress -y
+
+      - name: Run platform-neutral packaging tests
+        shell: powershell
+        run: |
+          python -m pip install -e . pytest
+          python -m pytest tests/packaging/test_windows_packaging_contract.py tests/packaging/test_windows_stage_tools.py tests/packaging/test_windows_launcher_contract.py tests/packaging/test_windows_installer_contract.py tests/packaging/test_windows_release_docs.py -q
+
+      - name: Build installer
+        shell: powershell
+        run: ./packaging/windows/scripts/build.ps1 -Python python
+
+      - name: Run native smoke checks
+        shell: powershell
+        run: ./packaging/windows/scripts/smoke_test.ps1 -Installer ./dist/PaleoRigor-Setup.exe
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PaleoRigor-Windows-development
+          path: |
+            dist/PaleoRigor-Setup.exe
+            paleorigor/windows/SHA256SUMS.txt
+            paleorigor/windows/verification.json
+          if-no-files-found: error

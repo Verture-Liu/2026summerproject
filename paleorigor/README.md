@@ -1,8 +1,16 @@
-# PaleoRigor for macOS
+# PaleoRigor desktop research prototypes
 
 PaleoRigor is a local, browser-based research agent for reproducible
 paleomicrobiome and ancient-DNA data analysis. This folder contains the first
-Apple Silicon development build.
+Apple Silicon development build. Windows 10/11 x64 packaging source is also
+available; its installer remains a separate artifact so the macOS build is
+preserved.
+
+## Platforms
+
+- macOS: `PaleoRigor-dev-arm64.dmg` for Apple Silicon and macOS 13 or later.
+- Windows: `PaleoRigor-Setup.exe` for Windows 10/11 x64, produced by the
+  native Windows build workflow after verification.
 
 ## Download
 
@@ -19,6 +27,10 @@ Apple Silicon development build.
 4. PaleoRigor starts its local backend and opens the browser interface.
 5. Enter the model API configuration in the web interface. API keys are stored
    in macOS Keychain and are not included in this repository.
+
+On Windows, the same local browser interface is opened from the Start-menu or
+desktop shortcut. API keys are stored through Windows Credential Manager. See
+`../packaging/windows/README.md` for the build and native verification guide.
 
 ## Bundled tools
 
@@ -53,3 +65,6 @@ The expected value is listed in `SHA256SUMS.txt`.
 This build is ad-hoc signed but is not yet signed with an Apple Developer ID or
 notarized by Apple. It is suitable for local development and limited testing.
 Formal public distribution requires Developer ID signing and notarization.
+
+The Windows development installer is likewise unsigned and may trigger Windows
+SmartScreen. Neither prototype should be described as a commercial release.
