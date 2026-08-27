@@ -2,7 +2,7 @@ from fastapi import FastAPI
 
 from research_agent import launcher
 from research_agent.runtime.paths import AppPaths
-from research_agent.runtime.secrets import MacOSKeychainSecretStore
+from research_agent.runtime.secrets import MacOSKeychainSecretStore, WindowsCredentialSecretStore
 
 
 def test_find_free_port_returns_bindable_port():
@@ -42,6 +42,15 @@ def test_session_token_file_with_broad_permissions_is_rejected_and_deleted(tmp_p
     assert not token_file.exists()
 
 
+def test_windows_session_token_file_does_not_apply_posix_mode_check(tmp_path):
+    token_file = tmp_path / "launch-token"
+    token_file.write_text("windows-token")
+    token_file.chmod(0o644)
+
+    assert launcher.read_session_token_file(token_file, platform_name="win32") == "windows-token"
+    assert not token_file.exists()
+
+
 def test_build_browser_url_places_an_encoded_token_in_a_fragment():
     url = launcher.build_browser_url("127.0.0.1", 8123, "token /?#%")
 
@@ -73,6 +82,22 @@ def test_build_runtime_creates_app_directories_and_composes_keychain_configurati
             paths.installed_skill_root,
         ]
     )
+
+
+def test_build_runtime_selects_windows_credential_store(tmp_path, monkeypatch):
+    paths = AppPaths.for_runtime(home=tmp_path, env={}, platform_name="win32")
+    monkeypatch.setattr(launcher.AppPaths, "for_runtime", classmethod(lambda _cls: paths))
+    monkeypatch.setattr(launcher.sys, "platform", "win32")
+    windows_store = WindowsCredentialSecretStore(backend=object())
+    monkeypatch.setattr(
+        launcher,
+        "secret_store_for_platform",
+        lambda platform_name: windows_store,
+    )
+
+    _, configuration, _ = launcher.build_runtime(session_token="token")
+
+    assert configuration._secret_store is windows_store
 
 
 def test_launch_passes_one_token_to_the_app_and_tokenized_browser_fragment(monkeypatch, tmp_path):

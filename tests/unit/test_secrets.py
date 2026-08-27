@@ -6,6 +6,8 @@ from research_agent.runtime.secrets import (
     MacOSKeychainSecretStore,
     MemorySecretStore,
     SecretStoreError,
+    WindowsCredentialSecretStore,
+    secret_store_for_platform,
 )
 
 
@@ -78,3 +80,37 @@ def test_keychain_errors_and_repr_redact_secret():
 
     assert SECRET not in str(error.value)
     assert SECRET not in repr(store)
+
+
+class FakeCredentialBackend:
+    def __init__(self):
+        self.values = {}
+
+    def get_password(self, service, name):
+        return self.values.get((service, name))
+
+    def set_password(self, service, name, value):
+        self.values[(service, name)] = value
+
+    def delete_password(self, service, name):
+        self.values.pop((service, name), None)
+
+
+def test_windows_credential_store_round_trip_without_exposing_values():
+    backend = FakeCredentialBackend()
+    store = WindowsCredentialSecretStore(backend=backend)
+
+    assert store.get("api_key") is None
+    store.set("api_key", SECRET)
+    assert store.get("api_key") == SECRET
+    store.delete("api_key")
+    assert store.get("api_key") is None
+    assert SECRET not in repr(store)
+
+
+def test_secret_store_factory_uses_platform_specific_secure_store():
+    assert isinstance(secret_store_for_platform("darwin"), MacOSKeychainSecretStore)
+    assert isinstance(
+        secret_store_for_platform("win32", windows_backend=FakeCredentialBackend()),
+        WindowsCredentialSecretStore,
+    )

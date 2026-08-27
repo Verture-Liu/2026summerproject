@@ -29,13 +29,23 @@ class AppPaths:
     installed_skill_root: Path
 
     @classmethod
-    def for_runtime(cls, home: Path | None = None, env: Mapping[str, str] | None = None) -> "AppPaths":
+    def for_runtime(
+        cls,
+        home: Path | None = None,
+        env: Mapping[str, str] | None = None,
+        platform_name: str | None = None,
+    ) -> "AppPaths":
         source = os.environ if env is None else env
         home = Path.home() if home is None else Path(home)
+        platform_name = sys.platform if platform_name is None else platform_name
         override = source.get("PALEORIGOR_DATA_ROOT")
         if override:
             root = Path(override).expanduser().resolve()
             support, cache, logs = root / "support", root / "cache", root / "logs"
+        elif platform_name == "win32":
+            local_app_data = Path(source.get("LOCALAPPDATA", home / "AppData/Local"))
+            support = local_app_data / "PaleoRigor"
+            cache, logs = support / "cache", support / "logs"
         else:
             support = home / "Library/Application Support/PaleoRigor"
             cache = home / "Library/Caches/PaleoRigor"

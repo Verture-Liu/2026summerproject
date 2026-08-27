@@ -5,11 +5,34 @@ from research_agent.runtime.paths import AppPaths, is_packaged_runtime, resource
 
 
 def test_app_paths_use_macos_user_directories(tmp_path):
-    paths = AppPaths.for_runtime(home=tmp_path, env={})
+    paths = AppPaths.for_runtime(home=tmp_path, env={}, platform_name="darwin")
     assert paths.support_dir == tmp_path / "Library/Application Support/PaleoRigor"
     assert paths.preferences_file == paths.support_dir / "preferences.json"
     assert paths.task_root == tmp_path / "Library/Caches/PaleoRigor/tasks"
     assert paths.log_dir == tmp_path / "Library/Logs/PaleoRigor"
+
+
+def test_app_paths_use_windows_local_app_data(tmp_path):
+    local_app_data = tmp_path / "AppData/Local"
+
+    paths = AppPaths.for_runtime(
+        home=tmp_path,
+        env={"LOCALAPPDATA": str(local_app_data)},
+        platform_name="win32",
+    )
+
+    assert paths.support_dir == local_app_data / "PaleoRigor"
+    assert paths.preferences_file == paths.support_dir / "preferences.json"
+    assert paths.cache_dir == paths.support_dir / "cache"
+    assert paths.task_root == paths.cache_dir / "tasks"
+    assert paths.log_dir == paths.support_dir / "logs"
+    assert paths.installed_skill_root == paths.support_dir / "skills"
+
+
+def test_windows_paths_fall_back_below_home_when_local_app_data_is_missing(tmp_path):
+    paths = AppPaths.for_runtime(home=tmp_path, env={}, platform_name="win32")
+
+    assert paths.support_dir == tmp_path / "AppData/Local/PaleoRigor"
 
 
 def test_app_paths_allow_isolated_test_root(tmp_path):

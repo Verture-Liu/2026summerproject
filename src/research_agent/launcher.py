@@ -12,7 +12,7 @@ from research_agent.main import create_app
 from research_agent.runtime.configuration import RuntimeConfiguration
 from research_agent.runtime.paths import AppPaths, is_packaged_runtime
 from research_agent.runtime.preferences import JsonPreferences
-from research_agent.runtime.secrets import MacOSKeychainSecretStore
+from research_agent.runtime.secrets import secret_store_for_platform
 from research_agent.runtime.session import generate_session_token
 
 
@@ -38,11 +38,13 @@ def build_browser_url(host: str, port: int, token: str) -> str:
     return f"http://{host}:{port}/#token={quote(token, safe='')}"
 
 
-def read_session_token_file(path: Path) -> str:
+def read_session_token_file(path: Path, platform_name: str | None = None) -> str:
     try:
-        mode = path.stat().st_mode & 0o777
-        if mode & 0o077:
-            raise ValueError("Session token file permissions are too broad")
+        platform_name = sys.platform if platform_name is None else platform_name
+        if platform_name != "win32":
+            mode = path.stat().st_mode & 0o777
+            if mode & 0o077:
+                raise ValueError("Session token file permissions are too broad")
         token = path.read_text(encoding="utf-8").strip()
         if not token:
             raise ValueError("Session token file is empty")
@@ -56,7 +58,7 @@ def build_runtime(session_token: str | None = None) -> tuple[AppPaths, RuntimeCo
     paths.ensure()
     configuration = RuntimeConfiguration(
         JsonPreferences(paths.preferences_file),
-        MacOSKeychainSecretStore(),
+        secret_store_for_platform(sys.platform),
     )
     return paths, configuration, session_token or generate_session_token()
 
