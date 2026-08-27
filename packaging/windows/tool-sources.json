@@ -1,0 +1,69 @@
+{
+  "tools": {
+    "fastqc": {
+      "version": "0.12.1",
+      "strategy": "archive",
+      "archive": "fastqc_v0.12.1.zip",
+      "url": "https://www.bioinformatics.babraham.ac.uk/projects/fastqc/fastqc_v0.12.1.zip",
+      "sha256": "92d31ac2433cc181cb30979938ed8f966f5ad6dc54fd7b5217208a64f683586d",
+      "command": "fastqc.cmd"
+    },
+    "multiqc": {
+      "version": "1.35",
+      "strategy": "python-wheel",
+      "archive": "multiqc-1.35-py3-none-any.whl",
+      "url": "https://files.pythonhosted.org/packages/ae/85/ea19a97a83eddf81ab645d44ea219211e65961c60a93c1a62e8751efe2ab/multiqc-1.35-py3-none-any.whl",
+      "sha256": "818ad8aa75572f13be55b66c0bafd7877c1e119a0903e004855ec04385a94dc6",
+      "command": "multiqc.exe"
+    },
+    "seqkit": {
+      "version": "2.13.0",
+      "strategy": "archive",
+      "archive": "seqkit_windows_amd64.exe.tar.gz",
+      "url": "https://github.com/shenwei356/seqkit/releases/download/v2.13.0/seqkit_windows_amd64.exe.tar.gz",
+      "sha256": "78e2927b5c3a11fcbf6a63f8ef8f10891fa9ecf2913ba8f61473bf047aa2891a",
+      "command": "seqkit.exe"
+    },
+    "seqtk": {
+      "version": "1.5-r133",
+      "strategy": "msys2-source",
+      "archive": "seqtk-v1.5.tar.gz",
+      "url": "https://github.com/lh3/seqtk/archive/refs/tags/v1.5.tar.gz",
+      "sha256": "384aa1e3cecf4f70403839d586cbb29d469b7c6f773a64bc5af48a6e4b8220a6",
+      "command": "seqtk.exe"
+    },
+    "samtools": {
+      "version": "1.23.1",
+      "strategy": "msys2-source",
+      "archive": "samtools-1.23.1.tar.bz2",
+      "url": "https://github.com/samtools/samtools/releases/download/1.23.1/samtools-1.23.1.tar.bz2",
+      "sha256": "f21a44daa9f5c10f430c4857da72b43d97e2044f4f3b18b26ab36622137ae96f",
+      "command": "samtools.exe"
+    },
+    "bwa": {
+      "version": "0.7.19-r1273",
+      "strategy": "msys2-source",
+      "archive": "bwa-v0.7.19.tar.gz",
+      "url": "https://github.com/lh3/bwa/archive/refs/tags/v0.7.19.tar.gz",
+      "sha256": "cdff5db67652c5b805a3df08c4e813a822c65791913eccfb3cf7d528588f37bc",
+      "command": "bwa.exe"
+    },
+    "bowtie2": {
+      "version": "2.5.5",
+      "strategy": "archive",
+      "archive": "bowtie2-2.5.5-mingw-x86_64.zip",
+      "url": "https://github.com/BenLangmead/bowtie2/releases/download/v2.5.5/bowtie2-2.5.5-mingw-x86_64.zip",
+      "sha256": "1a8d965369142d213561117ad0e158ff74c166cca065bd68b70c6a73c90fa26f",
+      "command": "bowtie2.cmd"
+    }
+  },
+  "runtimes": {
+    "java": {
+      "version": "21.0.8+9",
+      "strategy": "archive",
+      "archive": "OpenJDK21U-jre_x64_windows_hotspot_21.0.8_9.zip",
+      "url": "https://github.com/adoptium/temurin21-binaries/releases/download/jdk-21.0.8%2B9/OpenJDK21U-jre_x64_windows_hotspot_21.0.8_9.zip",
+      "sha256": "238d74ec4ec9422d416fa98805ba375eecd8bc8f971bd0c61a21051a4fe42db8"
+    }
+  }
+}
