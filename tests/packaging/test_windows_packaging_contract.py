@@ -16,7 +16,7 @@ def test_windows_build_configuration_is_x64_and_isolated_from_macos():
     assert config["architecture"] == "x64"
     assert config["minimum_windows"] == "10"
     assert config["backend_relative_path"] == "backend/PaleoRigorBackend.exe"
-    assert config["tool_root_relative_path"] == "tools"
+    assert config["tool_root_relative_path"] == "backend/_internal/research_agent/tools"
     assert config["launcher_relative_path"] == "PaleoRigor.exe"
     assert (ROOT / "packaging/macos/build_config.json").is_file()
 

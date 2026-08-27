@@ -5,6 +5,6 @@
   "architecture": "x64",
   "minimum_windows": "10",
   "backend_relative_path": "backend/PaleoRigorBackend.exe",
-  "tool_root_relative_path": "tools",
+  "tool_root_relative_path": "backend/_internal/research_agent/tools",
   "launcher_relative_path": "PaleoRigor.exe"
 }
