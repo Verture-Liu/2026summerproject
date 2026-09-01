@@ -66,7 +66,7 @@ jobs:
         if: steps.build.outcome == 'failure'
         shell: powershell
         run: |
-          $Stage = Get-Content windows-build-stage.txt -Raw
+          $Stage = (Get-Content windows-build-stage.txt -Raw).Trim()
           $Log = Get-Content windows-build.log -Raw
           $Category = "unclassified build error"
           if ($Log -match "ModuleNotFoundError:\s+No module named .(?<module>[A-Za-z0-9_.-]+)") {

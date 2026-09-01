@@ -58,3 +58,4 @@ def test_windows_ci_preserves_diagnostics_when_the_build_fails():
     assert "ModuleNotFoundError" in workflow
     assert "FileNotFoundError" in workflow
     assert "unclassified build error" in workflow
+    assert ").Trim()" in workflow
