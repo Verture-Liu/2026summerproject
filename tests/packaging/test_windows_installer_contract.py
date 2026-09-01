@@ -64,6 +64,19 @@ def test_seqtk_build_supplies_mingw_posix_random_compatibility():
         assert function in text
 
 
+def test_bwa_build_supplies_mingw_resource_compatibility():
+    source = (PACKAGING / "scripts/build_msys2_tools.sh").read_text()
+    header = PACKAGING / "scripts/bwa_mingw_compat/sys/resource.h"
+
+    assert "bwa_mingw_compat" in source
+    assert "-Icompat" in source
+    assert header.is_file()
+    text = header.read_text()
+    assert "struct rusage" in text
+    assert "getrusage" in text
+    assert "ru_maxrss" in text
+
+
 def test_smoke_script_produces_verification_and_checksum_files():
     source = (PACKAGING / "scripts/smoke_test.ps1").read_text()
 

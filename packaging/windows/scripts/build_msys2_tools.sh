@@ -25,7 +25,8 @@ cp "${work}/seqtk-1.5/seqtk.exe" "${built}/seqtk/"
 copy_runtime_dlls "${built}/seqtk/seqtk.exe" "${built}/seqtk"
 
 tar -xzf "${downloads}/bwa-v0.7.19.tar.gz" -C "${work}"
-make -C "${work}/bwa-0.7.19" CC=gcc
+cp -R "${script_dir}/bwa_mingw_compat" "${work}/bwa-0.7.19/compat"
+make -C "${work}/bwa-0.7.19" CC=gcc CFLAGS="-g -Wall -Wno-unused-function -O3 -DHAVE_PTHREAD -DUSE_MALLOC_WRAPPERS -Icompat"
 mkdir -p "${built}/bwa"
 cp "${work}/bwa-0.7.19/bwa.exe" "${built}/bwa/"
 copy_runtime_dlls "${built}/bwa/bwa.exe" "${built}/bwa"
