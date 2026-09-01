@@ -85,9 +85,10 @@ Expand-Archive -Force (Join-Path $Downloads $Manifest.tools.bowtie2.archive) $Bo
 $BowtieDirectory = Get-ChildItem $BowtieBuilt -Directory | Select-Object -First 1
 '@echo off' + "`r`n" + 'call "%~dp0bowtie2.bat" %*' | Set-Content -Encoding ASCII (Join-Path $BowtieDirectory.FullName "bowtie2.cmd")
 
-$MsysBash = "C:\msys64\usr\bin\bash.exe"
+$MsysRoot = $env:MSYS2_LOCATION
+if (-not $MsysRoot) { throw "MSYS2_LOCATION was not provided by setup-msys2" }
+$MsysBash = Join-Path $MsysRoot "usr\bin\bash.exe"
 if (-not (Test-Path $MsysBash)) { throw "MSYS2 is required to prepare seqtk, bwa and samtools: $MsysBash" }
-$MsysRoot = Split-Path (Split-Path (Split-Path $MsysBash -Parent) -Parent) -Parent
 $SamtoolsExe = Join-Path $MsysRoot "ucrt64\bin\samtools.exe"
 if (-not (Test-Path $SamtoolsExe)) { throw "MSYS2 Samtools is missing: $SamtoolsExe" }
 Invoke-Native "Build MSYS2 bioinformatics tools" { & $MsysBash (Join-Path $Packaging "scripts\build_msys2_tools.sh") $Cache $SamtoolsExe }

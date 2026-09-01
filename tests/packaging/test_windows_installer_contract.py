@@ -61,11 +61,14 @@ def test_samtools_uses_version_gated_native_msys2_package():
     manifest = (PACKAGING / "tool-sources.json").read_text(encoding="utf-8")
     assert "mingw-w64-ucrt-x86_64-samtools" in workflow
     assert '"strategy": "msys2-package"' in manifest
+    assert "id: msys2" in workflow
+    assert "steps.msys2.outputs.msys2-location" in workflow
     assert 'samtools_version' in source
     assert '!= "1.24"' in source
     build = (PACKAGING / "scripts/build.ps1").read_text(encoding="utf-8")
     assert '$SamtoolsExe' in build
     assert '$Cache $SamtoolsExe' in build
+    assert '$env:MSYS2_LOCATION' in build
 
 
 def test_seqtk_build_supplies_mingw_posix_random_compatibility():
