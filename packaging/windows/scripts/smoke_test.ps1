@@ -7,13 +7,18 @@ if ((Split-Path $Installer -Leaf) -ne "PaleoRigor-Setup.exe") { throw "Expected 
 $Root = (Resolve-Path (Join-Path $PSScriptRoot "..\..\..")).Path
 $Output = Join-Path $Root "paleorigor\windows"
 $Install = Join-Path $env:TEMP ("PaleoRigor-smoke-" + [Guid]::NewGuid().ToString("N"))
+$InstallLog = Join-Path $env:TEMP ("PaleoRigor-install-" + [Guid]::NewGuid().ToString("N") + ".log")
 New-Item -ItemType Directory -Force $Output | Out-Null
 $Checks = [ordered]@{ installer = $false; seven_tools = $false; backend_health = $false; uninstall = $false }
 $Backend = $null
 
 try {
-    $InstallProcess = Start-Process $Installer -ArgumentList "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART", "/DIR=$Install" -Wait -PassThru
-    if ($InstallProcess.ExitCode -ne 0 -or -not (Test-Path (Join-Path $Install "PaleoRigor.exe"))) { throw "Silent install failed" }
+    $InstallArguments = @("/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART", "/DIR=`"$Install`"", "/LOG=`"$InstallLog`"")
+    $InstallProcess = Start-Process $Installer -ArgumentList $InstallArguments -Wait -PassThru
+    if ($InstallProcess.ExitCode -ne 0 -or -not (Test-Path (Join-Path $Install "PaleoRigor.exe"))) {
+        $LogTail = if (Test-Path $InstallLog) { (Get-Content $InstallLog -Tail 30) -join " | " } else { "installer log missing" }
+        throw "Silent install failed (exit $($InstallProcess.ExitCode)): $LogTail"
+    }
     $Checks.installer = $true
 
     $ToolRoot = Join-Path $Install "backend\_internal\research_agent\tools"

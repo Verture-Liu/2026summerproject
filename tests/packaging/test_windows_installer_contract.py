@@ -130,3 +130,6 @@ def test_smoke_script_produces_verification_and_checksum_files():
     assert "seven_tools" in source
     assert "backend_health" in source
     assert "uninstall" in source
+    assert '/DIR=`"$Install`"' in source
+    assert '/LOG=`"$InstallLog`"' in source
+    assert "Get-Content $InstallLog -Tail 30" in source
