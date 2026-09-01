@@ -37,7 +37,11 @@ copy_runtime_dlls "${built}/bwa/bwa.exe" "${built}/bwa"
 tar -xjf "${downloads}/samtools-1.23.1.tar.bz2" -C "${work}"
 pushd "${work}/samtools-1.23.1" >/dev/null
 chmod +x version.sh htslib-1.23.1/version.sh htslib-1.23.1/hts_probe_cc.sh
-./configure --without-curses --disable-lzma --disable-bz2 --without-libdeflate
+pushd htslib-1.23.1 >/dev/null
+./configure --disable-lzma --disable-bz2 --without-libdeflate
+make -j2
+popd >/dev/null
+./configure --without-curses --disable-configure-htslib
 make -j2
 popd >/dev/null
 mkdir -p "${built}/samtools"

@@ -52,6 +52,13 @@ def test_msys2_script_builds_three_missing_native_tools_from_pinned_sources():
     assert "C:/msys64" not in source
 
 
+def test_samtools_build_configures_bundled_htslib_without_nested_argument_relay():
+    source = (PACKAGING / "scripts/build_msys2_tools.sh").read_text(encoding="utf-8")
+    assert "pushd htslib-1.23.1" in source
+    assert "./configure --disable-lzma --disable-bz2 --without-libdeflate" in source
+    assert "./configure --without-curses --disable-configure-htslib" in source
+
+
 def test_seqtk_build_supplies_mingw_posix_random_compatibility():
     source = (PACKAGING / "scripts/build_msys2_tools.sh").read_text()
     header = PACKAGING / "scripts/seqtk_mingw_compat.h"
