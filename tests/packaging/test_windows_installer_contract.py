@@ -79,6 +79,16 @@ def test_bwa_build_supplies_mingw_resource_compatibility():
     assert source.count("-include seqtk_mingw_compat.h") == 2
 
 
+def test_bwa_windows_build_disables_only_optional_posix_shared_memory():
+    source = (PACKAGING / "scripts/build_msys2_tools.sh").read_text(encoding="utf-8")
+    stub = PACKAGING / "scripts/bwa_mingw_compat/bwashm_stub.c"
+    text = stub.read_text(encoding="utf-8")
+    assert "bwashm_stub.c" in source
+    assert "bwa_idx_load_from_shm" in text
+    assert "main_shm" in text
+    assert "not available in the native Windows build" in text
+
+
 def test_smoke_script_produces_verification_and_checksum_files():
     source = (PACKAGING / "scripts/smoke_test.ps1").read_text()
 
