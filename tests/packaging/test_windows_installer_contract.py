@@ -32,6 +32,14 @@ def test_build_script_downloads_with_checksums_and_builds_all_layers():
     assert "PALEORIGOR_API_KEY" not in source
 
 
+def test_build_script_fails_at_the_native_command_that_breaks():
+    source = (PACKAGING / "scripts/build.ps1").read_text()
+
+    assert "Invoke-Native" in source
+    assert "$LASTEXITCODE" in source
+    assert "::error::" in source
+
+
 def test_msys2_script_builds_three_missing_native_tools_from_pinned_sources():
     source = (PACKAGING / "scripts/build_msys2_tools.sh").read_text()
 

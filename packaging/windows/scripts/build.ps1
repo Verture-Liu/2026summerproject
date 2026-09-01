@@ -17,6 +17,16 @@ $ManifestPath = Join-Path $Packaging "tool-sources.json"
 $Manifest = Get-Content $ManifestPath -Raw | ConvertFrom-Json
 New-Item -ItemType Directory -Force $Downloads, $Built, $Dist | Out-Null
 
+function Invoke-Native([string]$Label, [scriptblock]$Command) {
+    Write-Host "==> $Label"
+    & $Command
+    $ExitCode = $LASTEXITCODE
+    if ($null -ne $ExitCode -and $ExitCode -ne 0) {
+        Write-Host "::error::$Label failed with exit code $ExitCode"
+        throw "$Label failed with exit code $ExitCode"
+    }
+}
+
 function Get-PinnedAsset($Name, $Item) {
     $Destination = Join-Path $Downloads $Item.archive
     if (-not (Test-Path $Destination)) {
@@ -34,15 +44,19 @@ foreach ($Property in $Manifest.runtimes.PSObject.Properties) { Get-PinnedAsset 
 
 $Venv = Join-Path $Build "venv"
 if (-not (Test-Path (Join-Path $Venv "Scripts\python.exe"))) {
-    if ($Python -eq "py") { & py -3.13 -m venv $Venv } else { & $Python -m venv $Venv }
+    if ($Python -eq "py") {
+        Invoke-Native "Create Python virtual environment" { & py -3.13 -m venv $Venv }
+    } else {
+        Invoke-Native "Create Python virtual environment" { & $Python -m venv $Venv }
+    }
 }
 $VenvPython = Join-Path $Venv "Scripts\python.exe"
-& $VenvPython -m pip install --upgrade pip
-& $VenvPython -m pip install $Root pyinstaller (Join-Path $Downloads $Manifest.tools.multiqc.archive)
+Invoke-Native "Upgrade pip" { & $VenvPython -m pip install --upgrade pip }
+Invoke-Native "Install Python build dependencies" { & $VenvPython -m pip install $Root pyinstaller (Join-Path $Downloads $Manifest.tools.multiqc.archive) }
 
 Remove-Item -Recurse -Force -ErrorAction SilentlyContinue (Join-Path $Build "backend-dist"), (Join-Path $Build "multiqc-dist")
-& $VenvPython -m PyInstaller --noconfirm --clean --distpath (Join-Path $Build "backend-dist") --workpath (Join-Path $Build "backend-work") (Join-Path $Packaging "backend.spec")
-& $VenvPython -m PyInstaller --noconfirm --clean --distpath (Join-Path $Build "multiqc-dist") --workpath (Join-Path $Build "multiqc-work") (Join-Path $Packaging "multiqc.spec")
+Invoke-Native "Freeze PaleoRigor backend" { & $VenvPython -m PyInstaller --noconfirm --clean --distpath (Join-Path $Build "backend-dist") --workpath (Join-Path $Build "backend-work") (Join-Path $Packaging "backend.spec") }
+Invoke-Native "Freeze MultiQC" { & $VenvPython -m PyInstaller --noconfirm --clean --distpath (Join-Path $Build "multiqc-dist") --workpath (Join-Path $Build "multiqc-work") (Join-Path $Packaging "multiqc.spec") }
 Copy-Item -Recurse -Force (Join-Path $Build "multiqc-dist\multiqc") (Join-Path $Built "multiqc")
 
 $FastqcBuilt = Join-Path $Built "fastqc"
@@ -59,19 +73,19 @@ $BowtieDirectory = Get-ChildItem $BowtieBuilt -Directory | Select-Object -First 
 
 $MsysBash = "C:\msys64\usr\bin\bash.exe"
 if (-not (Test-Path $MsysBash)) { throw "MSYS2 is required to build seqtk, bwa and samtools: $MsysBash" }
-& $MsysBash (Join-Path $Packaging "scripts\build_msys2_tools.sh") $Cache
+Invoke-Native "Build MSYS2 bioinformatics tools" { & $MsysBash (Join-Path $Packaging "scripts\build_msys2_tools.sh") $Cache }
 
 Remove-Item -Recurse -Force -ErrorAction SilentlyContinue $AppStage
 New-Item -ItemType Directory -Force $AppStage, (Join-Path $AppStage "backend") | Out-Null
 Copy-Item -Recurse -Force (Join-Path $Build "backend-dist\PaleoRigorBackend\*") (Join-Path $AppStage "backend")
 $ToolRoot = Join-Path $AppStage "backend\_internal\research_agent\tools"
-& $VenvPython (Join-Path $Packaging "scripts\stage_tools.py") --cache $Cache --destination $ToolRoot --manifest $ManifestPath
+Invoke-Native "Stage bundled tools" { & $VenvPython (Join-Path $Packaging "scripts\stage_tools.py") --cache $Cache --destination $ToolRoot --manifest $ManifestPath }
 
-& dotnet publish (Join-Path $Packaging "launcher\PaleoRigorLauncher.csproj") -c Release -o (Join-Path $Build "launcher")
+Invoke-Native "Publish Windows launcher" { & dotnet publish (Join-Path $Packaging "launcher\PaleoRigorLauncher.csproj") -c Release -o (Join-Path $Build "launcher") }
 Copy-Item -Force (Join-Path $Build "launcher\PaleoRigor.exe") (Join-Path $AppStage "PaleoRigor.exe")
 
 if (-not (Test-Path $Iscc)) { throw "Inno Setup 6 was not found at $Iscc" }
-& $Iscc "/DAppSource=$AppStage" "/DOutputDir=$Dist" (Join-Path $Packaging "installer\PaleoRigor.iss")
+Invoke-Native "Compile Inno Setup installer" { & $Iscc "/DAppSource=$AppStage" "/DOutputDir=$Dist" (Join-Path $Packaging "installer\PaleoRigor.iss") }
 $Installer = Join-Path $Dist "PaleoRigor-Setup.exe"
 if (-not (Test-Path $Installer)) { throw "PaleoRigor-Setup.exe was not produced" }
 Write-Host "Built $Installer"

@@ -45,3 +45,10 @@ def test_windows_ci_builds_without_publishing_an_unverified_release():
     assert "actions/upload-artifact" in workflow
     assert "softprops/action-gh-release" not in workflow
     assert "contents: write" not in workflow
+
+
+def test_windows_ci_preserves_diagnostics_when_the_build_fails():
+    workflow = (ROOT / ".github/workflows/windows-build.yml").read_text()
+
+    assert "windows-build.log" in workflow
+    assert "if: always()" in workflow
