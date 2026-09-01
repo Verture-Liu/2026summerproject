@@ -21,8 +21,14 @@ New-Item -ItemType Directory -Force $Downloads, $Built, $Dist | Out-Null
 function Invoke-Native([string]$Label, [scriptblock]$Command) {
     Write-Host "==> $Label"
     "running: $Label" | Set-Content -Encoding ASCII $StagePath
-    & $Command
-    $ExitCode = $LASTEXITCODE
+    $PreviousErrorActionPreference = $ErrorActionPreference
+    $ErrorActionPreference = "Continue"
+    try {
+        & $Command
+        $ExitCode = $LASTEXITCODE
+    } finally {
+        $ErrorActionPreference = $PreviousErrorActionPreference
+    }
     if ($null -ne $ExitCode -and $ExitCode -ne 0) {
         Write-Host "::error::$Label failed with exit code $ExitCode"
         throw "$Label failed with exit code $ExitCode"
