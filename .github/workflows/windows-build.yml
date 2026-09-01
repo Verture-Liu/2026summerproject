@@ -81,6 +81,16 @@ jobs:
             $Category = "Python import failure"
           } elseif ($Log -match "PermissionError|Access is denied") {
             $Category = "build file permission failure"
+          } elseif ($Log -match "Unable to find|does not exist|not found") {
+            $Category = "missing PyInstaller input or dependency"
+          } elseif ($Log -match "Invalid.*tuple|Invalid.*spec") {
+            $Category = "invalid PyInstaller specification"
+          } elseif ($Log -match "(?m)^(?<kind>[A-Za-z][A-Za-z0-9]*(?:Error|Exception)):") {
+            $Category = "Python exception type: $($Matches.kind)"
+          } elseif ($Log -match "Traceback \(most recent call last\)") {
+            $Category = "unclassified Python traceback"
+          } elseif ($Log -match "PyInstaller.*ERROR|ERROR:.*PyInstaller") {
+            $Category = "PyInstaller internal error"
           }
           "## Windows installer build failure`n`nFailed during: **$Stage**`n`nCategory: **$Category**" |
             Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8 -Append

@@ -59,3 +59,5 @@ def test_windows_ci_preserves_diagnostics_when_the_build_fails():
     assert "FileNotFoundError" in workflow
     assert "unclassified build error" in workflow
     assert ").Trim()" in workflow
+    assert "invalid PyInstaller specification" in workflow
+    assert "Python exception type" in workflow
