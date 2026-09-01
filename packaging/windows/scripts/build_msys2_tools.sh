@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+export PATH="/ucrt64/bin:${PATH}"
+
 cache="$(cygpath -u "$1")"
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 work="${cache}/msys2-work"

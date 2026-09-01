@@ -50,6 +50,7 @@ def test_msys2_script_builds_three_missing_native_tools_from_pinned_sources():
     for tool in ("seqtk", "samtools", "bwa"):
         assert tool in source
     assert "set -euo pipefail" in source
+    assert 'export PATH="/ucrt64/bin:${PATH}"' in source
     assert "C:/msys64" not in source
 
 
