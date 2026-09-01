@@ -38,6 +38,7 @@ def test_build_script_fails_at_the_native_command_that_breaks():
     assert "Invoke-Native" in source
     assert "$LASTEXITCODE" in source
     assert "::error::" in source
+    assert "windows-build-stage.txt" in source
 
 
 def test_msys2_script_builds_three_missing_native_tools_from_pinned_sources():

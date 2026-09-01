@@ -52,3 +52,6 @@ def test_windows_ci_preserves_diagnostics_when_the_build_fails():
 
     assert "windows-build.log" in workflow
     assert "if: always()" in workflow
+    assert "continue-on-error: true" in workflow
+    assert "GITHUB_STEP_SUMMARY" in workflow
+    assert "windows-build-stage.txt" in workflow

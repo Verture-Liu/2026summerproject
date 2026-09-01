@@ -44,6 +44,8 @@ jobs:
           python -m pytest tests/packaging/test_windows_packaging_contract.py tests/packaging/test_windows_stage_tools.py tests/packaging/test_windows_launcher_contract.py tests/packaging/test_windows_installer_contract.py tests/packaging/test_windows_release_docs.py -q
 
       - name: Build installer
+        id: build
+        continue-on-error: true
         shell: powershell
         run: |
           ./packaging/windows/scripts/build.ps1 -Python python *>&1 |
@@ -55,14 +57,28 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: PaleoRigor-Windows-build-log
-          path: windows-build.log
+          path: |
+            windows-build.log
+            windows-build-stage.txt
           if-no-files-found: warn
 
+      - name: Report installer build failure
+        if: steps.build.outcome == 'failure'
+        shell: powershell
+        run: |
+          $Stage = Get-Content windows-build-stage.txt -Raw
+          "## Windows installer build failure`n`nFailed during: **$Stage**" |
+            Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8 -Append
+          Write-Host "::error title=Windows installer build failed::$Stage"
+          exit 1
+
       - name: Run native smoke checks
+        if: steps.build.outcome == 'success'
         shell: powershell
         run: ./packaging/windows/scripts/smoke_test.ps1 -Installer ./dist/PaleoRigor-Setup.exe
 
       - uses: actions/upload-artifact@v4
+        if: steps.build.outcome == 'success'
         with:
           name: PaleoRigor-Windows-development
           path: |
