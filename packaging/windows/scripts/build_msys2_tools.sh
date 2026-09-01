@@ -2,6 +2,7 @@
 set -euo pipefail
 
 cache="$(cygpath -u "$1")"
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 work="${cache}/msys2-work"
 built="${cache}/built"
 downloads="${cache}/downloads"
@@ -17,7 +18,8 @@ copy_runtime_dlls() {
 }
 
 tar -xzf "${downloads}/seqtk-v1.5.tar.gz" -C "${work}"
-make -C "${work}/seqtk-1.5" CC=gcc
+cp "${script_dir}/seqtk_mingw_compat.h" "${work}/seqtk-1.5/"
+make -C "${work}/seqtk-1.5" CC=gcc CFLAGS="-g -Wall -O2 -Wno-unused-function -Wno-format -include seqtk_mingw_compat.h"
 mkdir -p "${built}/seqtk"
 cp "${work}/seqtk-1.5/seqtk.exe" "${built}/seqtk/"
 copy_runtime_dlls "${built}/seqtk/seqtk.exe" "${built}/seqtk"

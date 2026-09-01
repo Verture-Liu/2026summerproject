@@ -52,6 +52,18 @@ def test_msys2_script_builds_three_missing_native_tools_from_pinned_sources():
     assert "C:/msys64" not in source
 
 
+def test_seqtk_build_supplies_mingw_posix_random_compatibility():
+    source = (PACKAGING / "scripts/build_msys2_tools.sh").read_text()
+    header = PACKAGING / "scripts/seqtk_mingw_compat.h"
+
+    assert "seqtk_mingw_compat.h" in source
+    assert "-include seqtk_mingw_compat.h" in source
+    assert header.is_file()
+    text = header.read_text()
+    for function in ("drand48", "srand48", "lrand48"):
+        assert function in text
+
+
 def test_smoke_script_produces_verification_and_checksum_files():
     source = (PACKAGING / "scripts/smoke_test.ps1").read_text()
 
