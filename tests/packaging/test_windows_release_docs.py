@@ -55,3 +55,6 @@ def test_windows_ci_preserves_diagnostics_when_the_build_fails():
     assert "continue-on-error: true" in workflow
     assert "GITHUB_STEP_SUMMARY" in workflow
     assert "windows-build-stage.txt" in workflow
+    assert "ModuleNotFoundError" in workflow
+    assert "FileNotFoundError" in workflow
+    assert "unclassified build error" in workflow

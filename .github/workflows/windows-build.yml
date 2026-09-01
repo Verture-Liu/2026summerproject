@@ -67,9 +67,24 @@ jobs:
         shell: powershell
         run: |
           $Stage = Get-Content windows-build-stage.txt -Raw
-          "## Windows installer build failure`n`nFailed during: **$Stage**" |
+          $Log = Get-Content windows-build.log -Raw
+          $Category = "unclassified build error"
+          if ($Log -match "ModuleNotFoundError:\s+No module named .(?<module>[A-Za-z0-9_.-]+)") {
+            $Category = "missing Python module: $($Matches.module)"
+          } elseif ($Log -match "FileNotFoundError") {
+            $Category = "missing build file"
+          } elseif ($Log -match "RecursionError") {
+            $Category = "Python recursion limit"
+          } elseif ($Log -match "MemoryError|out of memory") {
+            $Category = "build memory exhaustion"
+          } elseif ($Log -match "ImportError") {
+            $Category = "Python import failure"
+          } elseif ($Log -match "PermissionError|Access is denied") {
+            $Category = "build file permission failure"
+          }
+          "## Windows installer build failure`n`nFailed during: **$Stage**`n`nCategory: **$Category**" |
             Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Encoding utf8 -Append
-          Write-Host "::error title=Windows installer build failed::$Stage"
+          Write-Host "::error title=Windows installer build failed::$Stage; $Category"
           exit 1
 
       - name: Run native smoke checks
