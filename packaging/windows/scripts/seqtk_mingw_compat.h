@@ -3,6 +3,11 @@
 
 #if defined(__MINGW32__) || defined(__MINGW64__)
 #include <stdint.h>
+#include <string.h>
+
+#ifndef index
+#define index strchr
+#endif
 
 static uint64_t paleorigor_drand48_state = UINT64_C(0x1234abcd330e);
 

@@ -62,6 +62,7 @@ def test_seqtk_build_supplies_mingw_posix_random_compatibility():
     text = header.read_text()
     for function in ("drand48", "srand48", "lrand48"):
         assert function in text
+    assert "#define index strchr" in text
 
 
 def test_bwa_build_supplies_mingw_resource_compatibility():
