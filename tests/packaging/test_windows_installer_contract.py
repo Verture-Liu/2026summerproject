@@ -90,6 +90,17 @@ def test_bwa_windows_build_disables_only_optional_posix_shared_memory():
     assert "not available in the native Windows build" in text
 
 
+def test_bwa_windows_build_keeps_local_input_without_unix_process_pipes():
+    source = (PACKAGING / "scripts/build_msys2_tools.sh").read_text(encoding="utf-8")
+    adapter = PACKAGING / "scripts/bwa_mingw_compat/kopen_windows.c"
+    text = adapter.read_text(encoding="utf-8")
+    assert "kopen_windows.c" in source
+    assert "O_RDONLY | O_BINARY" in text
+    assert "STDIN_FILENO" in text
+    assert "waitpid" not in text
+    assert "vfork" not in text
+
+
 def test_smoke_script_produces_verification_and_checksum_files():
     source = (PACKAGING / "scripts/smoke_test.ps1").read_text()
 
