@@ -87,7 +87,10 @@ $BowtieDirectory = Get-ChildItem $BowtieBuilt -Directory | Select-Object -First 
 
 $MsysBash = "C:\msys64\usr\bin\bash.exe"
 if (-not (Test-Path $MsysBash)) { throw "MSYS2 is required to prepare seqtk, bwa and samtools: $MsysBash" }
-Invoke-Native "Build MSYS2 bioinformatics tools" { & $MsysBash (Join-Path $Packaging "scripts\build_msys2_tools.sh") $Cache }
+$MsysRoot = Split-Path (Split-Path (Split-Path $MsysBash -Parent) -Parent) -Parent
+$SamtoolsExe = Join-Path $MsysRoot "ucrt64\bin\samtools.exe"
+if (-not (Test-Path $SamtoolsExe)) { throw "MSYS2 Samtools is missing: $SamtoolsExe" }
+Invoke-Native "Build MSYS2 bioinformatics tools" { & $MsysBash (Join-Path $Packaging "scripts\build_msys2_tools.sh") $Cache $SamtoolsExe }
 
 Remove-Item -Recurse -Force -ErrorAction SilentlyContinue $AppStage
 New-Item -ItemType Directory -Force $AppStage, (Join-Path $AppStage "backend") | Out-Null

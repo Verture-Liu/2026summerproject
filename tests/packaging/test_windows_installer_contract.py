@@ -50,7 +50,8 @@ def test_msys2_script_builds_three_missing_native_tools_from_pinned_sources():
     for tool in ("seqtk", "samtools", "bwa"):
         assert tool in source
     assert "set -euo pipefail" in source
-    assert 'export PATH="/ucrt64/bin:${PATH}"' in source
+    assert 'samtools_exe="$(cygpath -u "$2")"' in source
+    assert 'export PATH="$(dirname "${samtools_exe}"):${PATH}"' in source
     assert "C:/msys64" not in source
 
 
@@ -62,6 +63,9 @@ def test_samtools_uses_version_gated_native_msys2_package():
     assert '"strategy": "msys2-package"' in manifest
     assert 'samtools_version' in source
     assert '!= "1.24"' in source
+    build = (PACKAGING / "scripts/build.ps1").read_text(encoding="utf-8")
+    assert '$SamtoolsExe' in build
+    assert '$Cache $SamtoolsExe' in build
 
 
 def test_seqtk_build_supplies_mingw_posix_random_compatibility():

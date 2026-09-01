@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-export PATH="/ucrt64/bin:${PATH}"
-
 cache="$(cygpath -u "$1")"
+samtools_exe="$(cygpath -u "$2")"
+export PATH="$(dirname "${samtools_exe}"):${PATH}"
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 work="${cache}/msys2-work"
 built="${cache}/built"
@@ -36,7 +36,6 @@ mkdir -p "${built}/bwa"
 cp "${work}/bwa-0.7.19/bwa.exe" "${built}/bwa/"
 copy_runtime_dlls "${built}/bwa/bwa.exe" "${built}/bwa"
 
-samtools_exe="/ucrt64/bin/samtools.exe"
 samtools_version="$(${samtools_exe} --version | head -n 1 | awk '{print $2}')"
 if [[ "${samtools_version}" != "1.24" ]]; then
   printf 'Expected MSYS2 Samtools 1.24, found %s\n' "${samtools_version}" >&2
