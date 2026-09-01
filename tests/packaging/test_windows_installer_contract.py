@@ -75,6 +75,7 @@ def test_bwa_build_supplies_mingw_resource_compatibility():
     assert "struct rusage" in text
     assert "getrusage" in text
     assert "ru_maxrss" in text
+    assert "#define fsync _commit" in text
 
 
 def test_smoke_script_produces_verification_and_checksum_files():

@@ -2,10 +2,12 @@
 #define PALEORIGOR_BWA_MINGW_SYS_RESOURCE_H
 
 #include <string.h>
+#include <io.h>
 #include <sys/time.h>
 #include <time.h>
 
 #define RUSAGE_SELF 0
+#define fsync _commit
 
 struct rusage {
     struct timeval ru_utime;
