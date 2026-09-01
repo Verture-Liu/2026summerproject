@@ -17,6 +17,7 @@ $StagePath = Join-Path $Root "windows-build-stage.txt"
 $ManifestPath = Join-Path $Packaging "tool-sources.json"
 $Manifest = Get-Content $ManifestPath -Raw | ConvertFrom-Json
 New-Item -ItemType Directory -Force $Downloads, $Built, $Dist | Out-Null
+"running: Prepare pinned assets" | Set-Content -Encoding ASCII $StagePath
 
 function Invoke-Native([string]$Label, [scriptblock]$Command) {
     Write-Host "==> $Label"
@@ -48,7 +49,11 @@ function Get-PinnedAsset($Name, $Item) {
     }
 }
 
-foreach ($Property in $Manifest.tools.PSObject.Properties) { Get-PinnedAsset $Property.Name $Property.Value }
+foreach ($Property in $Manifest.tools.PSObject.Properties) {
+    if ($Property.Value.strategy -ne "msys2-package") {
+        Get-PinnedAsset $Property.Name $Property.Value
+    }
+}
 foreach ($Property in $Manifest.runtimes.PSObject.Properties) { Get-PinnedAsset $Property.Name $Property.Value }
 
 $Venv = Join-Path $Build "venv"

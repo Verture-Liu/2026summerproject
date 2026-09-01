@@ -30,6 +30,7 @@ def test_build_script_downloads_with_checksums_and_builds_all_layers():
     assert "ISCC.exe" in source
     assert "PaleoRigor-Setup.exe" in source
     assert "PALEORIGOR_API_KEY" not in source
+    assert 'strategy -ne "msys2-package"' in source
 
 
 def test_build_script_fails_at_the_native_command_that_breaks():
