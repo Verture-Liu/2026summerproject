@@ -136,3 +136,5 @@ def test_smoke_script_produces_verification_and_checksum_files():
     assert "Get-Content $InstallLog -Tail 30" in source
     assert '$env:RUNNER_TEMP' in source
     assert '"pr-"' in source
+    assert "RandomNumberGenerator]::Create()" in source
+    assert "$Random.GetBytes($TokenBytes)" in source

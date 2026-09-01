@@ -31,7 +31,10 @@ try {
 
     $Listener = [System.Net.Sockets.TcpListener]::new([System.Net.IPAddress]::Loopback, 0)
     $Listener.Start(); $Port = ([System.Net.IPEndPoint]$Listener.LocalEndpoint).Port; $Listener.Stop()
-    $Token = [Convert]::ToBase64String([Security.Cryptography.RandomNumberGenerator]::GetBytes(32))
+    $TokenBytes = New-Object byte[] 32
+    $Random = [Security.Cryptography.RandomNumberGenerator]::Create()
+    try { $Random.GetBytes($TokenBytes) } finally { $Random.Dispose() }
+    $Token = [Convert]::ToBase64String($TokenBytes)
     $TokenFile = Join-Path $Install "smoke.token"
     [IO.File]::WriteAllText($TokenFile, $Token)
     $BackendPath = Join-Path $Install "backend\PaleoRigorBackend.exe"
