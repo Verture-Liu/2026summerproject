@@ -6,7 +6,7 @@ The Windows research prototype bundles or builds the following independently lic
 - MultiQC 1.35
 - SeqKit 2.13.0
 - SeqTk 1.5-r133
-- Samtools 1.23.1
+- Samtools 1.24
 - BWA 0.7.19-r1273
 - Bowtie2 2.5.5
 - Eclipse Temurin JRE 21.0.8+9 (runtime used by FastQC)

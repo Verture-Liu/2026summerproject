@@ -86,6 +86,25 @@ def test_stage_from_cache_requires_prebuilt_source_components(tmp_path):
         module.stage_from_cache(tmp_path / "cache", tmp_path / "staged", manifest)
 
 
+def test_stage_from_cache_requires_prebuilt_msys2_package_components(tmp_path):
+    module = load_module()
+    manifest = {
+        "tools": {
+            "samtools": {
+                "version": "1.24",
+                "strategy": "msys2-package",
+                "archive": "samtools.pkg.tar.zst",
+                "url": "https://example.invalid/samtools.pkg.tar.zst",
+                "sha256": "0" * 64,
+                "command": "samtools.exe",
+            }
+        },
+        "runtimes": {},
+    }
+    with pytest.raises(FileNotFoundError, match="prebuilt component.*samtools"):
+        module.stage_from_cache(tmp_path / "cache", tmp_path / "staged", manifest)
+
+
 def test_stage_from_cache_rejects_checksum_mismatch(tmp_path):
     module = load_module()
     downloads = tmp_path / "cache/downloads"

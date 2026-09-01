@@ -31,7 +31,7 @@ def test_windows_sources_pin_all_tools_and_runtime_with_real_checksums():
             assert item["url"].startswith("https://"), name
             assert re.fullmatch(r"[0-9a-f]{64}", item["sha256"]), name
             assert item["archive"], name
-            assert item["strategy"] in {"archive", "python-wheel", "msys2-source"}, name
+            assert item["strategy"] in {"archive", "python-wheel", "msys2-source", "msys2-package"}, name
 
 
 def test_windows_manifests_contain_no_credentials_or_local_machine_paths():

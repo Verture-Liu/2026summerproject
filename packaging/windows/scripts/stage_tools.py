@@ -97,7 +97,7 @@ def stage_from_cache(cache: Path, destination: Path, manifest: dict) -> Path:
         prebuilt = cache / "built" / name
         if prebuilt.is_dir():
             shutil.copytree(prebuilt, component)
-        elif item["strategy"] in {"msys2-source", "python-wheel"}:
+        elif item["strategy"] in {"msys2-source", "msys2-package", "python-wheel"}:
             if not prebuilt.is_dir():
                 raise FileNotFoundError(f"prebuilt component is missing for {name}: {prebuilt}")
         else:

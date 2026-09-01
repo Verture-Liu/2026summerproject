@@ -52,11 +52,14 @@ def test_msys2_script_builds_three_missing_native_tools_from_pinned_sources():
     assert "C:/msys64" not in source
 
 
-def test_samtools_build_configures_bundled_htslib_without_nested_argument_relay():
+def test_samtools_uses_version_gated_native_msys2_package():
     source = (PACKAGING / "scripts/build_msys2_tools.sh").read_text(encoding="utf-8")
-    assert "pushd htslib-1.23.1" in source
-    assert "./configure --disable-lzma --disable-bz2 --without-libdeflate" in source
-    assert "./configure --without-curses --disable-configure-htslib" in source
+    workflow = (ROOT / ".github/workflows/windows-build.yml").read_text(encoding="utf-8")
+    manifest = (PACKAGING / "tool-sources.json").read_text(encoding="utf-8")
+    assert "mingw-w64-ucrt-x86_64-samtools" in workflow
+    assert '"strategy": "msys2-package"' in manifest
+    assert 'samtools_version' in source
+    assert '!= "1.24"' in source
 
 
 def test_seqtk_build_supplies_mingw_posix_random_compatibility():

@@ -33,11 +33,11 @@
       "command": "seqtk.exe"
     },
     "samtools": {
-      "version": "1.23.1",
-      "strategy": "msys2-source",
-      "archive": "samtools-1.23.1.tar.bz2",
-      "url": "https://github.com/samtools/samtools/releases/download/1.23.1/samtools-1.23.1.tar.bz2",
-      "sha256": "32266198a4bc6a6df395d8526688c9697d9c8e472f888c749fdde2e08ea88dd2",
+      "version": "1.24",
+      "strategy": "msys2-package",
+      "archive": "mingw-w64-ucrt-x86_64-samtools-1.24-1-any.pkg.tar.zst",
+      "url": "https://mirror.msys2.org/mingw/ucrt64/mingw-w64-ucrt-x86_64-samtools-1.24-1-any.pkg.tar.zst",
+      "sha256": "55fcde1755d8f73b0f9195e524999953481f02956b69ee65c754f5e2da0c27b0",
       "command": "samtools.exe"
     },
     "bwa": {

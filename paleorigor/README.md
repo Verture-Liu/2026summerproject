@@ -38,7 +38,7 @@ desktop shortcut. API keys are stored through Windows Credential Manager. See
 - MultiQC 1.35
 - SeqKit 2.13.0
 - SeqTk 1.5-r133
-- Samtools 1.23.1
+- Samtools 1.24
 - BWA 0.7.19-r1273
 - Bowtie2 2.5.5
 

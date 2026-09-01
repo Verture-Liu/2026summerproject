@@ -34,18 +34,14 @@ mkdir -p "${built}/bwa"
 cp "${work}/bwa-0.7.19/bwa.exe" "${built}/bwa/"
 copy_runtime_dlls "${built}/bwa/bwa.exe" "${built}/bwa"
 
-tar -xjf "${downloads}/samtools-1.23.1.tar.bz2" -C "${work}"
-pushd "${work}/samtools-1.23.1" >/dev/null
-chmod +x version.sh htslib-1.23.1/version.sh htslib-1.23.1/hts_probe_cc.sh
-pushd htslib-1.23.1 >/dev/null
-./configure --disable-lzma --disable-bz2 --without-libdeflate
-make -j2
-popd >/dev/null
-./configure --without-curses --disable-configure-htslib
-make -j2
-popd >/dev/null
+samtools_exe="/ucrt64/bin/samtools.exe"
+samtools_version="$(${samtools_exe} --version | head -n 1 | awk '{print $2}')"
+if [[ "${samtools_version}" != "1.24" ]]; then
+  printf 'Expected MSYS2 Samtools 1.24, found %s\n' "${samtools_version}" >&2
+  exit 1
+fi
 mkdir -p "${built}/samtools"
-cp "${work}/samtools-1.23.1/samtools.exe" "${built}/samtools/"
+cp "${samtools_exe}" "${built}/samtools/"
 copy_runtime_dlls "${built}/samtools/samtools.exe" "${built}/samtools"
 
 printf 'Built seqtk, bwa and samtools in %s\n' "${built}"

@@ -81,7 +81,7 @@ $BowtieDirectory = Get-ChildItem $BowtieBuilt -Directory | Select-Object -First 
 '@echo off' + "`r`n" + 'call "%~dp0bowtie2.bat" %*' | Set-Content -Encoding ASCII (Join-Path $BowtieDirectory.FullName "bowtie2.cmd")
 
 $MsysBash = "C:\msys64\usr\bin\bash.exe"
-if (-not (Test-Path $MsysBash)) { throw "MSYS2 is required to build seqtk, bwa and samtools: $MsysBash" }
+if (-not (Test-Path $MsysBash)) { throw "MSYS2 is required to prepare seqtk, bwa and samtools: $MsysBash" }
 Invoke-Native "Build MSYS2 bioinformatics tools" { & $MsysBash (Join-Path $Packaging "scripts\build_msys2_tools.sh") $Cache }
 
 Remove-Item -Recurse -Force -ErrorAction SilentlyContinue $AppStage
