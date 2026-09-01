@@ -31,6 +31,7 @@ def test_build_script_downloads_with_checksums_and_builds_all_layers():
     assert "PaleoRigor-Setup.exe" in source
     assert "PALEORIGOR_API_KEY" not in source
     assert 'strategy -ne "msys2-package"' in source
+    assert 'Where-Object { $_.Name -eq ".svn" }' in source
 
 
 def test_build_script_fails_at_the_native_command_that_breaks():
@@ -133,3 +134,5 @@ def test_smoke_script_produces_verification_and_checksum_files():
     assert '/DIR=`"$Install`"' in source
     assert '/LOG=`"$InstallLog`"' in source
     assert "Get-Content $InstallLog -Tail 30" in source
+    assert '$env:RUNNER_TEMP' in source
+    assert '"pr-"' in source

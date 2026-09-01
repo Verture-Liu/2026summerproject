@@ -76,6 +76,9 @@ Copy-Item -Recurse -Force (Join-Path $Build "multiqc-dist\multiqc") (Join-Path $
 $FastqcBuilt = Join-Path $Built "fastqc"
 Remove-Item -Recurse -Force -ErrorAction SilentlyContinue $FastqcBuilt
 Expand-Archive -Force (Join-Path $Downloads $Manifest.tools.fastqc.archive) $FastqcBuilt
+Get-ChildItem $FastqcBuilt -Directory -Recurse -Force |
+    Where-Object { $_.Name -eq ".svn" } |
+    Remove-Item -Recurse -Force
 $FastqcCommand = Join-Path $FastqcBuilt "FastQC\fastqc.cmd"
 '@echo off' + "`r`n" + 'set "HERE=%~dp0"' + "`r`n" + 'for /d %%D in ("%HERE%..\..\..\runtimes\java\*") do set "JAVA_HOME=%%~fD"' + "`r`n" + 'pushd "%HERE%"' + "`r`n" + '"%JAVA_HOME%\bin\java.exe" -Xmx250m -classpath ".;htsjdk.jar;jbzip2-0.9.jar;sam-1.103.jar;cisd-jhdf5.jar" uk.ac.babraham.FastQC.FastQCApplication %*' + "`r`n" + 'set "CODE=%ERRORLEVEL%"' + "`r`n" + 'popd' + "`r`n" + 'exit /b %CODE%' | Set-Content -Encoding ASCII $FastqcCommand
 

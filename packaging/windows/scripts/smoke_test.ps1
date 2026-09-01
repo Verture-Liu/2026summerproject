@@ -6,7 +6,8 @@ $Installer = (Resolve-Path $Installer).Path
 if ((Split-Path $Installer -Leaf) -ne "PaleoRigor-Setup.exe") { throw "Expected PaleoRigor-Setup.exe" }
 $Root = (Resolve-Path (Join-Path $PSScriptRoot "..\..\..")).Path
 $Output = Join-Path $Root "paleorigor\windows"
-$Install = Join-Path $env:TEMP ("PaleoRigor-smoke-" + [Guid]::NewGuid().ToString("N"))
+$SmokeRoot = if ($env:RUNNER_TEMP) { $env:RUNNER_TEMP } else { $env:TEMP }
+$Install = Join-Path $SmokeRoot ("pr-" + [Guid]::NewGuid().ToString("N").Substring(0, 8))
 $InstallLog = Join-Path $env:TEMP ("PaleoRigor-install-" + [Guid]::NewGuid().ToString("N") + ".log")
 New-Item -ItemType Directory -Force $Output | Out-Null
 $Checks = [ordered]@{ installer = $false; seven_tools = $false; backend_health = $false; uninstall = $false }
