@@ -76,6 +76,7 @@ def test_bwa_build_supplies_mingw_resource_compatibility():
     assert "getrusage" in text
     assert "ru_maxrss" in text
     assert "#define fsync _commit" in text
+    assert source.count("-include seqtk_mingw_compat.h") == 2
 
 
 def test_smoke_script_produces_verification_and_checksum_files():
