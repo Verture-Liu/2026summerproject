@@ -29,7 +29,44 @@ def test_desktop_configuration_and_about_elements_are_present():
         assert f'id="{element_id}"' in files["html"]
 
     assert 'id="api-key" type="password" autocomplete="off"' in files["html"]
+    assert 'id="api-base-url" placeholder="https://api.example.com/v1"' in files["html"]
+    assert 'id="api-model" placeholder="Model name"' in files["html"]
+    assert "api.deepseek.com" not in files["html"]
+    assert "deepseek-" not in files["html"]
     assert "#api-config-panel" in files["styles"]
+
+
+def test_configuration_actions_report_exact_missing_fields_before_network_access():
+    javascript = read_web_files()["javascript"]
+
+    assert "const savedConfiguration = {baseUrl: \"\", model: \"\"};" in javascript
+    assert "const missingConfigurationFields = (useSavedValues = false) => {" in javascript
+    assert 'missing.push("baseUrl")' in javascript
+    assert 'missing.push("model")' in javascript
+    assert 'missing.push("apiKey")' in javascript
+    assert "configurationFieldsMissing" in javascript
+    assert "Missing required configuration: {fields}." in javascript
+    assert "缺少必填配置：{fields}。" in javascript
+    assert "let missingConfigurationFieldKeys = [];" in javascript
+    assert "missingConfigurationFieldKeys = [...fieldKeys];" in javascript
+    assert "if (missingConfigurationFieldKeys.length)" in javascript
+
+    save_handler = javascript.split('$("save-api-config").onclick = async () => {', 1)[1].split(
+        '$("test-api-config").onclick', 1
+    )[0]
+    assert "missingConfigurationFields()" in save_handler
+    assert save_handler.index("missingConfigurationFields()") < save_handler.index('apiFetch("/api/config"')
+
+    test_handler = javascript.split('$("test-api-config").onclick = async () => {', 1)[1].split(
+        '$("delete-api-key").onclick', 1
+    )[0]
+    assert "missingConfigurationFields(true)" in test_handler
+    assert test_handler.index("missingConfigurationFields(true)") < test_handler.index('apiFetch("/api/config/test"')
+
+    initial_load = javascript.split("const loadInitialConfiguration = async () => {", 1)[1].split(
+        "const initializeDesktopInterface", 1
+    )[0]
+    assert "setMissingConfigurationStatus(missingFields);" in initial_load
 
 
 def test_desktop_token_is_taken_from_fragment_then_removed_from_url():

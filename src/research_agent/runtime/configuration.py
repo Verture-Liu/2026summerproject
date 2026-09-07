@@ -7,8 +7,8 @@ from research_agent.runtime.preferences import JsonPreferences
 from research_agent.runtime.secrets import SecretStore
 
 
-DEFAULT_BASE_URL = "https://api.deepseek.com"
-DEFAULT_MODEL = "deepseek-v4-flash"
+DEFAULT_BASE_URL = ""
+DEFAULT_MODEL = ""
 _API_KEY_ACCOUNT = "api_key"
 
 
@@ -28,7 +28,11 @@ class RuntimeConfiguration:
         preferences = self._preferences.load()
         stored_base_url = preferences.get("api_base_url", DEFAULT_BASE_URL)
         try:
-            base_url = self._normalize_base_url(stored_base_url)
+            base_url = (
+                self._normalize_base_url(stored_base_url)
+                if stored_base_url
+                else DEFAULT_BASE_URL
+            )
         except (AttributeError, TypeError, ValueError):
             base_url = DEFAULT_BASE_URL
             sanitized_preferences = dict(preferences)

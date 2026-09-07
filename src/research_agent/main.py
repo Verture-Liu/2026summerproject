@@ -145,8 +145,23 @@ def create_app(
     @app.post("/api/config/test")
     async def test_configuration():
         config = await configuration_snapshot()
-        if not config.api_key:
-            raise HTTPException(401, detail={"error": "invalid_api_credentials"})
+        missing_fields = [
+            field
+            for field, value in (
+                ("base_url", config.base_url),
+                ("model", config.model),
+                ("api_key", config.api_key),
+            )
+            if not value
+        ]
+        if missing_fields:
+            raise HTTPException(
+                422,
+                detail={
+                    "error": "incomplete_configuration",
+                    "missing_fields": missing_fields,
+                },
+            )
         try:
             async with client_factory() as client:
                 planner = Planner(client, config.base_url, config.api_key, config.model)

@@ -5,6 +5,8 @@ let outputDirectorySelected = false;
 let currentLanguage = "en";
 let configurationReady = false;
 let apiKeyPresent = false;
+const savedConfiguration = {baseUrl: "", model: ""};
+let missingConfigurationFieldKeys = [];
 let configurationGeneration = 0;
 let hasFiles = false;
 let configStatusKey = "";
@@ -63,6 +65,7 @@ const translations = {
     testConnection: "Test Connection",
     deleteApiKey: "Delete API Key",
     configurationSaved: "Configuration saved.",
+    configurationFieldsMissing: "Missing required configuration: {fields}.",
     apiKeyDeleted: "API key deleted.",
     apiKeyDeleteFailed: "The API key could not be deleted. Try again.",
     connectionPassed: "Connection passed.",
@@ -125,6 +128,7 @@ const translations = {
     testConnection: "测试连接",
     deleteApiKey: "删除 API 密钥",
     configurationSaved: "配置已保存。",
+    configurationFieldsMissing: "缺少必填配置：{fields}。",
     apiKeyDeleted: "API 密钥已删除。",
     apiKeyDeleteFailed: "无法删除 API 密钥，请重试。",
     connectionPassed: "连接测试通过。",
@@ -169,8 +173,24 @@ const t = (key) => translations[currentLanguage][key] || translations.en[key] ||
 const show = (id, value) => { $(id).textContent = typeof value === "string" ? value : JSON.stringify(value, null, 2); };
 const setConfigStatus = (key) => {
   if (sessionInvalid && key !== "invalidSession") return;
+  missingConfigurationFieldKeys = [];
   configStatusKey = key;
   show("config-status", t(key));
+};
+const setMissingConfigurationStatus = (fieldKeys) => {
+  missingConfigurationFieldKeys = [...fieldKeys];
+  configStatusKey = "";
+  const fields = fieldKeys.map((key) => t(key)).join(", ");
+  show("config-status", t("configurationFieldsMissing").replace("{fields}", fields));
+};
+const missingConfigurationFields = (useSavedValues = false) => {
+  const baseUrl = useSavedValues ? savedConfiguration.baseUrl : $("api-base-url").value.trim();
+  const model = useSavedValues ? savedConfiguration.model : $("api-model").value.trim();
+  const missing = [];
+  if (!baseUrl) missing.push("baseUrl");
+  if (!model) missing.push("model");
+  if (!(apiKeyPresent || (!useSavedValues && $("api-key").value.trim()))) missing.push("apiKey");
+  return missing;
 };
 const isCurrentConfigurationAction = (generation) => generation === configurationGeneration;
 const configurationActionButtonIds = [
@@ -233,8 +253,10 @@ const renderAboutTools = () => {
   }
 };
 const applyConfiguration = (config) => {
-  $("api-base-url").value = config.base_url || "";
-  $("api-model").value = config.model || "";
+  savedConfiguration.baseUrl = config.base_url || "";
+  savedConfiguration.model = config.model || "";
+  $("api-base-url").value = savedConfiguration.baseUrl;
+  $("api-model").value = savedConfiguration.model;
   $("api-key").value = "";
   apiKeyPresent = Boolean(config.api_key_present);
   configurationReady = false;
@@ -271,7 +293,11 @@ const setLanguage = (language) => {
     const button = $(id);
     button.dataset.defaultLabel = button.textContent;
   });
-  if (configStatusKey) setConfigStatus(configStatusKey);
+  if (missingConfigurationFieldKeys.length) {
+    setMissingConfigurationStatus(missingConfigurationFieldKeys);
+  } else if (configStatusKey) {
+    setConfigStatus(configStatusKey);
+  }
   renderAboutTools();
 };
 const setActivity = (message) => {
@@ -330,6 +356,11 @@ const refreshExecuteButton = () => {
 };
 
 $("save-api-config").onclick = async () => {
+  const missingFields = missingConfigurationFields();
+  if (missingFields.length) {
+    setMissingConfigurationStatus(missingFields);
+    return;
+  }
   const requestGeneration = beginConfigurationAction("save-api-config", t("saveConfiguration"), true);
   configurationReady = false;
   refreshPlanningControls();
@@ -361,14 +392,14 @@ $("save-api-config").onclick = async () => {
 };
 
 $("test-api-config").onclick = async () => {
+  const missingFields = missingConfigurationFields(true);
+  if (missingFields.length) {
+    setMissingConfigurationStatus(missingFields);
+    return;
+  }
   const requestGeneration = beginConfigurationAction("test-api-config", t("testConnection"));
   configurationReady = false;
   refreshPlanningControls();
-  if (!apiKeyPresent) {
-    setConfigStatus("configurationMissing");
-    completeConfigurationAction(requestGeneration);
-    return;
-  }
   try {
     const response = await apiFetch("/api/config/test", {method: "POST"});
     if (!isCurrentConfigurationAction(requestGeneration)) return;
@@ -561,7 +592,12 @@ const loadInitialConfiguration = async () => {
     const data = await safeResponseJson(response);
     if (!isCurrentConfigurationAction(requestGeneration)) return;
     applyConfiguration(data);
-    setConfigStatus("configurationMissing");
+    const missingFields = missingConfigurationFields(true);
+    if (missingFields.length) {
+      setMissingConfigurationStatus(missingFields);
+    } else {
+      setConfigStatus("configurationMissing");
+    }
   } catch (_error) {
     if (!isCurrentConfigurationAction(requestGeneration)) return;
     setConfigStatus("configurationUnavailable");

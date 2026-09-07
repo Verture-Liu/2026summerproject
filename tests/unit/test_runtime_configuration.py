@@ -31,12 +31,12 @@ def assert_secret_absent(value):
         assert TEST_API_KEY not in value
 
 
-def test_get_uses_deepseek_defaults_without_an_api_key(tmp_path):
+def test_get_uses_empty_provider_neutral_defaults_without_an_api_key(tmp_path):
     config = make_configuration(tmp_path)
 
     assert config.get() == RuntimeApiConfig(
-        base_url="https://api.deepseek.com",
-        model="deepseek-v4-flash",
+        base_url="",
+        model="",
         api_key="",
     )
 
@@ -179,7 +179,7 @@ def test_get_scrubs_a_legacy_credential_bearing_base_url(tmp_path):
 
     current = config.get()
 
-    assert current.base_url == "https://api.deepseek.com"
+    assert current.base_url == ""
     assert credentials not in repr(current)
     assert credentials not in preferences_path.read_text(encoding="utf-8")
 

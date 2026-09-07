@@ -48,8 +48,8 @@ def test_configuration_endpoints_redact_and_delete_the_stored_api_key(tmp_path):
     initial = client.get("/api/config")
     assert initial.status_code == 200
     assert initial.json() == {
-        "base_url": "https://api.deepseek.com",
-        "model": "deepseek-v4-flash",
+        "base_url": "",
+        "model": "",
         "api_key_present": False,
     }
 
@@ -110,9 +110,25 @@ def test_configuration_endpoint_rejects_url_credentials_without_persisting_or_re
     assert response.status_code == 422
     assert response.json() == {"detail": {"error": "invalid_configuration"}}
     assert_secret_absent(response.text)
-    assert configuration.get().base_url == "https://api.deepseek.com"
+    assert configuration.get().base_url == ""
     preferences_path = tmp_path / "preferences.json"
     assert not preferences_path.exists()
+
+
+def test_connection_test_reports_every_missing_configuration_field(tmp_path):
+    client, _configuration = make_client(
+        tmp_path, lambda request: httpx.Response(500)
+    )
+
+    response = client.post("/api/config/test")
+
+    assert response.status_code == 422
+    assert response.json() == {
+        "detail": {
+            "error": "incomplete_configuration",
+            "missing_fields": ["base_url", "model", "api_key"],
+        }
+    }
 
 
 def test_connection_test_uses_stored_configuration_and_returns_only_safe_fields(tmp_path):
