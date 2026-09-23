@@ -1,0 +1,197 @@
+{
+  "prompt_raw_only_chars": {
+    "value": 247,
+    "source": "supplementary/file_4_system_prompts/raw_llm_only_prefix.txt",
+    "how": "len(file.read_text())"
+  },
+  "prompt_pr_only_chars": {
+    "value": 40347,
+    "source": "supplementary/file_4_system_prompts/paleorigor_only_prefix.txt",
+    "how": "len(file.read_text())"
+  },
+  "prompt_shared_chars": {
+    "value": 35682,
+    "source": "supplementary/file_4_system_prompts/shared_contract.txt",
+    "how": "len(file.read_text())"
+  },
+  "fv_successes": {
+    "value": 17,
+    "source": "…/v4_flash_vision_exp/results/summary.json",
+    "how": "arms.raw_llm.successes"
+  },
+  "fv_total": {
+    "value": 24,
+    "source": "同上",
+    "how": "arms.raw_llm.total"
+  },
+  "fv_rate_pct": {
+    "value": 70.8,
+    "source": "同上",
+    "how": "round(rate*100,1)"
+  },
+  "fv_ci_lo": {
+    "value": 50.8,
+    "source": "同上",
+    "how": "round(wilson_95[0]*100,1)"
+  },
+  "fv_ci_hi": {
+    "value": 85.1,
+    "source": "同上",
+    "how": "round(wilson_95[1]*100,1)"
+  },
+  "v5_date": {
+    "value": "2026-08-19",
+    "source": "analysis/benchmark_v5/runs/*/*/*/provenance.json",
+    "how": "min(started_at)[:10]"
+  },
+  "v5_start_utc": {
+    "value": "02:34",
+    "source": "analysis/benchmark_v5/runs/*/*/*/provenance.json",
+    "how": "min(started_at) HH:MM"
+  },
+  "v5_end_utc": {
+    "value": "02:50",
+    "source": "analysis/benchmark_v5/runs/*/*/*/provenance.json",
+    "how": "max(ended_at) HH:MM"
+  },
+  "v5_commit": {
+    "value": "4be5f2f",
+    "source": "analysis/benchmark_v5/runs/*/*/*/provenance.json",
+    "how": "code_commit[:7]"
+  },
+  "v5_repairs": {
+    "value": 0,
+    "source": "analysis/benchmark_v5/runs/*/*/*/provenance.json",
+    "how": "sum(repair_calls)"
+  },
+  "v5_max_attempts": {
+    "value": 1,
+    "source": "analysis/benchmark_v5/runs/*/*/*/provenance.json",
+    "how": "max(attempts)"
+  },
+  "v5_n": {
+    "value": 48,
+    "source": "analysis/benchmark_v5/runs/*/*/*/provenance.json",
+    "how": "len(runs)"
+  },
+  "pro_date": {
+    "value": "2026-08-19",
+    "source": "analysis/benchmark_multimodel/v4_pro/runs/*/*/*/provenance.json",
+    "how": "min(started_at)[:10]"
+  },
+  "pro_start_utc": {
+    "value": "06:52",
+    "source": "analysis/benchmark_multimodel/v4_pro/runs/*/*/*/provenance.json",
+    "how": "min(started_at) HH:MM"
+  },
+  "pro_end_utc": {
+    "value": "07:14",
+    "source": "analysis/benchmark_multimodel/v4_pro/runs/*/*/*/provenance.json",
+    "how": "max(ended_at) HH:MM"
+  },
+  "pro_commit": {
+    "value": "728a226",
+    "source": "analysis/benchmark_multimodel/v4_pro/runs/*/*/*/provenance.json",
+    "how": "code_commit[:7]"
+  },
+  "pro_repairs": {
+    "value": 0,
+    "source": "analysis/benchmark_multimodel/v4_pro/runs/*/*/*/provenance.json",
+    "how": "sum(repair_calls)"
+  },
+  "pro_max_attempts": {
+    "value": 1,
+    "source": "analysis/benchmark_multimodel/v4_pro/runs/*/*/*/provenance.json",
+    "how": "max(attempts)"
+  },
+  "pro_n": {
+    "value": 48,
+    "source": "analysis/benchmark_multimodel/v4_pro/runs/*/*/*/provenance.json",
+    "how": "len(runs)"
+  },
+  "fv_date": {
+    "value": "2026-08-21",
+    "source": "analysis/benchmark_multimodel/v4_flash_vision_exp/runs/*/*/*/provenance.json",
+    "how": "min(started_at)[:10]"
+  },
+  "fv_start_utc": {
+    "value": "13:07",
+    "source": "analysis/benchmark_multimodel/v4_flash_vision_exp/runs/*/*/*/provenance.json",
+    "how": "min(started_at) HH:MM"
+  },
+  "fv_end_utc": {
+    "value": "13:17",
+    "source": "analysis/benchmark_multimodel/v4_flash_vision_exp/runs/*/*/*/provenance.json",
+    "how": "max(ended_at) HH:MM"
+  },
+  "fv_commit": {
+    "value": "b5d3d18",
+    "source": "analysis/benchmark_multimodel/v4_flash_vision_exp/runs/*/*/*/provenance.json",
+    "how": "code_commit[:7]"
+  },
+  "fv_repairs": {
+    "value": 0,
+    "source": "analysis/benchmark_multimodel/v4_flash_vision_exp/runs/*/*/*/provenance.json",
+    "how": "sum(repair_calls)"
+  },
+  "fv_max_attempts": {
+    "value": 1,
+    "source": "analysis/benchmark_multimodel/v4_flash_vision_exp/runs/*/*/*/provenance.json",
+    "how": "max(attempts)"
+  },
+  "fv_n": {
+    "value": 24,
+    "source": "analysis/benchmark_multimodel/v4_flash_vision_exp/runs/*/*/*/provenance.json",
+    "how": "len(runs)"
+  },
+  "timeout_seconds": {
+    "value": 120,
+    "source": "…/H5-B1/repeat_01/paleorigor/request.json",
+    "how": "api.timeout_seconds"
+  },
+  "max_retries": {
+    "value": 2,
+    "source": "同上",
+    "how": "api.max_retries"
+  },
+  "win_samtools": {
+    "value": "1.24",
+    "source": "packaging/windows/tool-sources.json",
+    "how": "tools.samtools.version"
+  },
+  "win_java": {
+    "value": "21.0.8+9",
+    "source": "packaging/windows/tool-sources.json",
+    "how": "runtimes.java.version"
+  },
+  "win_platform": {
+    "value": "10/11",
+    "source": "packaging/windows/README.md",
+    "how": "regex 'Windows (10/11) x64'"
+  },
+  "mac_samtools": {
+    "value": "1.23.1",
+    "source": "packaging/macos/tool-sources.json",
+    "how": "samtools.version"
+  },
+  "mac_java": {
+    "value": "21.0.8",
+    "source": "packaging/macos/tool-sources.json",
+    "how": "java.version"
+  },
+  "gpl_version": {
+    "value": "3.0",
+    "source": "packaging/macos/licenses/fastqc.txt",
+    "how": "regex 'GNU General Public License v(3.0)'"
+  },
+  "release_gate_tests": {
+    "value": "278",
+    "source": "packaging/macos/phase1-verification.json",
+    "how": "gates.full_test_suite.result -> regex '(\\d+) passed'"
+  },
+  "release_gate_date": {
+    "value": "2026-08-23",
+    "source": "同上",
+    "how": "executed_at[:10]"
+  }
+}

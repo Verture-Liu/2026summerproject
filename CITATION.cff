@@ -1,0 +1,40 @@
+cff-version: 1.2.0
+title: "PaleoRigor: expert-guided workflows for traceable paleomicrobiome data processing"
+message: "If you use this software, please cite it using the metadata below."
+type: software
+# TODO before release: confirm the full author list, ORCIDs and affiliations,
+# and keep them identical to the manuscript title page.
+authors:
+  - given-names: Tianao
+    family-names: Liu
+    email: tagoreliu@gmail.com
+    # orcid: "https://orcid.org/0000-0000-0000-0000"
+    # affiliation: "TODO"
+repository-code: "https://github.com/Verture-Liu/2026summerproject"
+url: "https://verture-liu.github.io/2026summerproject/"
+abstract: >-
+  PaleoRigor is a local, human-in-the-loop system that converts a natural-language
+  research request into an explicit workflow built from predefined analysis
+  skills. It validates file references, formats and step compatibility before
+  execution, requires expert approval, restricts execution to registered skills,
+  and retains final outputs, intermediate files and run records so that the path
+  from request to result can be audited. It supports workflow review and
+  traceable source-data preparation before specialist paleomicrobiome
+  interpretation; it does not authenticate ancient DNA or perform biological
+  interpretation.
+keywords:
+  - paleomicrobiome
+  - ancient DNA
+  - human-in-the-loop analysis
+  - source-data verification
+  - reproducible bioinformatics
+  - workflow validation
+license: MIT
+version: 0.2.0
+# TODO before submission: set date-released to the tagged release date,
+# and add the Zenodo DOI under identifiers once the archive is minted.
+date-released: "2026-09-23"
+# identifiers:
+#   - type: doi
+#     value: "10.5281/zenodo.XXXXXXX"
+#     description: "Archived release corresponding to the reported results"
