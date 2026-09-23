@@ -31,10 +31,15 @@ keywords:
   - workflow validation
 license: MIT
 version: 0.2.0
-# TODO before submission: set date-released to the tagged release date,
-# and add the Zenodo DOI under identifiers once the archive is minted.
 date-released: "2026-09-23"
-# identifiers:
-#   - type: doi
-#     value: "10.5281/zenodo.XXXXXXX"
-#     description: "Archived release corresponding to the reported results"
+doi: "10.5281/zenodo.22912728"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.22912729"
+    description: "Archived snapshot of release v0.2.0, corresponding to the reported results"
+  - type: doi
+    value: "10.5281/zenodo.22912728"
+    description: "Concept DOI resolving to the latest version"
+  - type: swh
+    value: "swh:1:dir:f471f70d57db8e5244cc45c0ac7d7bc8a1d32c78"
+    description: "Software Heritage archive of release v0.2.0"

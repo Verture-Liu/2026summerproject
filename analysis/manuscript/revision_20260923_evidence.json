@@ -193,5 +193,35 @@
     "value": "2026-08-23",
     "source": "同上",
     "how": "executed_at[:10]"
+  },
+  "zenodo_version_doi": {
+    "value": "10.5281/zenodo.22912729",
+    "source": "Zenodo record https://zenodo.org/records/22912729 (read 2026-09-23)",
+    "how": "Versions panel, 'Version v0.2.0'"
+  },
+  "zenodo_concept_doi": {
+    "value": "10.5281/zenodo.22912728",
+    "source": "Zenodo record https://zenodo.org/records/22912729 (read 2026-09-23)",
+    "how": "'Cite all versions' notice"
+  },
+  "zenodo_archive_md5": {
+    "value": "2dd5d763be149bd6f84959bb4d5c5ca5",
+    "source": "Zenodo record https://zenodo.org/records/22912729 (read 2026-09-23)",
+    "how": "Files panel, md5 of release zip"
+  },
+  "swhid": {
+    "value": "swh:1:dir:f471f70d57db8e5244cc45c0ac7d7bc8a1d32c78",
+    "source": "Zenodo record https://zenodo.org/records/22912729 (read 2026-09-23)",
+    "how": "External resources, Software Heritage"
+  },
+  "release_tag": {
+    "value": "v0.2.0",
+    "source": "git tag -l + GitHub releases page",
+    "how": "annotated tag on commit 4febac7"
+  },
+  "release_commit": {
+    "value": "4febac7",
+    "source": "同上",
+    "how": "tag target"
   }
 }
