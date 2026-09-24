@@ -14,6 +14,7 @@ let aboutData = null;
 let sessionToken = "";
 let sessionInvalid = false;
 let reportObjectUrl = null;
+let lastValidation = null;
 
 const consumeSessionToken = () => {
   const fragment = window.location.hash;
@@ -86,6 +87,26 @@ const translations = {
     planHelp: "The model drafts a workflow. The local app validates skill names, inputs, and outputs before execution.",
     planButton: "Generate Workflow",
     workflowEmpty: "No workflow generated yet.",
+    tagAgent: "Agent",
+    tagConstraint: "Constraint",
+    tagReproducibility: "Reproducibility",
+    coreCaption: "stages complete",
+    fileRecords: "records",
+    runLogEmpty: "No run recorded yet.",
+    flowTitle: "Planned",
+    flowTitleAccent: "dataflow",
+    flowLegend: "Hover a node to see what it does. Every edge is an input the validator resolved before the run was allowed.",
+    flowMetaTemplate: "{skills} skills · {edges} edges · {unresolved} unresolved",
+    flowInputs: "uploaded",
+    flowSkills: "skills",
+    flowRetained: "retained",
+    flowUploaded: "uploaded file",
+    metricSteps: "Steps",
+    metricInputs: "Inputs resolved",
+    metricUnknown: "Unknown skills",
+    metricWarnings: "Warnings",
+    validationOk: "Validation passed. Every input resolved, no unknown skills.",
+    issueHint: "Suggested fix",
     runTitle: "Local Execution",
     runHelp: "Select where results should be copied, review the workflow, then run the local skills.",
     selectOutputButton: "Select Results Folder",
@@ -149,6 +170,26 @@ const translations = {
     planHelp: "模型生成 workflow，本地程序会先检查 skill 名称、输入和输出是否有效。",
     planButton: "生成 Workflow",
     workflowEmpty: "还没有生成 workflow。",
+    tagAgent: "智能体",
+    tagConstraint: "约束",
+    tagReproducibility: "可重复性",
+    coreCaption: "个阶段已完成",
+    fileRecords: "条记录",
+    runLogEmpty: "尚无运行记录。",
+    flowTitle: "已规划的",
+    flowTitleAccent: "数据流",
+    flowLegend: "悬停节点查看它做什么。每条边都是校验层在放行前已解析的输入。",
+    flowMetaTemplate: "{skills} 个技能 · {edges} 条边 · {unresolved} 项未解析",
+    flowInputs: "上传文件",
+    flowSkills: "技能",
+    flowRetained: "保留产物",
+    flowUploaded: "上传文件",
+    metricSteps: "步骤",
+    metricInputs: "输入已解析",
+    metricUnknown: "未知技能",
+    metricWarnings: "警告",
+    validationOk: "校验通过。输入全部解析，无未知技能。",
+    issueHint: "修复建议",
     runTitle: "本地执行",
     runHelp: "选择结果保存位置，审核 workflow，然后运行本地 skills。",
     selectOutputButton: "选择结果文件夹",
@@ -228,6 +269,7 @@ const completeConfigurationAction = (generation, mutatesConfiguration = false) =
 };
 const refreshPlanningControls = () => {
   $("plan").disabled = sessionInvalid || !(configurationReady && hasFiles);
+  setStepState("api", configurationReady ? "done" : "active");
 };
 const markSessionInvalid = () => {
   if (sessionInvalid) return;
@@ -293,6 +335,8 @@ const setLanguage = (language) => {
     const button = $(id);
     button.dataset.defaultLabel = button.textContent;
   });
+  if (workflow) renderDataflow(workflow, lastValidation);
+  if (lastValidation) renderValidationIssues(lastValidation);
   if (missingConfigurationFieldKeys.length) {
     setMissingConfigurationStatus(missingConfigurationFieldKeys);
   } else if (configStatusKey) {
@@ -321,9 +365,351 @@ const setStepState = (step, state) => {
     item.classList.add(state);
   });
 };
+const SVG_NS = "http://www.w3.org/2000/svg";
+const svgNode = (name, attributes = {}) => {
+  const node = document.createElementNS(SVG_NS, name);
+  for (const key of Object.keys(attributes)) node.setAttribute(key, attributes[key]);
+  return node;
+};
+const svgLabel = (className, x, y, text) => {
+  const node = svgNode("text", {class: className, x, y});
+  node.textContent = text;
+  return node;
+};
+const normalizeStepReference = (reference) => String(reference || "").split(".")[0];
+const shortenLabel = (text, width) => {
+  const limit = Math.max(6, Math.floor((width - 34) / 6.5));
+  const value = String(text || "");
+  return value.length > limit ? `${value.slice(0, limit - 1)}…` : value;
+};
+
+// Lay the planned workflow out left to right: the uploaded files, then one lane
+// per dependency depth, then the outputs that no later step consumes.
+const buildDataflowModel = (plan) => {
+  const steps = (plan?.steps || []).filter((step) => step && step.skill);
+  const stepsById = new Map(steps.map((step) => [step.id, step]));
+
+  // A step input may name an earlier output as "step_03.fastqc_zip", as the
+  // bare alias "fastqc_zip", or as the whole step directory "step_03" — the
+  // validator accepts all three, so the picture has to resolve all three.
+  const outputOwner = new Map();
+  for (const step of steps) {
+    for (const output of step.outputs || []) {
+      outputOwner.set(`${step.id}.${output.name}`, step.id);
+      if (!outputOwner.has(output.name)) outputOwner.set(output.name, step.id);
+    }
+  }
+  const producerOf = (reference) => {
+    const raw = String(reference || "");
+    const head = normalizeStepReference(raw);
+    if (raw.includes(".") && stepsById.has(head)) return stepsById.get(head);
+    const owner = outputOwner.get(raw);
+    if (owner) return stepsById.get(owner);
+    return stepsById.get(head);
+  };
+  const outputNameOf = (reference) => {
+    const raw = String(reference || "");
+    return raw.includes(".") ? raw.slice(raw.indexOf(".") + 1) : raw;
+  };
+
+  const depths = new Map();
+  const depthOf = (step, seen) => {
+    if (depths.has(step.id)) return depths.get(step.id);
+    if (seen.has(step.id)) return 0;
+    seen.add(step.id);
+    let depth = 0;
+    for (const input of step.inputs || []) {
+      if (input?.source !== "step") continue;
+      const producer = producerOf(input.ref);
+      if (producer && producer.id !== step.id) depth = Math.max(depth, depthOf(producer, seen) + 1);
+    }
+    depths.set(step.id, depth);
+    return depth;
+  };
+  steps.forEach((step) => depthOf(step, new Set()));
+
+  const uploads = [];
+  const consumedOutputs = new Set();
+  const consumedSteps = new Set();
+  let inputCount = 0;
+  let unresolved = 0;
+  for (const step of steps) {
+    for (const input of step.inputs || []) {
+      inputCount += 1;
+      if (input?.source === "step") {
+        const producer = producerOf(input.ref);
+        if (!producer) {
+          unresolved += 1;
+        } else if (String(input.ref) === producer.id) {
+          consumedSteps.add(producer.id);
+        } else {
+          consumedOutputs.add(`${producer.id}.${outputNameOf(input.ref)}`);
+        }
+      } else if (input?.ref && !uploads.includes(input.ref)) {
+        uploads.push(input.ref);
+      }
+    }
+  }
+  const retained = [];
+  for (const step of steps) {
+    if (consumedSteps.has(step.id)) continue;
+    for (const output of step.outputs || []) {
+      if (consumedOutputs.has(`${step.id}.${output.name}`)) continue;
+      retained.push({step, name: output.name, format: output.format});
+    }
+  }
+  const maxDepth = steps.length ? Math.max(...steps.map((step) => depths.get(step.id) || 0)) : 0;
+  return {steps, depths, uploads, retained, maxDepth, inputCount, unresolved, stepsById, producerOf};
+};
+
+const clearDataflow = () => {
+  $("flowStage").classList.add("is-hidden");
+  $("flowStage").classList.remove("is-running");
+  ["flowAxis", "flowEdges", "flowParts", "flowNodes"].forEach((id) => $(id).replaceChildren());
+  $("workflow").hidden = false;
+};
+
+const renderDataflow = (plan, validation) => {
+  const model = buildDataflowModel(plan);
+  if (!model.steps.length) {
+    clearDataflow();
+    return;
+  }
+  const lanes = [];
+  lanes.push(model.uploads.map((ref) => ({
+    kind: "chip", key: `up:${ref}`, title: ref, subtitle: t("flowUploaded")
+  })));
+  for (let level = 0; level <= model.maxDepth; level += 1) {
+    lanes.push(
+      model.steps
+        .filter((step) => (model.depths.get(step.id) || 0) === level)
+        .map((step) => ({
+          kind: "skill", key: step.id, step,
+          title: step.skill, subtitle: step.id, reason: step.reason
+        }))
+    );
+  }
+  lanes.push(model.retained.map((item) => ({
+    kind: "chip", keep: true, key: `out:${item.step.id}.${item.name}`,
+    title: item.name, subtitle: item.format
+  })));
+
+  const used = lanes.filter((lane) => lane.length);
+  const laneCount = used.length || 1;
+  const width = 1120;
+  const nodeWidth = Math.max(112, Math.min(212, Math.floor((width - (laneCount - 1) * 54) / laneCount)));
+  const gap = laneCount > 1 ? (width - laneCount * nodeWidth) / (laneCount - 1) : 0;
+  const rows = Math.max(1, ...used.map((lane) => lane.length));
+  const height = Math.max(250, rows * 78);
+
+  const placed = new Map();
+  used.forEach((lane, laneIndex) => {
+    const x = Math.round(laneIndex * (nodeWidth + gap));
+    lane.forEach((node, rowIndex) => {
+      const centre = 22 + ((height - 44) * (rowIndex + 0.5)) / lane.length;
+      placed.set(node.key, {
+        ...node, x, y: Math.round(centre), w: nodeWidth, h: node.kind === "skill" ? 52 : 44
+      });
+    });
+  });
+
+  const edges = [];
+  const link = (fromKey, toKey) => {
+    const from = placed.get(fromKey);
+    const to = placed.get(toKey);
+    if (from && to) edges.push({from, to});
+  };
+  for (const step of model.steps) {
+    for (const input of step.inputs || []) {
+      if (input?.source === "step") {
+        const producer = model.producerOf(input.ref);
+        if (producer) link(producer.id, step.id);
+      } else if (input?.ref) {
+        link(`up:${input.ref}`, step.id);
+      }
+    }
+  }
+  for (const item of model.retained) link(item.step.id, `out:${item.step.id}.${item.name}`);
+
+  const axis = $("flowAxis");
+  const edgeLayer = $("flowEdges");
+  const partLayer = $("flowParts");
+  const nodeLayer = $("flowNodes");
+  [axis, edgeLayer, partLayer, nodeLayer].forEach((layer) => layer.replaceChildren());
+
+  $("flowSvg").setAttribute("viewBox", `0 0 ${width} ${height + 32}`);
+  axis.append(svgNode("line", {class: "ax", x1: 0, y1: height + 6, x2: width, y2: height + 6}));
+  used.forEach((lane, laneIndex) => {
+    let name = t("flowSkills");
+    if (laneIndex === 0 && model.uploads.length) name = t("flowInputs");
+    else if (laneIndex === used.length - 1 && model.retained.length) name = t("flowRetained");
+    else if (laneIndex !== 1) return;
+    axis.append(svgLabel("ax-t", Math.round(laneIndex * (nodeWidth + gap)), height + 24, name));
+  });
+
+  edges.forEach((edge, index) => {
+    const x1 = edge.from.x + edge.from.w;
+    const y1 = edge.from.y;
+    const x2 = edge.to.x;
+    const y2 = edge.to.y;
+    const bend = Math.max(26, (x2 - x1) / 2);
+    edgeLayer.append(svgNode("path", {
+      class: "e", id: `flow-e${index}`,
+      d: `M${x1} ${y1} C${x1 + bend} ${y1} ${x2 - bend} ${y2} ${x2} ${y2}`
+    }));
+    if (index < 14) {
+      const dot = svgNode("circle", {class: "pt", r: 2.4});
+      const motion = svgNode("animateMotion", {
+        dur: `${(2.4 + (index % 5) * 0.28).toFixed(2)}s`,
+        begin: `${((index % 4) * 0.35).toFixed(2)}s`,
+        repeatCount: "indefinite"
+      });
+      const mpath = svgNode("mpath", {href: `#flow-e${index}`});
+      mpath.setAttributeNS("http://www.w3.org/1999/xlink", "xlink:href", `#flow-e${index}`);
+      motion.append(mpath);
+      dot.append(motion);
+      partLayer.append(dot);
+    }
+  });
+
+  for (const node of placed.values()) {
+    const group = svgNode("g", {class: "gnode"});
+    const tip = svgNode("title");
+    tip.textContent = node.reason ? `${node.title} — ${node.reason}` : node.title;
+    group.append(tip);
+    group.append(svgNode("rect", {
+      class: node.kind === "skill" ? "n-sk" : "n-chip",
+      x: node.x, y: Math.round(node.y - node.h / 2),
+      width: node.w, height: node.h,
+      rx: node.kind === "skill" ? 10 : 9
+    }));
+    if (node.kind === "chip") {
+      group.append(svgNode("path", {
+        class: node.keep ? "gl gl-k" : "gl",
+        transform: `translate(${node.x + 12},${node.y - 7}) scale(.58)`,
+        d: "M14 3v5h5M19 8v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7z"
+      }));
+      group.append(svgLabel("t-1", node.x + 30, node.y - 1, shortenLabel(node.title, node.w)));
+      group.append(svgLabel("t-2", node.x + 30, node.y + 12, shortenLabel(node.subtitle, node.w)));
+    } else {
+      group.append(svgLabel("t-1", node.x + 16, node.y - 1, shortenLabel(node.title, node.w + 14)));
+      group.append(svgLabel("t-2", node.x + 16, node.y + 13, shortenLabel(node.subtitle, node.w + 14)));
+    }
+    nodeLayer.append(group);
+  }
+
+  const issues = validation?.issues || [];
+  const unknownSkills = issues.filter((issue) => issue?.code === "unknown_skill").length;
+  $("metricSteps").textContent = String(model.steps.length);
+  $("metricInputs").textContent = `${model.inputCount - model.unresolved}/${model.inputCount}`;
+  $("metricUnknown").textContent = String(unknownSkills);
+  $("metricWarnings").textContent = String((validation?.warnings || []).length);
+  $("flowMeta").textContent = t("flowMetaTemplate")
+    .replace("{skills}", String(model.steps.length))
+    .replace("{edges}", String(edges.length))
+    .replace("{unresolved}", String(model.unresolved));
+
+  $("flowStage").classList.remove("is-hidden");
+  $("workflow").hidden = true;
+};
+
+// The validator already explains itself; show that rather than a JSON dump.
+const renderValidationIssues = (validation) => {
+  const host = $("validation");
+  host.replaceChildren();
+  if (!validation) return;
+  const issues = validation.issues || [];
+  const errors = validation.errors || [];
+  if (validation.valid && !issues.length) {
+    const passed = document.createElement("p");
+    passed.className = "validation-ok";
+    passed.textContent = t("validationOk");
+    host.append(passed);
+    return;
+  }
+  const list = document.createElement("ul");
+  list.className = "issues";
+  const entries = issues.length ? issues : errors.map((message) => ({code: "error", message}));
+  for (const issue of entries) {
+    const item = document.createElement("li");
+    item.className = validation.valid ? "issue warn" : "issue";
+    const code = document.createElement("span");
+    code.className = "code";
+    code.textContent = issue.code || "issue";
+    const body = document.createElement("div");
+    const message = document.createElement("p");
+    message.className = "msg";
+    message.textContent = issue.message || "";
+    body.append(message);
+    if (issue.step_id || issue.skill) {
+      const where = document.createElement("p");
+      where.className = "where";
+      where.textContent = [issue.step_id || "", issue.skill || ""].filter(Boolean).join(" · ");
+      body.append(where);
+    }
+    if (issue.hint) {
+      const hint = document.createElement("p");
+      hint.className = "hint";
+      hint.textContent = `${t("issueHint")}: ${issue.hint}`;
+      body.append(hint);
+    }
+    item.append(code, body);
+    list.append(item);
+  }
+  host.append(list);
+};
+const formatBytes = (bytes) => {
+  const value = Number(bytes);
+  if (!Number.isFinite(value) || value < 0) return "";
+  const units = ["B", "KB", "MB", "GB", "TB"];
+  let size = value, unit = 0;
+  while (size >= 1024 && unit < units.length - 1) { size /= 1024; unit += 1; }
+  return `${size >= 10 || unit === 0 ? Math.round(size) : size.toFixed(1)} ${units[unit]}`;
+};
+const renderFileList = (files) => {
+  const host = $("fileList");
+  if (!Array.isArray(files) || !files.length) {
+    show("fileList", files);
+    return;
+  }
+  host.replaceChildren();
+  const list = document.createElement("ul");
+  list.className = "files";
+  for (const file of files) {
+    const summary = file?.summary || {};
+    const item = document.createElement("li");
+    item.className = "file";
+    const glyph = document.createElement("span");
+    glyph.className = "file-glyph";
+    glyph.setAttribute("aria-hidden", "true");
+    const icon = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    icon.setAttribute("class", "ic");
+    const use = document.createElementNS("http://www.w3.org/2000/svg", "use");
+    use.setAttribute("href", "#i-doc");
+    icon.append(use);
+    glyph.append(icon);
+    const name = document.createElement("span");
+    name.className = "file-name";
+    name.textContent = summary.name || file?.ref || "";
+    name.title = name.textContent;
+    const meta = document.createElement("span");
+    meta.className = "file-meta";
+    const format = document.createElement("b");
+    format.textContent = String(summary.format || "file").toUpperCase();
+    const details = [formatBytes(summary.size_bytes)];
+    if (Number.isFinite(summary.record_count)) details.push(`${summary.record_count} ${t("fileRecords")}`);
+    if (file?.sha256) details.push(`sha256 ${String(file.sha256).slice(0, 12)}`);
+    meta.append(format, document.createTextNode(` · ${details.filter(Boolean).join(" · ")}`));
+    item.append(glyph, name, meta);
+    list.append(item);
+  }
+  host.append(list);
+};
 const resetAfterNewUpload = () => {
   workflow = null;
   workflowValid = false;
+  lastValidation = null;
+  clearDataflow();
   outputDirectorySelected = false;
   hasFiles = false;
   $("approved").checked = false;
@@ -331,7 +717,7 @@ const resetAfterNewUpload = () => {
   show("workflow", t("workflowEmpty"));
   show("validation", "");
   show("runSummary", t("runEmpty"));
-  show("status", t("runEmpty"));
+  show("status", t("runLogEmpty"));
   show("outputDirectory", t("outputEmpty"));
   clearReportLink();
   for (const step of ("plan output run").split(" ")) {
@@ -339,6 +725,7 @@ const resetAfterNewUpload = () => {
     element?.classList.remove("active", "done", "failed");
   }
   refreshPlanningControls();
+  $("workflow").hidden = true;
 };
 const summarizeWorkflow = (data) => {
   const steps = data.workflow?.steps || [];
@@ -463,7 +850,7 @@ $("upload").onclick = async () => {
     for (const file of $("files").files) body.append("files", file);
     const response = await apiFetch(`/api/tasks/${taskId}/files`, {method: "POST", body});
     const data = await response.json();
-    show("fileList", data.files || data);
+    renderFileList(data.files || data);
     hasFiles = Boolean(data.files?.length);
     refreshPlanningControls();
     $("selectOutput").disabled = sessionInvalid || !data.files?.length;
@@ -492,13 +879,17 @@ $("plan").onclick = async () => {
     if (!response.ok) {
       show("workflowSummary", t("workflowPlanningFailed"));
       show("workflow", data);
+      lastValidation = null;
+      clearDataflow();
       setStepState("plan", "failed");
       return;
     }
     workflow = data.workflow;
+    lastValidation = data.validation;
     show("workflowSummary", summarizeWorkflow(data));
     show("workflow", workflow);
-    show("validation", data.validation);
+    renderDataflow(workflow, data.validation);
+    renderValidationIssues(data.validation);
     workflowValid = data.validation.valid;
     setStepState("plan", workflowValid ? "done" : "failed");
     if (workflowValid) setStepState("output", "active");

@@ -3,37 +3,90 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="color-scheme" content="dark">
   <title>Local Research Agent</title>
   <link rel="stylesheet" href="/assets/styles.css">
 </head>
 <body>
+  <svg class="sprite" aria-hidden="true" focusable="false">
+    <symbol id="i-dna" viewBox="0 0 24 24"><path d="M7 3c0 4.5 10 6 10 10.5S7 19.5 7 21"/><path d="M17 3c0 4.5-10 6-10 10.5S17 19.5 17 21"/><path d="M8.6 7h6.8M7.4 11h9.2M8.6 15.5h6.8"/></symbol>
+    <symbol id="i-key" viewBox="0 0 24 24"><circle cx="8" cy="15" r="4.2"/><path d="M11 12 20 3"/><path d="M16.8 6.2l2.5 2.5M14.3 8.7l2.5 2.5"/></symbol>
+    <symbol id="i-fileup" viewBox="0 0 24 24"><path d="M14 3v5h5"/><path d="M19 8v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7z"/><path d="M12 17.5v-5.5"/><path d="M9.8 14.2 12 12l2.2 2.2"/></symbol>
+    <symbol id="i-graph" viewBox="0 0 24 24"><circle cx="5.5" cy="6.5" r="2.5"/><circle cx="5.5" cy="17.5" r="2.5"/><circle cx="18.5" cy="12" r="2.5"/><path d="M8 7.7 16.1 11M8 16.3 16.1 13"/></symbol>
+    <symbol id="i-folder" viewBox="0 0 24 24"><path d="M3.5 7.4a2 2 0 0 1 2-2h3.1l2 2.4h7.9a2 2 0 0 1 2 2v8.8a2 2 0 0 1-2 2H5.5a2 2 0 0 1-2-2z"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M7.6 5.2 18.5 12 7.6 18.8z"/></symbol>
+    <symbol id="i-cpu" viewBox="0 0 24 24"><rect x="8" y="8" width="8" height="8" rx="1.5"/><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 1.6v2.4M15 1.6v2.4M9 20v2.4M15 20v2.4M1.6 9H4M1.6 15H4M20 9h2.4M20 15h2.4"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M11 3l1.75 4.75L17.5 9.5l-4.75 1.75L11 16l-1.75-4.75L4.5 9.5l4.75-1.75z"/><path d="M18.2 15.2l.75 2.05 2.05.75-2.05.75-.75 2.05-.75-2.05-2.05-.75 2.05-.75z"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3l7.4 2.8v6.3c0 4.6-3.1 7.8-7.4 9.4-4.3-1.6-7.4-4.8-7.4-9.4V5.8z"/><path d="M8.8 12.2l2.3 2.3 4.3-4.6"/></symbol>
+    <symbol id="i-cycle" viewBox="0 0 24 24"><path d="M20 11a8 8 0 0 0-14.3-4.9L4 8"/><path d="M4 3.5V8h4.5"/><path d="M4 13a8 8 0 0 0 14.3 4.9L20 16"/><path d="M20 20.5V16h-4.5"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24"><path d="M14 3v5h5"/><path d="M19 8v11a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h7z"/><path d="M9 13h6M9 17h4"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M4.8 12.6 9.6 17.4 19.2 6.6"/></symbol>
+  </svg>
+
+  <div class="bg" aria-hidden="true">
+    <div class="wash"></div>
+    <canvas id="neuralField"></canvas>
+    <div class="floor"></div>
+    <div class="scan"></div>
+  </div>
+
+  <div class="frame">
   <main>
     <div class="topbar">
-      <div></div>
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true"><svg class="ic"><use href="#i-dna"/></svg></span>
+        <span class="brand-name">PaleoRigor <em>agent</em></span>
+      </div>
       <div id="languageToggle" class="language-toggle" aria-label="Language selection">
         <button type="button" class="lang-option active" data-language="en">English</button>
         <button type="button" class="lang-option" data-language="zh">中文</button>
       </div>
     </div>
+
     <header class="hero">
-      <div>
+      <div class="hero-copy">
         <p class="eyebrow" data-i18n="eyebrow">LOCAL RESEARCH AGENT</p>
         <h1 data-i18n="heroTitle">Turn research requests into reviewable, reproducible local workflows</h1>
-        <p data-i18n="heroSubtitle">The model API plans the workflow. Skills on your computer process the data.</p>
+        <p class="hero-sub" data-i18n="heroSubtitle">The model API plans the workflow. Skills on your computer process the data.</p>
+        <div class="tags">
+          <span class="tag"><svg class="ic"><use href="#i-spark"/></svg><span data-i18n="tagAgent">Agent</span></span>
+          <span class="tag"><svg class="ic"><use href="#i-shield"/></svg><span data-i18n="tagConstraint">Constraint</span></span>
+          <span class="tag"><svg class="ic"><use href="#i-cycle"/></svg><span data-i18n="tagReproducibility">Reproducibility</span></span>
+        </div>
+        <div class="hero-card">
+          <span class="status-dot"></span>
+          <strong data-i18n="heroCardTitle">Local-first execution</strong>
+          <p data-i18n="heroCardText">Files stay on this computer. You review every workflow before it runs.</p>
+        </div>
       </div>
-      <div class="hero-card">
-        <span class="status-dot"></span>
-        <strong data-i18n="heroCardTitle">Local-first execution</strong>
-        <p data-i18n="heroCardText">Files stay on this computer. You review every workflow before it runs.</p>
+      <div class="core" id="core">
+        <div class="core-cross" aria-hidden="true"></div>
+        <div class="core-sweep" aria-hidden="true"></div>
+        <svg class="ring" viewBox="0 0 220 220" aria-hidden="true">
+          <defs>
+            <linearGradient id="gRing" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#3fe2ff"/><stop offset="1" stop-color="#8b6bff"/>
+            </linearGradient>
+          </defs>
+          <circle class="r-out spin" cx="110" cy="110" r="106"/>
+          <circle class="r-tick" cx="110" cy="110" r="96"/>
+          <circle class="r-track" cx="110" cy="110" r="84"/>
+          <circle class="r-val" id="coreRing" cx="110" cy="110" r="84" transform="rotate(-90 110 110)" stroke-dasharray="527.8" stroke-dashoffset="527.8"/>
+          <circle class="r-in spin rev" cx="110" cy="110" r="66"/>
+        </svg>
+        <div class="core-label">
+          <div class="core-num" id="coreNum">0<i>/5</i></div>
+          <div class="core-cap" data-i18n="coreCaption">stages complete</div>
+        </div>
       </div>
     </header>
 
     <nav id="progressSteps" class="progress-steps" aria-label="Workflow progress">
-      <div class="progress-step active" data-step="api"><span>1</span><strong data-i18n="stepApi">Model API</strong></div>
-      <div class="progress-step" data-step="upload"><span>2</span><strong data-i18n="stepUpload">Upload files</strong></div>
-      <div class="progress-step" data-step="plan"><span>3</span><strong data-i18n="stepPlan">Plan workflow</strong></div>
-      <div class="progress-step" data-step="output"><span>4</span><strong data-i18n="stepOutput">Choose output</strong></div>
-      <div class="progress-step" data-step="run"><span>5</span><strong data-i18n="stepRun">Run locally</strong></div>
+      <div class="progress-step active" data-step="api"><i class="si"><svg class="ic"><use href="#i-key"/></svg></i><span>1</span><strong data-i18n="stepApi">Model API</strong></div>
+      <div class="progress-step" data-step="upload"><i class="si"><svg class="ic"><use href="#i-fileup"/></svg></i><span>2</span><strong data-i18n="stepUpload">Upload files</strong></div>
+      <div class="progress-step" data-step="plan"><i class="si"><svg class="ic"><use href="#i-graph"/></svg></i><span>3</span><strong data-i18n="stepPlan">Plan workflow</strong></div>
+      <div class="progress-step" data-step="output"><i class="si"><svg class="ic"><use href="#i-folder"/></svg></i><span>4</span><strong data-i18n="stepOutput">Choose output</strong></div>
+      <div class="progress-step" data-step="run"><i class="si"><svg class="ic"><use href="#i-play"/></svg></i><span>5</span><strong data-i18n="stepRun">Run locally</strong></div>
     </nav>
 
     <div id="activityBanner" class="activity-banner" hidden>
@@ -41,79 +94,135 @@
       <span id="activityText">Working...</span>
     </div>
 
-    <section id="api-config-panel" class="card">
-      <div class="section-heading">
-        <span class="section-number">1</span>
-        <div>
-          <h2 data-i18n="configurationTitle">API Configuration</h2>
-          <p data-i18n="configurationHelp">Save the API endpoint, model, and key securely before planning a workflow.</p>
+    <div class="panels">
+      <section id="api-config-panel" class="card">
+        <div class="section-heading">
+          <span class="p-ico" aria-hidden="true"><svg class="ic"><use href="#i-key"/></svg></span>
+          <div>
+            <span class="section-number">1</span>
+            <h2 data-i18n="configurationTitle">API Configuration</h2>
+            <p data-i18n="configurationHelp">Save the API endpoint, model, and key securely before planning a workflow.</p>
+          </div>
         </div>
-      </div>
-      <div class="grid">
-        <label><span data-i18n="baseUrl">Base URL</span><input id="api-base-url" placeholder="https://api.example.com/v1" data-i18n-placeholder="baseUrlPlaceholder"></label>
-        <label><span data-i18n="model">Model</span><input id="api-model" placeholder="Model name" data-i18n-placeholder="modelPlaceholder"></label>
-        <label><span data-i18n="apiKey">API Key</span><input id="api-key" type="password" autocomplete="off" placeholder="Saved securely and never shown again" data-i18n-placeholder="apiKeyPlaceholder"></label>
-      </div>
-      <div class="config-actions">
-        <button id="save-api-config" type="button" data-i18n="saveConfiguration">Save Configuration</button>
-        <button id="test-api-config" type="button" class="secondary-button" data-i18n="testConnection">Test Connection</button>
-        <button id="delete-api-key" type="button" class="secondary-button" aria-describedby="config-status" data-i18n="deleteApiKey">Delete API Key</button>
-      </div>
-      <div id="config-status" class="config-status" role="status" aria-live="polite"></div>
-      <section class="about-panel" aria-labelledby="about-title">
-        <h3 id="about-title" data-i18n="aboutTitle">Included Tools</h3>
-        <table id="about-tools">
-          <thead><tr><th data-i18n="toolName">Tool</th><th data-i18n="toolVersion">Pinned version</th></tr></thead>
-          <tbody></tbody>
-        </table>
+        <div class="grid">
+          <label><span data-i18n="baseUrl">Base URL</span><input id="api-base-url" placeholder="https://api.example.com/v1" data-i18n-placeholder="baseUrlPlaceholder" spellcheck="false" autocapitalize="off"></label>
+          <label><span data-i18n="model">Model</span><input id="api-model" placeholder="Model name" data-i18n-placeholder="modelPlaceholder" spellcheck="false" autocapitalize="off"></label>
+          <label><span data-i18n="apiKey">API Key</span><input id="api-key" type="password" autocomplete="off" placeholder="Saved securely and never shown again" data-i18n-placeholder="apiKeyPlaceholder"></label>
+        </div>
+        <div class="config-actions">
+          <button id="save-api-config" type="button" data-i18n="saveConfiguration">Save Configuration</button>
+          <button id="test-api-config" type="button" class="secondary-button" data-i18n="testConnection">Test Connection</button>
+          <button id="delete-api-key" type="button" class="secondary-button" aria-describedby="config-status" data-i18n="deleteApiKey">Delete API Key</button>
+        </div>
+        <div id="config-status" class="config-status" role="status" aria-live="polite"></div>
+        <section class="about-panel" aria-labelledby="about-title">
+          <h3 id="about-title" data-i18n="aboutTitle">Included Tools</h3>
+          <table id="about-tools">
+            <thead><tr><th data-i18n="toolName">Tool</th><th data-i18n="toolVersion">Pinned version</th></tr></thead>
+            <tbody></tbody>
+          </table>
+        </section>
       </section>
-    </section>
 
-    <section class="card">
-      <div class="section-heading">
-        <span class="section-number">2</span>
-        <div>
-          <h2 data-i18n="taskTitle">Task and Files</h2>
-          <p data-i18n="taskHelp">Describe the research task and upload the files that should be processed locally.</p>
+      <section class="card card-task">
+        <div class="section-heading">
+          <span class="p-ico" aria-hidden="true"><svg class="ic"><use href="#i-fileup"/></svg></span>
+          <div>
+            <span class="section-number">2</span>
+            <h2 data-i18n="taskTitle">Task and Files</h2>
+            <p data-i18n="taskHelp">Describe the research task and upload the files that should be processed locally.</p>
+          </div>
         </div>
-      </div>
-      <textarea id="instruction" rows="5" placeholder="Example: Keep peptide sequences between 13 and 26 amino acids and export a FASTA file." data-i18n-placeholder="instructionPlaceholder"></textarea>
-      <input id="files" type="file" multiple>
-      <button id="upload" data-i18n="uploadButton">Create Task and Upload</button>
-      <div id="fileList" class="panel"></div>
-    </section>
+        <textarea id="instruction" rows="5" placeholder="Example: Keep peptide sequences between 13 and 26 amino acids and export a FASTA file." data-i18n-placeholder="instructionPlaceholder"></textarea>
+        <div class="file-row">
+          <input id="files" type="file" multiple>
+          <button id="upload" data-i18n="uploadButton">Create Task and Upload</button>
+        </div>
+        <div id="fileList" class="panel"></div>
+      </section>
 
-    <section class="card">
-      <div class="section-heading">
-        <span class="section-number">3</span>
-        <div>
-          <h2 data-i18n="planTitle">Generate and Validate Workflow</h2>
-          <p data-i18n="planHelp">The model drafts a workflow. The local app validates skill names, inputs, and outputs before execution.</p>
+      <section class="card card-plan">
+        <div class="section-heading">
+          <span class="p-ico" aria-hidden="true"><svg class="ic"><use href="#i-graph"/></svg></span>
+          <div>
+            <span class="section-number">3</span>
+            <h2 data-i18n="planTitle">Generate and Validate Workflow</h2>
+            <p data-i18n="planHelp">The model drafts a workflow. The local app validates skill names, inputs, and outputs before execution.</p>
+          </div>
         </div>
-      </div>
-      <button id="plan" disabled data-i18n="planButton">Generate Workflow</button>
-      <div id="workflowSummary" class="summary-card" data-i18n="workflowEmpty">No workflow generated yet.</div>
-      <pre id="workflow" class="panel" data-i18n="workflowEmpty">No workflow generated yet.</pre>
-      <div id="validation"></div>
-    </section>
+        <button id="plan" disabled data-i18n="planButton">Generate Workflow</button>
+        <div id="workflowSummary" class="summary-card" data-i18n="workflowEmpty">No workflow generated yet.</div>
 
-    <section class="card">
-      <div class="section-heading">
-        <span class="section-number">4</span>
-        <div>
-          <h2 data-i18n="runTitle">Local Execution</h2>
-          <p data-i18n="runHelp">Select where results should be copied, review the workflow, then run the local skills.</p>
+        <div class="flow is-hidden" id="flowStage">
+          <div class="flow-head">
+            <h3><span data-i18n="flowTitle">Planned</span> <em data-i18n="flowTitleAccent">dataflow</em></h3>
+            <span class="m" id="flowMeta"></span>
+          </div>
+          <div class="flow-scroll">
+            <svg class="flow-svg" id="flowSvg" viewBox="0 0 1120 318" role="img" aria-labelledby="flowDesc" preserveAspectRatio="xMidYMid meet">
+              <desc id="flowDesc">Every uploaded file, planned skill and retained output of this workflow, drawn left to right.</desc>
+              <defs>
+                <linearGradient id="skg" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="var(--sk-top)"/>
+                  <stop offset="1" stop-color="var(--sk-bot)"/>
+                </linearGradient>
+                <linearGradient id="skl" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0" stop-color="var(--live-a)"/>
+                  <stop offset="1" stop-color="var(--live-b)"/>
+                </linearGradient>
+                <filter id="nsh" x="-30%" y="-45%" width="160%" height="200%">
+                  <feDropShadow dx="0" dy="3" stdDeviation="4"/>
+                </filter>
+                <filter id="nglow" x="-45%" y="-70%" width="190%" height="260%">
+                  <feDropShadow dx="0" dy="0" stdDeviation="6"/>
+                </filter>
+              </defs>
+              <g id="flowAxis"></g>
+              <g id="flowEdges"></g>
+              <g id="flowParts"></g>
+              <g id="flowNodes"></g>
+            </svg>
+          </div>
+          <p class="flow-legend" data-i18n="flowLegend">Hover a node to see what it does. Every edge is an input the validator resolved before the run was allowed.</p>
+          <dl class="metrics">
+            <div><dt data-i18n="metricSteps">Steps</dt><dd id="metricSteps">0</dd></div>
+            <div><dt data-i18n="metricInputs">Inputs resolved</dt><dd id="metricInputs">0</dd></div>
+            <div><dt data-i18n="metricUnknown">Unknown skills</dt><dd id="metricUnknown">0</dd></div>
+            <div><dt data-i18n="metricWarnings">Warnings</dt><dd id="metricWarnings">0</dd></div>
+          </dl>
         </div>
-      </div>
-      <button id="selectOutput" disabled data-i18n="selectOutputButton">Select Results Folder</button>
-      <div id="outputDirectory" class="directory-status" data-i18n="outputEmpty">No results folder selected.</div>
-      <label class="confirm"><input id="approved" type="checkbox"> <span data-i18n="approvalText">I reviewed the workflow and approve running these Skills locally.</span></label>
-      <button id="execute" disabled data-i18n="executeButton">Run Workflow</button>
-      <div id="runSummary" class="summary-card" data-i18n="runEmpty">Waiting to run.</div>
-      <pre id="status" class="panel" data-i18n="runEmpty">Waiting to run.</pre>
-      <a id="reportLink" href="#" target="_blank" hidden data-i18n="reportLink">Open Run Report</a>
-    </section>
+
+        <pre id="workflow" class="panel" hidden data-i18n="workflowEmpty">No workflow generated yet.</pre>
+        <div id="validation"></div>
+      </section>
+
+      <section class="card card-run">
+        <div class="section-heading">
+          <span class="p-ico" aria-hidden="true"><svg class="ic"><use href="#i-cpu"/></svg></span>
+          <div>
+            <span class="section-number">4</span>
+            <h2 data-i18n="runTitle">Local Execution</h2>
+            <p data-i18n="runHelp">Select where results should be copied, review the workflow, then run the local skills.</p>
+          </div>
+        </div>
+        <div class="run-grid">
+          <div class="run-controls">
+            <button id="selectOutput" disabled data-i18n="selectOutputButton">Select Results Folder</button>
+            <div id="outputDirectory" class="directory-status" data-i18n="outputEmpty">No results folder selected.</div>
+            <label class="confirm"><input id="approved" type="checkbox"> <span data-i18n="approvalText">I reviewed the workflow and approve running these Skills locally.</span></label>
+            <button id="execute" disabled data-i18n="executeButton">Run Workflow</button>
+            <a id="reportLink" href="#" target="_blank" hidden data-i18n="reportLink">Open Run Report</a>
+          </div>
+          <div class="run-log">
+            <div id="runSummary" class="summary-card" data-i18n="runEmpty">Waiting to run.</div>
+            <pre id="status" class="panel" data-i18n="runLogEmpty">No run recorded yet.</pre>
+          </div>
+        </div>
+      </section>
+    </div>
   </main>
+  </div>
   <script src="/assets/app.js"></script>
+  <script src="/assets/effects.js"></script>
 </body>
 </html>
