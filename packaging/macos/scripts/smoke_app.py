@@ -171,7 +171,7 @@ def run_smoke(app: Path, scan: bool = True) -> dict:
             "bundle_scan_errors": scan_bundle(app) if scan else [],
         }
         expected = {
-            "health": {"status": "ok", "version": "0.2.0"},
+            "health": {"status": "ok", "version": "0.2.1"},
             "unauthorized_status": 401,
             "about_status": 200,
             "about_tools": EXPECTED_TOOLS,

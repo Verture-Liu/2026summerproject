@@ -1,6 +1,6 @@
 Metadata-Version: 2.4
 Name: local-research-agent
-Version: 0.2.0
+Version: 0.2.1
 Requires-Python: <3.14,>=3.11
 Requires-Dist: fastapi<1,>=0.115
 Requires-Dist: uvicorn<1,>=0.34

@@ -12,7 +12,7 @@ def test_windows_build_configuration_is_x64_and_isolated_from_macos():
     config = json.loads((PACKAGING / "build_config.json").read_text())
 
     assert config["app_name"] == "PaleoRigor"
-    assert config["version"] == "0.2.0-dev"
+    assert config["version"] == "0.2.1-dev"
     assert config["architecture"] == "x64"
     assert config["minimum_windows"] == "10"
     assert config["backend_relative_path"] == "backend/PaleoRigorBackend.exe"

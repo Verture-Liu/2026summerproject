@@ -24,7 +24,7 @@ def test_session_token_guard_protects_api_without_leaking_tokens(tmp_path, caplo
     assert missing.status_code == 401
     assert wrong.status_code == 401
     assert authorized.status_code == 200
-    assert authorized.json() == {"status": "ok", "version": "0.2.0"}
+    assert authorized.json() == {"status": "ok", "version": "0.2.1"}
     assert missing.json() == {"detail": {"error": "invalid_session"}}
     assert wrong.json() == {"detail": {"error": "invalid_session"}}
 

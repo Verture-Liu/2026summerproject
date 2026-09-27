@@ -11,7 +11,7 @@ def test_build_configuration_is_apple_silicon_only():
     assert config == {
         "app_name": "PaleoRigor",
         "bundle_identifier": "org.paleorigor.app",
-        "version": "0.2.0-dev",
+        "version": "0.2.1-dev",
         "architecture": "arm64",
         "minimum_macos": "13.0",
         "backend_relative_path": "Contents/Resources/backend/PaleoRigorBackend",

@@ -8,7 +8,7 @@
 [Setup]
 AppId={{C0ACAA8A-8912-4D59-81CA-24A363E584B8}
 AppName=PaleoRigor
-AppVersion=0.2.0-dev
+AppVersion=0.2.1-dev
 AppPublisher=PaleoRigor research project
 DefaultDirName={localappdata}\Programs\PaleoRigor
 DefaultGroupName=PaleoRigor

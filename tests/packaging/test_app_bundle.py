@@ -21,7 +21,7 @@ def test_info_plist_declares_native_apple_silicon_application():
         info = plistlib.load(handle)
     assert info["CFBundleExecutable"] == "PaleoRigor"
     assert info["CFBundleIdentifier"] == "org.paleorigor.app"
-    assert info["CFBundleShortVersionString"] == "0.2.0"
+    assert info["CFBundleShortVersionString"] == "0.2.1"
     assert info["LSMinimumSystemVersion"] == "13.0"
     assert info["LSArchitecturePriority"] == ["arm64"]
     assert info["LSUIElement"] is False

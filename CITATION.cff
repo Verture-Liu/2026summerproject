@@ -30,13 +30,14 @@ keywords:
   - reproducible bioinformatics
   - workflow validation
 license: MIT
-version: 0.2.0
-date-released: "2026-09-23"
+version: 0.2.1
+date-released: "2026-09-27"
 doi: "10.5281/zenodo.22912728"
+# TODO after the v0.2.1 Zenodo record exists: add its version DOI as the first identifier.
 identifiers:
   - type: doi
     value: "10.5281/zenodo.22912729"
-    description: "Archived snapshot of release v0.2.0, corresponding to the reported results"
+    description: "Archived snapshot of release v0.2.0; the evaluated commits are contained in this release"
   - type: doi
     value: "10.5281/zenodo.22912728"
     description: "Concept DOI resolving to the latest version"

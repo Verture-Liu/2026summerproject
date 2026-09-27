@@ -36,7 +36,7 @@ from research_agent.runtime.session import install_api_token_guard
 from research_agent.skills.registry import build_default_registry
 
 
-APPLICATION_VERSION = "0.2.0"
+APPLICATION_VERSION = "0.2.1"
 GITHUB_URL = "https://github.com/Verture-Liu/2026summerproject"
 
 
@@ -200,7 +200,7 @@ def create_app(
 
     @app.get("/api/health")
     def health():
-        return {"status": "ok", "version": "0.2.0"}
+        return {"status": "ok", "version": "0.2.1"}
 
     @app.post("/api/tasks", status_code=201)
     def create_task():

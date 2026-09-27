@@ -15,7 +15,7 @@ preserved.
 ## Download
 
 - `PaleoRigor-dev-arm64.dmg`
-- Version: `0.2.0-dev`
+- Version: `0.2.1-dev`
 - Target: Apple Silicon (M-series Macs), macOS 13 or later
 
 ## Install and open

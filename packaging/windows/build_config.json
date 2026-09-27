@@ -1,7 +1,7 @@
 {
   "app_name": "PaleoRigor",
   "app_identifier": "org.paleorigor.app",
-  "version": "0.2.0-dev",
+  "version": "0.2.1-dev",
   "architecture": "x64",
   "minimum_windows": "10",
   "backend_relative_path": "backend/PaleoRigorBackend.exe",
