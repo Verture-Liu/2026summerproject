@@ -16,7 +16,8 @@ def is_macho(path: Path) -> bool:
     if path.is_symlink() or not path.is_file():
         return False
     result = subprocess.run(
-        ["/usr/bin/file", "-b", str(path)], capture_output=True, text=True, check=False
+        ["/usr/bin/file", "-b", str(path)], capture_output=True, text=True,
+        encoding="utf-8", errors="replace", check=False
     )
     return "Mach-O" in result.stdout
 
@@ -30,7 +31,8 @@ def architectures(path: Path) -> set[str]:
 
 def dependencies(path: Path) -> list[str]:
     result = subprocess.run(
-        ["/usr/bin/otool", "-L", str(path)], capture_output=True, text=True, check=True
+        ["/usr/bin/otool", "-L", str(path)], capture_output=True, text=True,
+        encoding="utf-8", errors="replace", check=True
     )
     return [line.strip().split(" (", 1)[0] for line in result.stdout.splitlines()[1:] if line.strip()]
 

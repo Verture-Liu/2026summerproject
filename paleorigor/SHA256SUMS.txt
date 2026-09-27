@@ -1,1 +1,1 @@
-527548e3c40fa0c29c1721b91746e3ca28ff4489d81e66c629caa734d46db8d8  PaleoRigor-dev-arm64.dmg
+9ee98aedfcea1041c6cdd1d79fb4ea8f4d76ac188e5661196164379182ad6108  paleorigor/PaleoRigor-dev-arm64.dmg
