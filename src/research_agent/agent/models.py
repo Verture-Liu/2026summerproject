@@ -30,3 +30,27 @@ class Workflow(StrictModel):
     schema_version: Literal["1.0"]
     task_summary: str = Field(min_length=1)
     steps: list[WorkflowStep] = Field(min_length=1)
+
+
+BLOCKED_REASON_CODES = (
+    "file_type_mismatch",
+    "missing_mate",
+    "unsupported_scientific_claim",
+    "missing_prerequisite",
+)
+
+
+class BlockedDecision(StrictModel):
+    """The planner's refusal: a request crossed a boundary stated in the control layer.
+
+    A blocked decision is a result, not an error. Nothing is executed for it.
+    """
+
+    status: Literal["blocked"]
+    reason_code: Literal[
+        "file_type_mismatch",
+        "missing_mate",
+        "unsupported_scientific_claim",
+        "missing_prerequisite",
+    ]
+    message: str = Field(min_length=1)

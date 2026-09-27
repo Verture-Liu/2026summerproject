@@ -484,3 +484,67 @@ def test_about_returns_the_pinned_tool_manifest(tmp_path):
             {"id": "bowtie2", "version": "2.5.5"},
         ],
     }
+
+
+def test_planning_returns_and_records_a_blocked_decision_without_validating_or_running(tmp_path):
+    decision = {
+        "status": "blocked",
+        "reason_code": "unsupported_scientific_claim",
+        "message": "Quality-control output cannot establish that the reads are ancient.",
+    }
+
+    def handler(_request):
+        return httpx.Response(200, json={"choices": [{"message": {"content": json.dumps(decision)}}]})
+
+    client, _ = make_client(tmp_path, handler)
+    client.put(
+        "/api/config",
+        json={"base_url": "https://provider.example/v1", "model": "provider-model", "api_key": TEST_API_KEY},
+    )
+    task_id = client.post("/api/tasks").json()["task_id"]
+
+    response = client.post(
+        f"/api/tasks/{task_id}/plan",
+        json={"instruction": "Use FastQC to prove these reads are ancient and uncontaminated."},
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body == {"workflow": None, "blocked": decision, "validation": None}
+    task_dir = tmp_path / "tasks" / task_id
+    record = json.loads((task_dir / "planning_decision.json").read_text(encoding="utf-8"))
+    assert record == {
+        "instruction": "Use FastQC to prove these reads are ancient and uncontaminated.",
+        "decision": decision,
+    }
+    assert not (task_dir / "workflow.draft.json").exists()
+    assert not (task_dir / "manifest.json").exists()
+    assert_secret_absent(body)
+
+
+def test_planning_response_for_a_workflow_marks_it_as_not_blocked(tmp_path):
+    workflow_json = {
+        "schema_version": "1.0",
+        "task_summary": "filter peptides",
+        "steps": [{
+            "id": "step_01", "skill": "peptide_filter",
+            "inputs": [{"source": "uploaded", "ref": "peptides"}],
+            "parameters": {"min_length": 13, "max_length": 26},
+            "outputs": [{"name": "filtered", "format": "fasta"}],
+            "reason": "filter peptide lengths",
+        }],
+    }
+
+    def handler(_request):
+        return httpx.Response(200, json={"choices": [{"message": {"content": json.dumps(workflow_json)}}]})
+
+    client, _ = make_client(tmp_path, handler)
+    client.put(
+        "/api/config",
+        json={"base_url": "https://provider.example/v1", "model": "provider-model", "api_key": TEST_API_KEY},
+    )
+    task_id = client.post("/api/tasks").json()["task_id"]
+    body = client.post(f"/api/tasks/{task_id}/plan", json={"instruction": "filter peptides"}).json()
+    assert body["blocked"] is None
+    assert body["workflow"]["task_summary"] == "filter peptides"
+    assert not (tmp_path / "tasks" / task_id / "planning_decision.json").exists()

@@ -20,6 +20,49 @@ WORKFLOW_EXAMPLE = {
 }
 
 
+# The control layer the desktop planner runs with. These rules and the blocked
+# schema are the ones the PaleoRigor arm of the frozen evaluation received
+# (supplementary/file_4_system_prompts); a test keeps the two identical.
+CONTROL_LAYER_RULES = (
+    "PALEORIGOR_CONTROL_LAYER=enabled",
+    "When the request conflicts with the observed file format, return blocked with reason_code file_type_mismatch; do not substitute another analysis.",
+    "When a named paired-end mate is absent, return blocked with reason_code missing_mate; do not invent or reuse a file.",
+    "FastQC or general QC cannot prove ancient authenticity or absence of contamination. Return blocked with reason_code unsupported_scientific_claim for such proof requests.",
+    "mapDamage and DamageProfiler require aligned BAM data and an explicit valid reference workflow. If prerequisites are absent, return blocked with reason_code missing_prerequisite; never choose an arbitrary reference.",
+    "Read alignment and host-DNA removal require an explicit reference genome or named existing index. If it is absent, return blocked with reason_code missing_prerequisite; never invent or guess one.",
+    "A blocked decision is valid JSON and takes precedence over the workflow-only wording above when a scientific or input boundary is reached.",
+)
+
+BLOCKED_JSON_SCHEMA = {
+    "type": "object",
+    "additionalProperties": False,
+    "required": ["status", "reason_code", "message"],
+    "properties": {
+        "status": {"const": "blocked"},
+        "reason_code": {
+            "enum": [
+                "file_type_mismatch",
+                "missing_mate",
+                "unsupported_scientific_claim",
+                "missing_prerequisite",
+            ]
+        },
+        "message": {"type": "string", "minLength": 1},
+    },
+}
+
+
+def build_planner_prompt(file_summaries, skill_descriptors) -> str:
+    """The system prompt the desktop app sends: the workflow contract plus the control layer."""
+    return "\n".join(
+        [
+            build_system_prompt(file_summaries, skill_descriptors),
+            *CONTROL_LAYER_RULES,
+            f"BLOCKED_JSON_SCHEMA={json.dumps(BLOCKED_JSON_SCHEMA, ensure_ascii=False)}",
+        ]
+    )
+
+
 def build_system_prompt(file_summaries, skill_descriptors) -> str:
     return "\n".join(
         [

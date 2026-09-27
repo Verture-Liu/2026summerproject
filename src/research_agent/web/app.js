@@ -16,6 +16,7 @@ let sessionInvalid = false;
 let reportObjectUrl = null;
 let lastValidation = null;
 let lastRun = null;
+let lastBlocked = null;
 let skillPackages = [];
 const skillPackageOf = new Map();
 let planModuleUse = null;
@@ -65,6 +66,14 @@ const translations = {
     planSummaryLabel: "Plan",
     logExported: "exported file(s)",
     logResults: "Results",
+    blockedTitle: "Request refused by the constraint layer",
+    blockedSummary: "Planning stopped with reason code {code}. No workflow will run.",
+    blockedNote: "Nothing was run. Change the request or the uploaded files, then generate the workflow again.",
+    blockedPlannerSays: "Planner's explanation",
+    reason_file_type_mismatch: "The requested operation does not match the format of the uploaded files.",
+    reason_missing_mate: "The request names a paired-end mate that was not uploaded.",
+    reason_unsupported_scientific_claim: "Quality-control output cannot show that reads are ancient or free of contamination.",
+    reason_missing_prerequisite: "A required input is missing, such as aligned data or a named reference genome or index.",
     stepApi: "Model API",
     stepUpload: "Upload files",
     stepPlan: "Plan workflow",
@@ -160,6 +169,14 @@ const translations = {
     planSummaryLabel: "计划",
     logExported: "个导出文件",
     logResults: "结果",
+    blockedTitle: "约束层拒绝了这个请求",
+    blockedSummary: "规划已停止，理由码 {code}。不会运行任何工作流。",
+    blockedNote: "没有运行任何步骤。请修改请求或上传的文件，然后重新生成工作流。",
+    blockedPlannerSays: "规划模型的说明",
+    reason_file_type_mismatch: "请求的操作与上传文件的格式不符。",
+    reason_missing_mate: "请求提到的双端测序配对文件没有上传。",
+    reason_unsupported_scientific_claim: "质控结果无法证明 reads 是古老的或没有污染。",
+    reason_missing_prerequisite: "缺少必需的输入，例如比对后的数据或指定的参考基因组或索引。",
     stepApi: "模型 API",
     stepUpload: "上传文件",
     stepPlan: "生成 workflow",
@@ -375,6 +392,7 @@ const setLanguage = (language) => {
   if (workflow) renderDataflow(workflow, lastValidation);
   else renderModules();
   if (lastValidation) renderValidationIssues(lastValidation);
+  if (lastBlocked) renderBlockedDecision(lastBlocked);
   if (lastRun) renderRunLog(lastRun);
   if (missingConfigurationFieldKeys.length) {
     setMissingConfigurationStatus(missingConfigurationFieldKeys);
@@ -400,7 +418,7 @@ const setButtonLoading = (buttonId, loading, label) => {
 const setStepState = (step, state) => {
   document.querySelectorAll(".progress-step").forEach((item) => {
     if (item.dataset.step !== step) return;
-    item.classList.remove("active", "done", "failed");
+    item.classList.remove("active", "done", "failed", "blocked");
     item.classList.add(state);
   });
   document.querySelectorAll(`.card[data-stage="${step}"]`).forEach((card) => {
@@ -899,6 +917,7 @@ const resetAfterNewUpload = () => {
   hasFiles = false;
   $("approved").checked = false;
   lastRun = null;
+  lastBlocked = null;
   showKey("workflowSummary", "workflowEmpty");
   showKey("workflow", "workflowEmpty");
   show("validation", "");
@@ -909,11 +928,49 @@ const resetAfterNewUpload = () => {
   clearReportLink();
   for (const step of ("plan output run").split(" ")) {
     const element = document.querySelector(`.progress-step[data-step="${step}"]`);
-    element?.classList.remove("active", "done", "failed");
+    element?.classList.remove("active", "done", "failed", "blocked");
     document.querySelectorAll(`.card[data-stage="${step}"]`).forEach((card) => delete card.dataset.state);
   }
   refreshPlanningControls();
   $("workflow").hidden = true;
+};
+// The control layer refused the request: say which boundary, in the user's
+// language, and keep the planner's own explanation beside it.
+const renderBlockedDecision = (decision) => {
+  const host = $("validation");
+  host.replaceChildren();
+  const card = document.createElement("div");
+  card.className = "blocked-decision";
+  card.setAttribute("role", "status");
+  const head = document.createElement("div");
+  head.className = "blocked-head";
+  const title = document.createElement("strong");
+  title.textContent = t("blockedTitle");
+  const code = document.createElement("code");
+  code.textContent = decision.reason_code || "blocked";
+  head.append(title, code);
+  card.append(head);
+  const reasonKey = `reason_${decision.reason_code}`;
+  if (translations.en[reasonKey]) {
+    const reason = document.createElement("p");
+    reason.className = "blocked-reason";
+    reason.textContent = t(reasonKey);
+    card.append(reason);
+  }
+  if (decision.message) {
+    const said = document.createElement("p");
+    said.className = "blocked-message";
+    const label = document.createElement("span");
+    label.textContent = `${t("blockedPlannerSays")}: `;
+    said.append(label, document.createTextNode(decision.message));
+    card.append(said);
+  }
+  const note = document.createElement("p");
+  note.className = "blocked-note";
+  note.textContent = t("blockedNote");
+  card.append(note);
+  host.append(card);
+  show("workflowSummary", fillTemplate("blockedSummary", {code: decision.reason_code || "blocked"}));
 };
 const clockTime = (iso) => {
   const moment = new Date(iso);
@@ -1119,6 +1176,23 @@ $("plan").onclick = async () => {
       setStepState("plan", "failed");
       return;
     }
+    if (data.blocked) {
+      workflow = null;
+      workflowValid = false;
+      lastValidation = null;
+      lastBlocked = data.blocked;
+      clearDataflow();
+      show("workflow", data.blocked);
+      $("workflow").hidden = true;
+      renderBlockedDecision(data.blocked);
+      setStepState("plan", "blocked");
+      for (const step of ["output", "run"]) {
+        document.querySelector(`.progress-step[data-step="${step}"]`)?.classList.remove("active", "done", "failed", "blocked");
+        document.querySelectorAll(`.card[data-stage="${step}"]`).forEach((card) => delete card.dataset.state);
+      }
+      return;
+    }
+    lastBlocked = null;
     workflow = data.workflow;
     lastValidation = data.validation;
     show("workflowSummary", summarizeWorkflow(data));

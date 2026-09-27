@@ -11,7 +11,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, ConfigDict
 from starlette.concurrency import run_in_threadpool
 
-from research_agent.agent.models import Workflow
+from research_agent.agent.models import BlockedDecision, Workflow
 from research_agent.agent.planner import Planner
 from research_agent.agent.validator import validate_workflow
 from research_agent.execution.executor import execute_workflow
@@ -265,6 +265,20 @@ def create_app(
             assert_no_secret_contamination(workflow_payload, config.api_key)
         except Exception as exc:
             raise HTTPException(502, detail={"error": "planning_failed"}) from exc
+        if isinstance(workflow, BlockedDecision):
+            # The control layer refused the request. Nothing is validated or run;
+            # the decision is kept with the task so the refusal is on record.
+            response_payload = {"workflow": None, "blocked": workflow_payload, "validation": None}
+            try:
+                assert_no_secret_contamination(response_payload, config.api_key)
+                write_guarded_json(
+                    task_dir / "planning_decision.json",
+                    {"instruction": request.instruction, "decision": workflow_payload},
+                    config.api_key,
+                )
+            except SecretContaminationError as exc:
+                raise HTTPException(502, detail={"error": "planning_failed"}) from exc
+            return response_payload
         uploaded_formats = {ref: item["summary"]["format"] for ref, item in index.items()}
         uploaded_paths = {ref: Path(item["path"]) for ref, item in index.items()}
         report = validate_workflow(
@@ -276,6 +290,7 @@ def create_app(
         )
         response_payload = {
             "workflow": workflow_payload,
+            "blocked": None,
             "validation": {
                 "valid": report.valid,
                 "errors": report.errors,
