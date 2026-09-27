@@ -15,6 +15,10 @@ let sessionToken = "";
 let sessionInvalid = false;
 let reportObjectUrl = null;
 let lastValidation = null;
+let lastRun = null;
+let skillPackages = [];
+const skillPackageOf = new Map();
+let planModuleUse = null;
 
 const consumeSessionToken = () => {
   const fragment = window.location.hash;
@@ -49,6 +53,18 @@ const translations = {
     heroSubtitle: "The model API plans the workflow. Skills on your computer process the data.",
     heroCardTitle: "Local-first execution",
     heroCardText: "Files stay on this computer. You review every workflow before it runs.",
+    brandTagline: "Bounded research agent · local",
+    modulesTitle: "Skill modules",
+    modulesHelp: "Every step the agent plans must call a skill from one of these installed modules.",
+    modulesLock: "The module list is fixed before the model is called. The agent cannot write or run code outside it.",
+    moduleCountTemplate: "{modules} modules · {skills} skills",
+    modulePlanTemplate: "This plan uses {modules} modules · {skills} skills",
+    moduleSkillsTemplate: "{n} skills",
+    moduleInPlanTemplate: "{used} of {n} in plan",
+    modulesUnavailable: "The installed skill modules could not be listed.",
+    planSummaryLabel: "Plan",
+    logExported: "exported file(s)",
+    logResults: "Results",
     stepApi: "Model API",
     stepUpload: "Upload files",
     stepPlan: "Plan workflow",
@@ -132,6 +148,18 @@ const translations = {
     heroSubtitle: "模型 API 负责规划 workflow；你电脑上的 Skills 负责处理数据。",
     heroCardTitle: "本地优先执行",
     heroCardText: "文件保留在本机。每个 workflow 都需要你审核后才会运行。",
+    brandTagline: "受约束的科研智能体 · 本地运行",
+    modulesTitle: "技能模块",
+    modulesHelp: "智能体规划的每一步，都必须调用下面这些已安装模块中的技能。",
+    modulesLock: "模块清单在调用模型之前就已固定，智能体不能编写或运行清单之外的代码。",
+    moduleCountTemplate: "{modules} 个模块 · {skills} 项技能",
+    modulePlanTemplate: "本次计划用到 {modules} 个模块 · {skills} 项技能",
+    moduleSkillsTemplate: "{n} 项技能",
+    moduleInPlanTemplate: "计划用到 {used}/{n}",
+    modulesUnavailable: "无法列出已安装的技能模块。",
+    planSummaryLabel: "计划",
+    logExported: "个导出文件",
+    logResults: "结果",
     stepApi: "模型 API",
     stepUpload: "上传文件",
     stepPlan: "生成 workflow",
@@ -211,7 +239,16 @@ const translations = {
   },
 };
 const t = (key) => translations[currentLanguage][key] || translations.en[key] || key;
-const show = (id, value) => { $(id).textContent = typeof value === "string" ? value : JSON.stringify(value, null, 2); };
+const show = (id, value) => {
+  const element = $(id);
+  delete element.dataset.i18n;
+  element.textContent = typeof value === "string" ? value : JSON.stringify(value, null, 2);
+};
+const showKey = (id, key) => {
+  const element = $(id);
+  element.dataset.i18n = key;
+  element.textContent = t(key);
+};
 const setConfigStatus = (key) => {
   if (sessionInvalid && key !== "invalidSession") return;
   missingConfigurationFieldKeys = [];
@@ -336,7 +373,9 @@ const setLanguage = (language) => {
     button.dataset.defaultLabel = button.textContent;
   });
   if (workflow) renderDataflow(workflow, lastValidation);
+  else renderModules();
   if (lastValidation) renderValidationIssues(lastValidation);
+  if (lastRun) renderRunLog(lastRun);
   if (missingConfigurationFieldKeys.length) {
     setMissingConfigurationStatus(missingConfigurationFieldKeys);
   } else if (configStatusKey) {
@@ -364,6 +403,9 @@ const setStepState = (step, state) => {
     item.classList.remove("active", "done", "failed");
     item.classList.add(state);
   });
+  document.querySelectorAll(`.card[data-stage="${step}"]`).forEach((card) => {
+    card.dataset.state = state;
+  });
 };
 const SVG_NS = "http://www.w3.org/2000/svg";
 const svgNode = (name, attributes = {}) => {
@@ -375,6 +417,105 @@ const svgLabel = (className, x, y, text) => {
   const node = svgNode("text", {class: className, x, y});
   node.textContent = text;
   return node;
+};
+// Skill modules: every planned step must call a skill from an installed module.
+// Known modules have a fixed colour in styles.css; any other gets a stable hue.
+const KNOWN_MODULES = [
+  "ancient-dna-core", "ancient-metagenome-tools", "sequence-utilities",
+  "workflow-utilities", "peptide-table", "amplit", "legacy-core"
+];
+let skillModulesState = "loading";
+const moduleColour = (packageId) => {
+  const id = String(packageId || "");
+  if (KNOWN_MODULES.includes(id)) return `var(--m-${id})`;
+  let hash = 0;
+  for (const character of id) hash = (hash * 31 + character.charCodeAt(0)) >>> 0;
+  return `hsl(${hash % 360} 48% 46%)`;
+};
+const CUBE_FACES = [
+  ["f-top", "M30 6 54 18 30 30 6 18z"],
+  ["f-left", "M6 18 30 30v26L6 44z"],
+  ["f-right", "M30 30 54 18v26L30 56z"],
+  ["f-edge", "M30 6 54 18 30 30 6 18z M30 30v26"]
+];
+const cubeGlyph = (attributes) => {
+  const node = svgNode(attributes.viewBox ? "svg" : "g", attributes);
+  for (const [className, d] of CUBE_FACES) node.append(svgNode("path", {class: className, d}));
+  return node;
+};
+const fillTemplate = (key, values) => Object.keys(values).reduce(
+  (text, name) => text.replace(`{${name}}`, String(values[name])), t(key)
+);
+const renderModules = () => {
+  const host = $("moduleCubes");
+  host.replaceChildren();
+  host.classList.toggle("idle", !planModuleUse);
+  const totalSkills = skillPackages.reduce((sum, item) => sum + item.skills.length, 0);
+  $("moduleCount").textContent = skillPackages.length
+    ? fillTemplate("moduleCountTemplate", {modules: skillPackages.length, skills: totalSkills})
+    : "";
+  if (skillModulesState === "failed") {
+    const note = document.createElement("p");
+    note.className = "cubes-empty";
+    note.textContent = t("modulesUnavailable");
+    host.append(note);
+  }
+  for (const item of skillPackages) {
+    const usedSkills = planModuleUse?.get(item.id);
+    const cube = document.createElement("div");
+    cube.className = usedSkills ? "cube used" : "cube";
+    cube.dataset.m = item.id;
+    cube.style.setProperty("--c", moduleColour(item.id));
+    cube.title = item.skills.join(", ");
+    const name = document.createElement("span");
+    name.className = "cube-name";
+    name.textContent = item.id;
+    const count = document.createElement("span");
+    count.className = "cube-count";
+    count.textContent = usedSkills
+      ? fillTemplate("moduleInPlanTemplate", {used: usedSkills.size, n: item.skills.length})
+      : fillTemplate("moduleSkillsTemplate", {n: item.skills.length});
+    cube.append(cubeGlyph({viewBox: "0 0 60 60", "aria-hidden": "true"}), name, count);
+    host.append(cube);
+  }
+  const usedModules = planModuleUse ? planModuleUse.size : 0;
+  const usedSkills = planModuleUse ? [...planModuleUse.values()].reduce((sum, set) => sum + set.size, 0) : 0;
+  $("modulePlanUse").hidden = !usedModules;
+  $("modulePlanUse").textContent = usedModules
+    ? fillTemplate("modulePlanTemplate", {modules: usedModules, skills: usedSkills})
+    : "";
+};
+const loadSkillModules = async () => {
+  try {
+    const response = await apiFetch("/api/skills");
+    if (!response.ok) throw new Error("skills unavailable");
+    const data = await safeResponseJson(response);
+    const grouped = new Map();
+    for (const skill of data.skills || []) {
+      if (!skill?.name) continue;
+      const packageId = skill.package_id || "local";
+      skillPackageOf.set(skill.name, packageId);
+      if (!grouped.has(packageId)) grouped.set(packageId, []);
+      grouped.get(packageId).push(skill.name);
+    }
+    const rank = (id) => (KNOWN_MODULES.includes(id) ? KNOWN_MODULES.indexOf(id) : KNOWN_MODULES.length);
+    skillPackages = [...grouped]
+      .map(([id, skills]) => ({id, skills}))
+      .sort((a, b) => rank(a.id) - rank(b.id) || a.id.localeCompare(b.id));
+    skillModulesState = "ready";
+  } catch (_error) {
+    skillModulesState = "failed";
+  }
+  renderModules();
+  if (workflow) renderDataflow(workflow, lastValidation);
+};
+const focusModule = (packageId) => {
+  $("flowNodes").querySelectorAll(".gnode").forEach((group) => {
+    group.classList.toggle("dim", Boolean(packageId) && group.dataset.m !== packageId);
+  });
+  $("moduleCubes").querySelectorAll(".cube").forEach((cube) => {
+    cube.classList.toggle("hl", cube.dataset.m === packageId);
+  });
 };
 const normalizeStepReference = (reference) => String(reference || "").split(".")[0];
 const shortenLabel = (text, width) => {
@@ -463,6 +604,10 @@ const buildDataflowModel = (plan) => {
 };
 
 const clearDataflow = () => {
+  planModuleUse = null;
+  renderModules();
+  $("flowModules").replaceChildren();
+  $("planSummary").textContent = "";
   $("flowStage").classList.add("is-hidden");
   $("flowStage").classList.remove("is-running");
   ["flowAxis", "flowEdges", "flowParts", "flowNodes"].forEach((id) => $(id).replaceChildren());
@@ -572,8 +717,21 @@ const renderDataflow = (plan, validation) => {
     }
   });
 
+  planModuleUse = new Map();
+  for (const step of model.steps) {
+    const packageId = skillPackageOf.get(step.skill);
+    if (!packageId) continue;
+    if (!planModuleUse.has(packageId)) planModuleUse.set(packageId, new Set());
+    planModuleUse.get(packageId).add(step.skill);
+  }
+
   for (const node of placed.values()) {
-    const group = svgNode("g", {class: "gnode"});
+    const packageId = node.kind === "skill" ? skillPackageOf.get(node.step.skill) : null;
+    const group = svgNode("g", {class: node.keep ? "gnode keep" : "gnode"});
+    if (packageId) {
+      group.dataset.m = packageId;
+      group.style.setProperty("--c", moduleColour(packageId));
+    }
     const tip = svgNode("title");
     tip.textContent = node.reason ? `${node.title} — ${node.reason}` : node.title;
     group.append(tip);
@@ -591,6 +749,20 @@ const renderDataflow = (plan, validation) => {
       }));
       group.append(svgLabel("t-1", node.x + 30, node.y - 1, shortenLabel(node.title, node.w)));
       group.append(svgLabel("t-2", node.x + 30, node.y + 12, shortenLabel(node.subtitle, node.w)));
+    } else if (packageId) {
+      const colour = moduleColour(packageId);
+      group.append(svgNode("rect", {
+        class: "n-bar", x: node.x, y: Math.round(node.y - node.h / 2) + 9,
+        width: 3.5, height: node.h - 18, rx: 1.5, style: `fill:${colour}`
+      }));
+      const glyph = cubeGlyph({class: "cube-glyph", transform: `translate(${node.x + 11},${node.y - 11}) scale(.37)`});
+      glyph.querySelector(".f-top").setAttribute("style", `fill:color-mix(in srgb, ${colour} 45%, white)`);
+      glyph.querySelector(".f-left").setAttribute("style", `fill:${colour}`);
+      glyph.querySelector(".f-right").setAttribute("style", `fill:color-mix(in srgb, ${colour} 72%, black)`);
+      glyph.querySelector(".f-edge").setAttribute("style", "fill:none;stroke:rgba(255,255,255,.6)");
+      group.append(glyph);
+      group.append(svgLabel("t-1", node.x + 42, node.y - 1, shortenLabel(node.title, node.w - 12)));
+      group.append(svgLabel("t-2", node.x + 42, node.y + 13, shortenLabel(node.subtitle, node.w - 12)));
     } else {
       group.append(svgLabel("t-1", node.x + 16, node.y - 1, shortenLabel(node.title, node.w + 14)));
       group.append(svgLabel("t-2", node.x + 16, node.y + 13, shortenLabel(node.subtitle, node.w + 14)));
@@ -608,6 +780,19 @@ const renderDataflow = (plan, validation) => {
     .replace("{skills}", String(model.steps.length))
     .replace("{edges}", String(edges.length))
     .replace("{unresolved}", String(model.unresolved));
+
+  $("planSummary").textContent = String(plan?.task_summary || "");
+  const legend = $("flowModules");
+  legend.replaceChildren();
+  for (const item of skillPackages) {
+    if (!planModuleUse.has(item.id)) continue;
+    const entry = document.createElement("span");
+    entry.dataset.m = item.id;
+    entry.style.setProperty("--c", moduleColour(item.id));
+    entry.append(document.createElement("i"), document.createTextNode(item.id));
+    legend.append(entry);
+  }
+  renderModules();
 
   $("flowStage").classList.remove("is-hidden");
   $("workflow").hidden = true;
@@ -713,19 +898,69 @@ const resetAfterNewUpload = () => {
   outputDirectorySelected = false;
   hasFiles = false;
   $("approved").checked = false;
-  show("workflowSummary", t("workflowEmpty"));
-  show("workflow", t("workflowEmpty"));
+  lastRun = null;
+  showKey("workflowSummary", "workflowEmpty");
+  showKey("workflow", "workflowEmpty");
   show("validation", "");
-  show("runSummary", t("runEmpty"));
-  show("status", t("runLogEmpty"));
-  show("outputDirectory", t("outputEmpty"));
+  showKey("runSummary", "runEmpty");
+  showKey("status", "runLogEmpty");
+  showKey("outputDirectory", "outputEmpty");
+  $("runProgress").dataset.state = "idle";
   clearReportLink();
   for (const step of ("plan output run").split(" ")) {
     const element = document.querySelector(`.progress-step[data-step="${step}"]`);
     element?.classList.remove("active", "done", "failed");
+    document.querySelectorAll(`.card[data-stage="${step}"]`).forEach((card) => delete card.dataset.state);
   }
   refreshPlanningControls();
   $("workflow").hidden = true;
+};
+const clockTime = (iso) => {
+  const moment = new Date(iso);
+  return Number.isNaN(moment.getTime()) ? "--:--:--" : moment.toLocaleTimeString([], {hour12: false});
+};
+const baseName = (path) => String(path || "").split(/[\\/]/).pop();
+const renderRunLog = (data) => {
+  const steps = Array.isArray(data?.steps) ? data.steps : null;
+  if (!steps) {
+    show("status", data);
+    return;
+  }
+  const host = $("status");
+  delete host.dataset.i18n;
+  host.replaceChildren();
+  const addLine = (parts) => {
+    const line = document.createElement("span");
+    line.className = "log-line";
+    for (const [className, text, colour] of parts) {
+      const part = document.createElement("span");
+      if (className) part.className = className;
+      if (colour) part.style.setProperty("--c", colour);
+      part.textContent = text;
+      line.append(part);
+    }
+    host.append(line);
+  };
+  for (const step of steps) {
+    const passed = step.status === "succeeded";
+    const packageId = skillPackageOf.get(step.skill);
+    const outputs = (step.outputs || []).map((item) => baseName(item.path)).filter(Boolean);
+    const detail = step.error ? ` — ${step.error}` : outputs.length ? `  → ${outputs.join(", ")}` : "";
+    addLine([
+      ["log-t", `${clockTime(step.ended_at || step.started_at)} `],
+      [passed ? "log-ok" : "log-no", passed ? "✓ " : "✗ "],
+      packageId ? ["log-sw", "", moduleColour(packageId)] : ["", ""],
+      ["", `${step.id} ${step.skill}${detail}`]
+    ]);
+  }
+  const exported = data.exported_files?.length || 0;
+  if (exported) addLine([["log-t", "         "], ["log-ok", "↳ "], ["", `${exported} ${t("logExported")}`]]);
+  if (data.result_directory) addLine([["log-t", "         "], ["", `${t("logResults")}: ${data.result_directory}`]]);
+};
+const setRunProgress = (state, done = 0, total = 0) => {
+  const bar = $("runProgress");
+  bar.dataset.state = state;
+  bar.style.setProperty("--p", total ? `${Math.round((done / total) * 100)}%` : "0%");
 };
 const summarizeWorkflow = (data) => {
   const steps = data.workflow?.steps || [];
@@ -940,6 +1175,7 @@ $("execute").onclick = async () => {
   setActivity(t("running"));
   setButtonLoading("execute", true, t("running"));
   show("runSummary", t("localRunning"));
+  setRunProgress("running");
   try {
     const response = await apiFetch(`/api/tasks/${taskId}/execute`, {
       method: "POST",
@@ -947,8 +1183,12 @@ $("execute").onclick = async () => {
       body: JSON.stringify({approved: $("approved").checked, workflow})
     });
     const data = await response.json();
-    show("status", data);
+    lastRun = data;
+    renderRunLog(data);
     show("runSummary", summarizeRun(data));
+    const plannedSteps = workflow?.steps?.length || data.steps?.length || 0;
+    const succeededSteps = (data.steps || []).filter((step) => step.status === "succeeded").length;
+    setRunProgress(response.ok && data.status !== "failed" ? "done" : "failed", succeededSteps, plannedSteps);
     if (response.ok) {
       try {
         await loadReportLink();
@@ -962,6 +1202,7 @@ $("execute").onclick = async () => {
     }
   } catch (error) {
     show("runSummary", `Local execution failed: ${error.message}`);
+    setRunProgress("failed");
     setStepState("run", "failed");
   } finally {
     setButtonLoading("execute", false);
@@ -972,6 +1213,28 @@ $("execute").onclick = async () => {
 
 document.querySelectorAll(".lang-option").forEach((button) => {
   button.onclick = () => setLanguage(button.dataset.language);
+});
+
+document.querySelectorAll(".progress-step[data-target]").forEach((step) => {
+  const reveal = () => {
+    const smooth = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    $(step.dataset.target)?.scrollIntoView({behavior: smooth ? "smooth" : "auto", block: "start"});
+  };
+  step.addEventListener("click", reveal);
+  step.addEventListener("keydown", (event) => {
+    if (event.key !== "Enter" && event.key !== " ") return;
+    event.preventDefault();
+    reveal();
+  });
+});
+
+["moduleCubes", "flowModules", "flowNodes"].forEach((hostId) => {
+  const host = $(hostId);
+  host.addEventListener("pointerover", (event) => {
+    const owner = event.target.closest ? event.target.closest("[data-m]") : null;
+    focusModule(owner && host.contains(owner) ? owner.dataset.m : null);
+  });
+  host.addEventListener("pointerleave", () => focusModule(null));
 });
 
 const loadInitialConfiguration = async () => {
@@ -998,6 +1261,7 @@ const loadInitialConfiguration = async () => {
 const initializeDesktopInterface = async () => {
   setLanguage("en");
   await loadInitialConfiguration();
+  await loadSkillModules();
   try {
     const response = await apiFetch("/api/about");
     if (!response.ok) return;
