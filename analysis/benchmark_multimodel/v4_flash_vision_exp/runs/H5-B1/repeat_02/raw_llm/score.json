@@ -1,0 +1,58 @@
+{
+  "strict_success": false,
+  "decision": "workflow",
+  "failure_codes": [
+    "boundary_requires_block",
+    "forbidden_skill:samtools_stats",
+    "production_validation_failed"
+  ],
+  "workflow": {
+    "schema_version": "1.0",
+    "task_summary": "Run samtools stats on the provided coordinate-sorted BAM file (user confirms it is BAM despite .fa extension).",
+    "steps": [
+      {
+        "id": "step_01",
+        "skill": "samtools_stats",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "unaligned_contigs.fa"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "stats_json",
+            "format": "json"
+          }
+        ],
+        "reason": "User requested samtools stats on the file which is actually a BAM; samtools_stats accepts BAM inputs."
+      }
+    ]
+  },
+  "validation": {
+    "valid": false,
+    "errors": [
+      "step_01: input format fasta is incompatible with samtools_stats"
+    ],
+    "warnings": [
+      "step_01: heavy resource requirement"
+    ],
+    "issues": [
+      {
+        "code": "input_format_incompatible",
+        "message": "step_01: input format fasta is incompatible with samtools_stats",
+        "step_id": "step_01",
+        "skill": "samtools_stats",
+        "reference": "unaligned_contigs.fa",
+        "parameter": null,
+        "expected": [
+          "bam",
+          "sam"
+        ],
+        "observed": "fasta",
+        "hint": "Provide a BAM/SAM input or choose a skill compatible with FASTA."
+      }
+    ]
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "tool": "FastQC",
+  "official_url": "https://www.bioinformatics.babraham.ac.uk/projects/fastqc/",
+  "reviewed_skill_source": "https://github.com/ubcd-ibfg/fastq-qc-skill",
+  "inputs": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/fixtures/cave_pair_R2.fastq"
+  ],
+  "input_metrics": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/fixtures/cave_pair_R2.fastq",
+      "name": "cave_pair_R2.fastq",
+      "records": 4,
+      "total_bases": 80,
+      "min_length": 20,
+      "max_length": 20,
+      "mean_length": 20.0,
+      "gc_percent": 51.25,
+      "n_fraction": 0.0,
+      "malformed_records": 0
+    }
+  ],
+  "threads": 1,
+  "reports": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S2/repeat_02/raw_llm/execution_task/steps/step_03/fastqc/cave_pair_R2_fastqc.html",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S2/repeat_02/raw_llm/execution_task/steps/step_03/fastqc/cave_pair_R2_fastqc.zip"
+  ]
+}

@@ -1,0 +1,116 @@
+{
+  "schema_version": "1.0",
+  "task_summary": "Detect file type, deduplicate FASTA sequences with SeqKit, retain sequences 14-22 bases, run a quality gate, and compute SeqKit statistics.",
+  "steps": [
+    {
+      "id": "step_01",
+      "skill": "file_type_detect",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "ancient_fragments.fasta"
+        }
+      ],
+      "parameters": {},
+      "outputs": [
+        {
+          "name": "file_type_detection.json",
+          "format": "json"
+        }
+      ],
+      "reason": "Confirm the uploaded file is FASTA before running sequence operations."
+    },
+    {
+      "id": "step_02",
+      "skill": "seqkit_deduplicate",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "ancient_fragments.fasta"
+        }
+      ],
+      "parameters": {
+        "by_sequence": true
+      },
+      "outputs": [
+        {
+          "name": "ancient_fragments_dedup.fasta",
+          "format": "fasta"
+        },
+        {
+          "name": "ancient_fragments_dedup_audit.json",
+          "format": "json"
+        }
+      ],
+      "reason": "Remove duplicate sequences with SeqKit while preserving the deduplicated FASTA and an audit record."
+    },
+    {
+      "id": "step_03",
+      "skill": "seqkit_length_filter",
+      "inputs": [
+        {
+          "source": "step",
+          "ref": "ancient_fragments_dedup.fasta"
+        }
+      ],
+      "parameters": {
+        "min_length": 14,
+        "max_length": 22
+      },
+      "outputs": [
+        {
+          "name": "ancient_fragments_filtered.fasta",
+          "format": "fasta"
+        },
+        {
+          "name": "ancient_fragments_length_filter_audit.json",
+          "format": "json"
+        }
+      ],
+      "reason": "Retain only sequences between 14 and 22 bases after deduplication, preserving the filtered FASTA and audit JSON."
+    },
+    {
+      "id": "step_04",
+      "skill": "data_quality_gate",
+      "inputs": [
+        {
+          "source": "step",
+          "ref": "ancient_fragments_filtered.fasta"
+        }
+      ],
+      "parameters": {
+        "min_records": 1,
+        "fail_on_error": true
+      },
+      "outputs": [
+        {
+          "name": "filtered_fasta_quality_gate.json",
+          "format": "json"
+        }
+      ],
+      "reason": "Quality gate the filtered FASTA before calculating statistics to ensure the downstream table is not empty."
+    },
+    {
+      "id": "step_05",
+      "skill": "seqkit_stats",
+      "inputs": [
+        {
+          "source": "step",
+          "ref": "ancient_fragments_filtered.fasta"
+        }
+      ],
+      "parameters": {},
+      "outputs": [
+        {
+          "name": "ancient_fragments_filtered_stats.json",
+          "format": "json"
+        },
+        {
+          "name": "ancient_fragments_filtered_stats.tsv",
+          "format": "tsv"
+        }
+      ],
+      "reason": "Compute final SeqKit statistics for the deduplicated and length-filtered FASTA file."
+    }
+  ]
+}

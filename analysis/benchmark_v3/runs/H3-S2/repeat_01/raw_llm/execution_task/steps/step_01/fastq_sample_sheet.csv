@@ -1,0 +1,2 @@
+sample_id,layout,fastq_1,fastq_2
+heldout_pair,paired,/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/fixtures/heldout_pair_R1.fastq,/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/fixtures/heldout_pair_R2.fastq

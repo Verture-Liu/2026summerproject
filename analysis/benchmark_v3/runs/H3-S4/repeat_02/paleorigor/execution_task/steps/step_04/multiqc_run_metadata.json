@@ -1,0 +1,9 @@
+{
+  "tool": "MultiQC",
+  "official_url": "https://multiqc.info/",
+  "tool_source": "conda:multiqc_env",
+  "inputs": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/runs/H3-S4/repeat_02/paleorigor/execution_task/steps/step_03/fastqc/heldout_variable_length_fastqc.zip"
+  ],
+  "report": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/runs/H3-S4/repeat_02/paleorigor/execution_task/steps/step_04/multiqc/multiqc_report.html"
+}

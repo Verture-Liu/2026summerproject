@@ -1,0 +1,1 @@
+{"status": "blocked", "reason_code": "missing_prerequisite", "message": "Host-DNA removal requires an explicit reference genome or a named existing index. No reference was supplied or named, and inventing or guessing the host is not permitted."}

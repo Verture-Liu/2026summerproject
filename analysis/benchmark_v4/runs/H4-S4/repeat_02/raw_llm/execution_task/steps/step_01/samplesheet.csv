@@ -1,0 +1,3 @@
+sample_id,run_accession,layout,fastq_1,fastq_2,organism
+SAMEA900001,ERR900001,paired,ERR900001_1.fastq.gz,ERR900001_2.fastq.gz,Homo sapiens
+SAMEA900002,ERR900002,single,ERR900002.fastq.gz,,Homo sapiens

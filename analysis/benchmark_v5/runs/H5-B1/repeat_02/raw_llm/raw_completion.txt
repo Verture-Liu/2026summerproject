@@ -1,0 +1,1 @@
+{"status":"blocked","reason_code":"file_type_mismatch","message":"The uploaded file is registered as FASTA (unaligned_contigs.fa), but samtools_stats requires BAM or SAM input. The visible extension cannot be ignored for workflow validation; please upload the actual coordinate-sorted BAM file with a .bam extension or re-register the file with the correct format."}

@@ -1,0 +1,97 @@
+{
+  "schema_version": "1.0",
+  "task_summary": "Run raw FastQC, filter reads to 12-18 bases with SeqKit, quality-gate the filtered FASTQ, and compute post-filter SeqKit statistics.",
+  "steps": [
+    {
+      "id": "step_01",
+      "skill": "fastq_qc",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "heldout_variable_length.fastq"
+        }
+      ],
+      "parameters": {},
+      "outputs": [
+        {
+          "name": "fastqc_raw.html",
+          "format": "html"
+        },
+        {
+          "name": "fastqc_raw.json",
+          "format": "json"
+        },
+        {
+          "name": "fastqc_raw.zip",
+          "format": "zip"
+        }
+      ],
+      "reason": "Run raw FastQC on the input FASTQ as the first QC step before any filtering."
+    },
+    {
+      "id": "step_02",
+      "skill": "seqkit_length_filter",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "heldout_variable_length.fastq"
+        }
+      ],
+      "parameters": {
+        "min_length": 12,
+        "max_length": 18
+      },
+      "outputs": [
+        {
+          "name": "filtered.fastq",
+          "format": "fastq"
+        },
+        {
+          "name": "length_filter_report.json",
+          "format": "json"
+        }
+      ],
+      "reason": "Retain only reads between 12 and 18 bases using SeqKit as requested."
+    },
+    {
+      "id": "step_03",
+      "skill": "data_quality_gate",
+      "inputs": [
+        {
+          "source": "step",
+          "ref": "filtered.fastq"
+        }
+      ],
+      "parameters": {},
+      "outputs": [
+        {
+          "name": "quality_gate.json",
+          "format": "json"
+        }
+      ],
+      "reason": "Apply a quality gate to the filtered FASTQ to ensure it is acceptable for downstream use."
+    },
+    {
+      "id": "step_04",
+      "skill": "seqkit_stats",
+      "inputs": [
+        {
+          "source": "step",
+          "ref": "filtered.fastq"
+        }
+      ],
+      "parameters": {},
+      "outputs": [
+        {
+          "name": "postfilter_stats.tsv",
+          "format": "tsv"
+        },
+        {
+          "name": "postfilter_stats.json",
+          "format": "json"
+        }
+      ],
+      "reason": "Calculate post-filter SeqKit statistics on the retained FASTQ reads."
+    }
+  ]
+}

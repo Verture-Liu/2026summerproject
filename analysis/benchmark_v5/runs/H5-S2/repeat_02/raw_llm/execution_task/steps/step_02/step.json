@@ -1,0 +1,31 @@
+{
+  "id": "step_02",
+  "skill": "fastq_qc",
+  "status": "succeeded",
+  "parameters": {},
+  "metrics": {
+    "input_files": 1,
+    "report_files": 2
+  },
+  "warnings": [],
+  "error": null,
+  "started_at": "2026-08-19T02:39:31.053236+00:00",
+  "ended_at": "2026-08-19T02:39:33.551611+00:00",
+  "inputs": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v5/fixtures/crypt_library_1.fq"
+  ],
+  "outputs": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v5/runs/H5-S2/repeat_02/raw_llm/execution_task/steps/step_02/fastqc/crypt_library_1_fastqc.html",
+      "sha256": "8e2e66a5f261b648869c02b1712d875adad5829fc3e5cc3e1638742a18327602"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v5/runs/H5-S2/repeat_02/raw_llm/execution_task/steps/step_02/fastqc_run_metadata.json",
+      "sha256": "013b93c2ee0b659a833cb1a8078885250ca44572036d51d1cee24c921a7f6b39"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v5/runs/H5-S2/repeat_02/raw_llm/execution_task/steps/step_02/fastqc/crypt_library_1_fastqc.zip",
+      "sha256": "79bf25d404212d2a3802d97f212a8b6cb5af6da3b81726e707aa480d2a108e98"
+    }
+  ]
+}

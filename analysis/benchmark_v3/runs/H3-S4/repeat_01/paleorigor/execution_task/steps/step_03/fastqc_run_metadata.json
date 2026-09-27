@@ -1,0 +1,27 @@
+{
+  "tool": "FastQC",
+  "official_url": "https://www.bioinformatics.babraham.ac.uk/projects/fastqc/",
+  "reviewed_skill_source": "https://github.com/ubcd-ibfg/fastq-qc-skill",
+  "inputs": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/fixtures/heldout_variable_length.fastq"
+  ],
+  "input_metrics": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/fixtures/heldout_variable_length.fastq",
+      "name": "heldout_variable_length.fastq",
+      "records": 5,
+      "total_bases": 76,
+      "min_length": 10,
+      "max_length": 20,
+      "mean_length": 15.2,
+      "gc_percent": 50.0,
+      "n_fraction": 0.0,
+      "malformed_records": 0
+    }
+  ],
+  "threads": 1,
+  "reports": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/runs/H3-S4/repeat_01/paleorigor/execution_task/steps/step_03/fastqc/heldout_variable_length_fastqc.html",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/runs/H3-S4/repeat_01/paleorigor/execution_task/steps/step_03/fastqc/heldout_variable_length_fastqc.zip"
+  ]
+}

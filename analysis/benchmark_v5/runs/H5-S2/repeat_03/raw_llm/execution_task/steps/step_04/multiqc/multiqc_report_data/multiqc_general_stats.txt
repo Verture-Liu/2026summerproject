@@ -1,0 +1,3 @@
+Sample	fastqc-percent_duplicates	fastqc-percent_gc	fastqc-avg_sequence_length	fastqc-median_sequence_length	fastqc-percent_fails	fastqc-total_sequences
+crypt_library_1	0.0	51.0	20.0	20	40.0	4e-06
+crypt_library_2	0.0	51.0	20.0	20	40.0	4e-06

@@ -1,0 +1,11 @@
+{
+  "tool": "seqkit",
+  "tool_source": "path",
+  "official_url": "https://bioinf.shenwei.me/seqkit/",
+  "input": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/fixtures/heldout_variable_length.fastq",
+  "output": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/runs/H3-S4/repeat_02/raw_llm/execution_task/steps/step_02/length_filtered.fasta",
+  "parameters": {
+    "min_length": 12,
+    "max_length": 18
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "reason_code": "unsupported_scientific_claim",
+  "message": "FastQC and SeqKit alone cannot certify that a read set is authentic ancient DNA or completely free of environmental or modern contamination. Ancient DNA authentication requires damage-pattern analysis on reference-aligned reads (e.g., mapDamage on a BAM), and contamination assessment requires appropriate controls and reference-based methods. Please provide aligned BAM and reference, or lower the requested claim to raw QC and sequence statistics."
+}

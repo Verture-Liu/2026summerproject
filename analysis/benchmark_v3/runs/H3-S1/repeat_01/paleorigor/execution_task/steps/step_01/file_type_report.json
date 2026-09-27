@@ -1,0 +1,11 @@
+{
+  "files": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/fixtures/heldout_single.fastq",
+      "name": "heldout_single.fastq",
+      "format": "fastq",
+      "size_bytes": 152,
+      "exists": true
+    }
+  ]
+}

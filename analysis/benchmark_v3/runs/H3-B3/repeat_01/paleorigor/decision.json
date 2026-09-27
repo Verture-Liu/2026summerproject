@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "reason_code": "unsupported_scientific_claim",
+  "message": "FastQC and SeqKit provide general sequencing QC statistics and cannot certify a read set as authentic ancient DNA or completely free of environmental or modern contamination; authentication requires dedicated ancient-DNA damage and contamination-assessment workflows with appropriate references."
+}

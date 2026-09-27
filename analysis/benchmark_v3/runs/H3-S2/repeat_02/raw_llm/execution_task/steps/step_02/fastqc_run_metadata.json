@@ -1,0 +1,27 @@
+{
+  "tool": "FastQC",
+  "official_url": "https://www.bioinformatics.babraham.ac.uk/projects/fastqc/",
+  "reviewed_skill_source": "https://github.com/ubcd-ibfg/fastq-qc-skill",
+  "inputs": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/fixtures/heldout_pair_R1.fastq"
+  ],
+  "input_metrics": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/fixtures/heldout_pair_R1.fastq",
+      "name": "heldout_pair_R1.fastq",
+      "records": 4,
+      "total_bases": 48,
+      "min_length": 12,
+      "max_length": 12,
+      "mean_length": 12.0,
+      "gc_percent": 50.0,
+      "n_fraction": 0.0,
+      "malformed_records": 0
+    }
+  ],
+  "threads": 1,
+  "reports": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/runs/H3-S2/repeat_02/raw_llm/execution_task/steps/step_02/fastqc/heldout_pair_R1_fastqc.html",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/runs/H3-S2/repeat_02/raw_llm/execution_task/steps/step_02/fastqc/heldout_pair_R1_fastqc.zip"
+  ]
+}

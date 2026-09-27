@@ -1,0 +1,210 @@
+{
+  "comparison": "deepseek-v4-pro + PaleoRigor skills vs deepseek-v4-flash-vision-exp without skills",
+  "design": "exploratory paired-task comparison; model and control layer both differ",
+  "summary": {
+    "pairs": 24,
+    "arms": {
+      "paleorigor": {
+        "successes": 24,
+        "total": 24,
+        "rate": 1.0,
+        "wilson_95": [
+          0.8620237953250198,
+          1.0
+        ]
+      },
+      "raw_llm": {
+        "successes": 17,
+        "total": 24,
+        "rate": 0.7083333333333334,
+        "wilson_95": [
+          0.5083230633550337,
+          0.8508535180303913
+        ]
+      }
+    },
+    "paired_rate_difference": 0.29166666666666663,
+    "discordant": {
+      "paleorigor_only": 7,
+      "raw_only": 0
+    },
+    "mcnemar_exact_two_sided_p": 0.015625,
+    "by_scenario": {
+      "H5-B1": {
+        "paleorigor": {
+          "successes": 3,
+          "total": 3,
+          "rate": 1.0
+        },
+        "raw_llm": {
+          "successes": 1,
+          "total": 3,
+          "rate": 0.3333333333333333
+        }
+      },
+      "H5-B2": {
+        "paleorigor": {
+          "successes": 3,
+          "total": 3,
+          "rate": 1.0
+        },
+        "raw_llm": {
+          "successes": 3,
+          "total": 3,
+          "rate": 1.0
+        }
+      },
+      "H5-B3": {
+        "paleorigor": {
+          "successes": 3,
+          "total": 3,
+          "rate": 1.0
+        },
+        "raw_llm": {
+          "successes": 3,
+          "total": 3,
+          "rate": 1.0
+        }
+      },
+      "H5-B4": {
+        "paleorigor": {
+          "successes": 3,
+          "total": 3,
+          "rate": 1.0
+        },
+        "raw_llm": {
+          "successes": 3,
+          "total": 3,
+          "rate": 1.0
+        }
+      },
+      "H5-S1": {
+        "paleorigor": {
+          "successes": 3,
+          "total": 3,
+          "rate": 1.0
+        },
+        "raw_llm": {
+          "successes": 0,
+          "total": 3,
+          "rate": 0.0
+        }
+      },
+      "H5-S2": {
+        "paleorigor": {
+          "successes": 3,
+          "total": 3,
+          "rate": 1.0
+        },
+        "raw_llm": {
+          "successes": 3,
+          "total": 3,
+          "rate": 1.0
+        }
+      },
+      "H5-S3": {
+        "paleorigor": {
+          "successes": 3,
+          "total": 3,
+          "rate": 1.0
+        },
+        "raw_llm": {
+          "successes": 1,
+          "total": 3,
+          "rate": 0.3333333333333333
+        }
+      },
+      "H5-S4": {
+        "paleorigor": {
+          "successes": 3,
+          "total": 3,
+          "rate": 1.0
+        },
+        "raw_llm": {
+          "successes": 3,
+          "total": 3,
+          "rate": 1.0
+        }
+      }
+    }
+  },
+  "new_model_vs_standard_flash_without_skills": {
+    "v4_flash_vision_exp_raw": {
+      "successes": 17,
+      "total": 24,
+      "rate": 0.7083333333333334,
+      "wilson_95": [
+        0.5083230633550337,
+        0.8508535180303913
+      ]
+    },
+    "v4_flash_raw": {
+      "successes": 19,
+      "total": 24,
+      "rate": 0.7916666666666666,
+      "wilson_95": [
+        0.5952954674681133,
+        0.9075517464714814
+      ]
+    },
+    "rate_difference_first_minus_second": -0.08333333333333326,
+    "discordant": {
+      "v4_flash_vision_exp_raw_only": 2,
+      "v4_flash_raw_only": 4
+    },
+    "mcnemar_exact_two_sided_p": 0.6875
+  },
+  "verification": {
+    "v4_pro_paleorigor": {
+      "checked": 24,
+      "expected": 24,
+      "all_match": true,
+      "discrepancies": [],
+      "api_errors": 0,
+      "reported_models": [
+        "deepseek-v4-pro"
+      ]
+    },
+    "v4_flash_raw": {
+      "checked": 24,
+      "expected": 24,
+      "all_match": true,
+      "discrepancies": [],
+      "api_errors": 0,
+      "reported_models": [
+        "deepseek-v4-flash"
+      ]
+    },
+    "v4_flash_vision_exp_raw": {
+      "checked": 24,
+      "expected": 24,
+      "all_match": true,
+      "discrepancies": [],
+      "api_errors": 0,
+      "reported_models": [
+        "deepseek-v4-flash-vision-exp"
+      ]
+    }
+  },
+  "operational_metrics": {
+    "v4_pro_paleorigor": {
+      "runs": 24,
+      "median_latency_seconds": 13.674532229459146,
+      "total_tokens": 577985,
+      "median_tokens": 23275.5
+    },
+    "v4_flash_raw": {
+      "runs": 24,
+      "median_latency_seconds": 8.919775229005609,
+      "total_tokens": 331618,
+      "median_tokens": 11740.5
+    },
+    "v4_flash_vision_exp_raw": {
+      "runs": 24,
+      "median_latency_seconds": 8.055552437494043,
+      "total_tokens": 317485,
+      "median_tokens": 11614.5
+    }
+  },
+  "interpretation_boundary": "The result describes performance on the frozen PaleoRigor task set. Because both the model and the presence of Skills differ, it does not isolate a causal Skills effect or establish general model superiority."
+}

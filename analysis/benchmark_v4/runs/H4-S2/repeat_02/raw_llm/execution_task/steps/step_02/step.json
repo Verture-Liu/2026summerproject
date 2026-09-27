@@ -1,0 +1,31 @@
+{
+  "id": "step_02",
+  "skill": "fastq_qc",
+  "status": "succeeded",
+  "parameters": {},
+  "metrics": {
+    "input_files": 1,
+    "report_files": 2
+  },
+  "warnings": [],
+  "error": null,
+  "started_at": "2026-08-19T01:49:47.359371+00:00",
+  "ended_at": "2026-08-19T01:49:48.868536+00:00",
+  "inputs": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/fixtures/cave_pair_R1.fastq"
+  ],
+  "outputs": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S2/repeat_02/raw_llm/execution_task/steps/step_02/fastqc/cave_pair_R1_fastqc.html",
+      "sha256": "74a9bd867fdcadfe6ee6d122a6b472b0ff419e8b80ada9f14ac2d0d48d91698d"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S2/repeat_02/raw_llm/execution_task/steps/step_02/fastqc_run_metadata.json",
+      "sha256": "12268b10c38f7d8948902e86ab86f5883818ebf739c5f7876d5bf88d25bf7cdd"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S2/repeat_02/raw_llm/execution_task/steps/step_02/fastqc/cave_pair_R1_fastqc.zip",
+      "sha256": "f04c027f2d4a2dc06058bfced240ffc0899d181aa9a5e518c8044ae8aa6ef680"
+    }
+  ]
+}

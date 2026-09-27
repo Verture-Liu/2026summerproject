@@ -1,0 +1,2 @@
+sample_id,layout,fastq_1,fastq_2
+crypt_library,paired,/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v5/fixtures/crypt_library_1.fq,/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v5/fixtures/crypt_library_2.fq

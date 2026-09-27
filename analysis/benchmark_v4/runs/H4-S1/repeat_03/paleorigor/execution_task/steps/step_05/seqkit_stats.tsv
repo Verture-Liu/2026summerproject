@@ -1,0 +1,2 @@
+file	format	type	num_seqs	sum_len	min_len	avg_len	max_len
+/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S1/repeat_03/paleorigor/execution_task/steps/step_03/length_filtered.fasta	FASTA	DNA	2	36	16	18.0	20

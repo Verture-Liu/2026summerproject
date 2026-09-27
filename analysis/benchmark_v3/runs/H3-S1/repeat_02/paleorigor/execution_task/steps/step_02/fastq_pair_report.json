@@ -1,0 +1,10 @@
+{
+  "samples": [
+    {
+      "sample_id": "heldout_single",
+      "layout": "single",
+      "fastq_1": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/fixtures/heldout_single.fastq",
+      "fastq_2": ""
+    }
+  ]
+}

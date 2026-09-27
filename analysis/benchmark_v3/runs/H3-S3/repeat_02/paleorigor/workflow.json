@@ -1,0 +1,138 @@
+{
+  "schema_version": "1.0",
+  "task_summary": "Normalize a headerless peptide CSV to label and sequence, validate canonical amino acids, remove duplicate sequences, calculate peptide statistics, and export the cleaned CSV.",
+  "steps": [
+    {
+      "id": "step_01",
+      "skill": "peptide_csv_normalize",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "heldout_peptides_no_header.csv"
+        }
+      ],
+      "parameters": {
+        "delimiter": "auto",
+        "drop_empty_rows": true
+      },
+      "outputs": [
+        {
+          "name": "normalized_peptides.csv",
+          "format": "csv"
+        }
+      ],
+      "reason": "Convert the headerless CSV into a canonical peptide table with label and sequence columns."
+    },
+    {
+      "id": "step_02",
+      "skill": "peptide_validate",
+      "inputs": [
+        {
+          "source": "step",
+          "ref": "normalized_peptides.csv"
+        }
+      ],
+      "parameters": {
+        "allowed_alphabet": "ACDEFGHIKLMNPQRSTVWY",
+        "invalid_row_policy": "reject"
+      },
+      "outputs": [
+        {
+          "name": "validated_peptides.csv",
+          "format": "csv"
+        }
+      ],
+      "reason": "Ensure sequences contain only canonical amino acids before further analysis."
+    },
+    {
+      "id": "step_03",
+      "skill": "peptide_deduplicate",
+      "inputs": [
+        {
+          "source": "step",
+          "ref": "validated_peptides.csv"
+        }
+      ],
+      "parameters": {},
+      "outputs": [
+        {
+          "name": "deduplicated_peptides.csv",
+          "format": "csv"
+        }
+      ],
+      "reason": "Remove duplicate peptide sequences while auditing label consistency."
+    },
+    {
+      "id": "step_04",
+      "skill": "data_quality_gate",
+      "inputs": [
+        {
+          "source": "step",
+          "ref": "deduplicated_peptides.csv"
+        }
+      ],
+      "parameters": {
+        "sequence_column": "sequence",
+        "label_column": "label",
+        "min_rows": 1,
+        "fail_on_error": true
+      },
+      "outputs": [
+        {
+          "name": "cleaned_quality_gate.json",
+          "format": "json"
+        }
+      ],
+      "reason": "Verify the cleaned, deduplicated peptide table is valid before computing statistics or exporting."
+    },
+    {
+      "id": "step_05",
+      "skill": "peptide_statistics",
+      "inputs": [
+        {
+          "source": "step",
+          "ref": "deduplicated_peptides.csv"
+        }
+      ],
+      "parameters": {
+        "group_by_label": true,
+        "include_amino_acid_composition": true
+      },
+      "outputs": [
+        {
+          "name": "peptide_statistics.csv",
+          "format": "csv"
+        },
+        {
+          "name": "peptide_statistics.json",
+          "format": "json"
+        }
+      ],
+      "reason": "Calculate descriptive peptide statistics after cleaning and deduplication."
+    },
+    {
+      "id": "step_06",
+      "skill": "peptide_csv_export",
+      "inputs": [
+        {
+          "source": "step",
+          "ref": "deduplicated_peptides.csv"
+        }
+      ],
+      "parameters": {
+        "columns": [
+          "label",
+          "sequence"
+        ],
+        "filename": "heldout_peptides_cleaned.csv"
+      },
+      "outputs": [
+        {
+          "name": "heldout_peptides_cleaned.csv",
+          "format": "csv"
+        }
+      ],
+      "reason": "Export the cleaned and deduplicated peptide table as a CSV."
+    }
+  ]
+}

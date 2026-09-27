@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "reason_code": "unsupported_scientific_claim",
+  "message": "FastQC and a taxonomic profile cannot certify that every read is ancient or that the library contains zero modern contamination. A definitive ancient-DNA authenticity claim requires appropriate aligned BAM data, an explicit reference, ancient-DNA damage authentication, and contamination estimation approaches; no such evidence was provided."
+}

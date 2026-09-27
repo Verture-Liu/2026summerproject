@@ -1,0 +1,1 @@
+{"status":"blocked","reason_code":"unsupported_scientific_claim","message":"FastQC and general QC metrics cannot certify ancient authenticity or prove complete absence of environmental/modern contamination. Such a claim requires aligned BAM data plus dedicated authentication tools (e.g., mapDamage/DamageProfiler) and appropriate controls; raw FASTQ QC alone is insufficient."}

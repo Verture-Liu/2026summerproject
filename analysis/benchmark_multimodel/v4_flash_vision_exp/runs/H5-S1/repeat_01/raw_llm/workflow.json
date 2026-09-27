@@ -1,0 +1,65 @@
+{
+  "schema_version": "1.0",
+  "task_summary": "Deduplicate the ancient-sediment FASTA, retain sequences between 15 and 22 nucleotides, and report SeqKit statistics for the retained sequences.",
+  "steps": [
+    {
+      "id": "step_01",
+      "skill": "seqkit_deduplicate",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "sediment_amplicons.fna"
+        }
+      ],
+      "parameters": {
+        "by_sequence": true
+      },
+      "outputs": [
+        {
+          "name": "deduplicated.fasta",
+          "format": "fasta"
+        }
+      ],
+      "reason": "Remove duplicate sequences from the input FASTA."
+    },
+    {
+      "id": "step_02",
+      "skill": "seqkit_length_filter",
+      "inputs": [
+        {
+          "source": "step",
+          "ref": "deduplicated.fasta"
+        }
+      ],
+      "parameters": {
+        "min_length": 15,
+        "max_length": 22
+      },
+      "outputs": [
+        {
+          "name": "length_filtered.fasta",
+          "format": "fasta"
+        }
+      ],
+      "reason": "Keep records between 15 and 22 nucleotides."
+    },
+    {
+      "id": "step_03",
+      "skill": "seqkit_stats",
+      "inputs": [
+        {
+          "source": "step",
+          "ref": "length_filtered.fasta"
+        }
+      ],
+      "parameters": {},
+      "outputs": [
+        {
+          "name": "seqkit_stats.json",
+          "format": "json"
+        }
+      ],
+      "reason": "Report SeqKit statistics for retained sequences."
+    }
+  ]
+}

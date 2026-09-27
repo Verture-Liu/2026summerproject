@@ -1,0 +1,29 @@
+{
+  "id": "step_03",
+  "skill": "seqkit_length_filter",
+  "status": "succeeded",
+  "parameters": {
+    "min_length": 15,
+    "max_length": 22
+  },
+  "metrics": {
+    "output_sequences": null
+  },
+  "warnings": [],
+  "error": null,
+  "started_at": "2026-08-19T02:36:27.681148+00:00",
+  "ended_at": "2026-08-19T02:36:27.753511+00:00",
+  "inputs": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v5/runs/H5-S1/repeat_02/paleorigor/execution_task/steps/step_02/deduplicated.fasta"
+  ],
+  "outputs": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v5/runs/H5-S1/repeat_02/paleorigor/execution_task/steps/step_03/length_filtered.fasta",
+      "sha256": "8b8f8f302c09e1df6dbb050b51b6b4af939ac3d7ee606763f9c2107acb6d5ad5"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v5/runs/H5-S1/repeat_02/paleorigor/execution_task/steps/step_03/seqkit_length_filter_metadata.json",
+      "sha256": "25c92d177bd8aaef9dc7dfbf97c8c9724fec59def396f0a3f61a5356c4aaa24b"
+    }
+  ]
+}

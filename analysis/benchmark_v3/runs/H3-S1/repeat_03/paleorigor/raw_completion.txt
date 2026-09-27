@@ -1,0 +1,45 @@
+{
+  "schema_version": "1.0",
+  "task_summary": "Detect file type, validate single-end layout, run FastQC raw QC, and compute SeqKit statistics for the uploaded FASTQ, retaining auditable JSON/HTML/ZIP/TSV outputs.",
+  "steps": [
+    {
+      "id": "step_01",
+      "skill": "file_type_detect",
+      "inputs": [{"source": "uploaded", "ref": "heldout_single.fastq"}],
+      "parameters": {},
+      "outputs": [{"name": "detected_type.json", "format": "json"}],
+      "reason": "Confirm the uploaded file is FASTQ before running FASTQ-specific QC and statistics."
+    },
+    {
+      "id": "step_02",
+      "skill": "fastq_pair_match",
+      "inputs": [{"source": "uploaded", "ref": "heldout_single.fastq"}],
+      "parameters": {},
+      "outputs": [{"name": "pair_match.json", "format": "json"}],
+      "reason": "Validate that the single-end FASTQ is not missing a paired mate and record sample layout for audit."
+    },
+    {
+      "id": "step_03",
+      "skill": "fastq_qc",
+      "inputs": [{"source": "uploaded", "ref": "heldout_single.fastq"}],
+      "parameters": {"threads": 4},
+      "outputs": [
+        {"name": "heldout_fastqc.html", "format": "html"},
+        {"name": "heldout_fastqc.json", "format": "json"},
+        {"name": "heldout_fastqc.zip", "format": "zip"}
+      ],
+      "reason": "Run raw QC with FastQC to assess sequence quality, GC content, and overrepresented sequences before any downstream analysis."
+    },
+    {
+      "id": "step_04",
+      "skill": "seqkit_stats",
+      "inputs": [{"source": "uploaded", "ref": "heldout_single.fastq"}],
+      "parameters": {},
+      "outputs": [
+        {"name": "seqkit_stats.tsv", "format": "tsv"},
+        {"name": "seqkit_stats.json", "format": "json"}
+      ],
+      "reason": "Compute sequence count, total bases, and read length statistics with SeqKit, retained as auditable TSV and JSON outputs."
+    }
+  ]
+}

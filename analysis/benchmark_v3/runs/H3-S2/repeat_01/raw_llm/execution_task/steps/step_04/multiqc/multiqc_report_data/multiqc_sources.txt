@@ -1,0 +1,3 @@
+Module	Section	Sample Name	Source
+FastQC	all_sections	heldout_pair_R1	/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/runs/H3-S2/repeat_01/raw_llm/execution_task/steps/step_02/fastqc/heldout_pair_R1_fastqc.zip
+FastQC	all_sections	heldout_pair_R2	/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/runs/H3-S2/repeat_01/raw_llm/execution_task/steps/step_03/fastqc/heldout_pair_R2_fastqc.zip

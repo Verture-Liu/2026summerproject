@@ -1,0 +1,95 @@
+{
+  "schema_version": "1.0",
+  "task_summary": "Detect the FASTA file type, remove duplicate sequences with SeqKit, filter to sequences 14-22 bases long, and compute SeqKit statistics while preserving deduplicated/filtered files and audit outputs.",
+  "steps": [
+    {
+      "id": "step_01",
+      "skill": "file_type_detect",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "ancient_fragments.fasta"
+        }
+      ],
+      "parameters": {},
+      "outputs": [
+        {
+          "name": "detected_file_type.json",
+          "format": "json"
+        }
+      ],
+      "reason": "Confirm that the uploaded file is FASTA before downstream sequence processing."
+    },
+    {
+      "id": "step_02",
+      "skill": "seqkit_deduplicate",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "ancient_fragments.fasta"
+        }
+      ],
+      "parameters": {
+        "by_sequence": true
+      },
+      "outputs": [
+        {
+          "name": "deduplicated.fasta",
+          "format": "fasta"
+        },
+        {
+          "name": "deduplicate_audit.json",
+          "format": "json"
+        }
+      ],
+      "reason": "Remove duplicate sequences with SeqKit and preserve the deduplicated FASTA plus its audit output."
+    },
+    {
+      "id": "step_03",
+      "skill": "seqkit_length_filter",
+      "inputs": [
+        {
+          "source": "step",
+          "ref": "deduplicated.fasta"
+        }
+      ],
+      "parameters": {
+        "min_length": 14,
+        "max_length": 22
+      },
+      "outputs": [
+        {
+          "name": "filtered_14_22.fasta",
+          "format": "fasta"
+        },
+        {
+          "name": "length_filter_audit.json",
+          "format": "json"
+        }
+      ],
+      "reason": "Retain only sequences with lengths between 14 and 22 bases inclusive, preserving the filtered FASTA and audit output."
+    },
+    {
+      "id": "step_04",
+      "skill": "seqkit_stats",
+      "inputs": [
+        {
+          "source": "step",
+          "ref": "filtered_14_22.fasta"
+        }
+      ],
+      "parameters": {},
+      "outputs": [
+        {
+          "name": "final_stats.json",
+          "format": "json"
+        },
+        {
+          "name": "final_stats.tsv",
+          "format": "tsv"
+        }
+      ],
+      "reason": "Calculate SeqKit statistics for the final filtered FASTA and preserve the statistical outputs."
+    }
+  ]
+}

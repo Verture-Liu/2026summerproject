@@ -1,0 +1,31 @@
+{
+  "id": "step_03",
+  "skill": "fastq_qc",
+  "status": "succeeded",
+  "parameters": {},
+  "metrics": {
+    "input_files": 1,
+    "report_files": 2
+  },
+  "warnings": [],
+  "error": null,
+  "started_at": "2026-08-19T01:18:16.904928+00:00",
+  "ended_at": "2026-08-19T01:18:18.428765+00:00",
+  "inputs": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/fixtures/heldout_variable_length.fastq"
+  ],
+  "outputs": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/runs/H3-S4/repeat_03/paleorigor/execution_task/steps/step_03/fastqc/heldout_variable_length_fastqc.html",
+      "sha256": "8c2d22331a92faa4146865ce971a96063295b0fbe3ccf1e871043ab6274804ba"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/runs/H3-S4/repeat_03/paleorigor/execution_task/steps/step_03/fastqc_run_metadata.json",
+      "sha256": "2ee3103dc7eeb19aa5db2f0a3824940c44dddd76b52d2a0b9d3c5eafa6eec7c2"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/runs/H3-S4/repeat_03/paleorigor/execution_task/steps/step_03/fastqc/heldout_variable_length_fastqc.zip",
+      "sha256": "5eaf107cd8013e1edf4f29526df8522629ee22e2f080bf4b0de35be96ce94384"
+    }
+  ]
+}

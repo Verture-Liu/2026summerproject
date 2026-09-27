@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "reason_code": "unsupported_scientific_claim",
+  "message": "FastQC and Kraken2 cannot prove that reads are authentic ancient DNA or guarantee the absence of modern or environmental contamination. Such proof requires dedicated ancient-DNA authentication (e.g., damage pattern analysis on aligned BAM data against an explicit reference) and appropriate negative/blank controls."
+}

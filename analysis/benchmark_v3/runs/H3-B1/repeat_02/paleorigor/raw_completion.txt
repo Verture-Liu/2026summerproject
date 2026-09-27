@@ -1,0 +1,1 @@
+{"status": "blocked", "reason_code": "file_type_mismatch", "message": "The uploaded file heldout_metadata.tsv is a TSV table, not raw FASTQ data, so FastQC and cutadapt pre-processing cannot be applied."}

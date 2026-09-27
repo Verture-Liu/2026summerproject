@@ -1,0 +1,161 @@
+{
+  "schema_version": "1.0",
+  "task_summary": "Curate peptide_screen.csv by normalizing class/peptide columns, validating amino-acid sequences and labels, removing duplicate peptides, then producing descriptive statistics, a peptide-length histogram, a cleaned CSV export, and a rejected-row audit output.",
+  "steps": [
+    {
+      "id": "step_01",
+      "skill": "peptide_csv_normalize",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "peptide_screen.csv"
+        }
+      ],
+      "parameters": {
+        "delimiter": "auto",
+        "label_column": "class",
+        "sequence_column": "peptide",
+        "drop_empty_rows": true
+      },
+      "outputs": [
+        {
+          "name": "normalized_peptides.csv",
+          "format": "csv"
+        }
+      ],
+      "reason": "Normalize the screening table's class and peptide columns into canonical label and sequence columns so later validation, deduplication, statistics, charting, and export operate on a consistent schema."
+    },
+    {
+      "id": "step_02",
+      "skill": "peptide_validate",
+      "inputs": [
+        {
+          "source": "step",
+          "ref": "normalized_peptides.csv"
+        }
+      ],
+      "parameters": {
+        "invalid_row_policy": "reject"
+      },
+      "outputs": [
+        {
+          "name": "validated_peptides.csv",
+          "format": "csv"
+        },
+        {
+          "name": "validation_rejected_rows.csv",
+          "format": "csv"
+        }
+      ],
+      "reason": "Validate binary labels and amino-acid sequences, rejecting invalid rows while preserving an audit of rejected rows for downstream review."
+    },
+    {
+      "id": "step_03",
+      "skill": "peptide_deduplicate",
+      "inputs": [
+        {
+          "source": "step",
+          "ref": "validated_peptides.csv"
+        }
+      ],
+      "parameters": {
+        "conflict_policy": "prefer_positive",
+        "keep": "first"
+      },
+      "outputs": [
+        {
+          "name": "deduplicated_peptides.csv",
+          "format": "csv"
+        }
+      ],
+      "reason": "Remove duplicate peptide sequences from the validated set to create a non-redundant peptide table for statistics, charting, and export."
+    },
+    {
+      "id": "step_04",
+      "skill": "peptide_statistics",
+      "inputs": [
+        {
+          "source": "step",
+          "ref": "deduplicated_peptides.csv"
+        }
+      ],
+      "parameters": {
+        "group_by_label": true,
+        "include_amino_acid_composition": true
+      },
+      "outputs": [
+        {
+          "name": "peptide_statistics.csv",
+          "format": "csv"
+        },
+        {
+          "name": "peptide_statistics.json",
+          "format": "json"
+        }
+      ],
+      "reason": "Compute descriptive statistics for the curated peptide table, including counts, lengths, label distribution, and amino-acid composition."
+    },
+    {
+      "id": "step_05",
+      "skill": "peptide_chart",
+      "inputs": [
+        {
+          "source": "step",
+          "ref": "deduplicated_peptides.csv"
+        }
+      ],
+      "parameters": {
+        "charts": [
+          "peptide_length_histogram"
+        ]
+      },
+      "outputs": [
+        {
+          "name": "peptide_length_histogram.png",
+          "format": "png"
+        }
+      ],
+      "reason": "Draw a single histogram of peptide lengths from the deduplicated peptide table as requested."
+    },
+    {
+      "id": "step_06",
+      "skill": "peptide_csv_export",
+      "inputs": [
+        {
+          "source": "step",
+          "ref": "deduplicated_peptides.csv"
+        }
+      ],
+      "parameters": {
+        "filename": "cleaned_peptides.csv"
+      },
+      "outputs": [
+        {
+          "name": "cleaned_peptides.csv",
+          "format": "csv"
+        }
+      ],
+      "reason": "Export the final deduplicated, validated peptide table as the cleaned CSV output."
+    },
+    {
+      "id": "step_07",
+      "skill": "peptide_csv_export",
+      "inputs": [
+        {
+          "source": "step",
+          "ref": "validation_rejected_rows.csv"
+        }
+      ],
+      "parameters": {
+        "filename": "rejected_row_audit.csv"
+      },
+      "outputs": [
+        {
+          "name": "rejected_row_audit.csv",
+          "format": "csv"
+        }
+      ],
+      "reason": "Export the rejected-row audit CSV so any rows removed during validation can be reviewed."
+    }
+  ]
+}

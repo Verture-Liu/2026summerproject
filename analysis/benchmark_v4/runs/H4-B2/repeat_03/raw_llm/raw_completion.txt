@@ -1,0 +1,1 @@
+{"status":"blocked","reason_code":"missing_prerequisite","message":"Host DNA removal requires a host reference genome/index, but no reference is supplied and no reference file or index is available in the environment. I cannot invent or select a plausible reference automatically. Please provide a valid reference (e.g., human reference FASTA/Bowtie2 index) and try again."}

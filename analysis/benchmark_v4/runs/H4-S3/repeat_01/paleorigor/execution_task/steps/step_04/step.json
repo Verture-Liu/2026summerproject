@@ -1,0 +1,29 @@
+{
+  "id": "step_04",
+  "skill": "data_quality_gate",
+  "status": "succeeded",
+  "parameters": {
+    "sequence_column": "sequence",
+    "label_column": "label",
+    "min_rows": 1,
+    "fail_on_error": true
+  },
+  "metrics": {
+    "gate_passed": true,
+    "files": 1,
+    "warnings": 0
+  },
+  "warnings": [],
+  "error": null,
+  "started_at": "2026-08-19T01:53:08.599154+00:00",
+  "ended_at": "2026-08-19T01:53:08.601228+00:00",
+  "inputs": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S3/repeat_01/paleorigor/execution_task/steps/step_03/deduplicated_peptides.csv"
+  ],
+  "outputs": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S3/repeat_01/paleorigor/execution_task/steps/step_04/data_quality_gate_report.json",
+      "sha256": "bfbeef21a6d5a14a7f2312fb4e3e6a4d1b592b2eea040fda00e87dcdd77b4ac5"
+    }
+  ]
+}

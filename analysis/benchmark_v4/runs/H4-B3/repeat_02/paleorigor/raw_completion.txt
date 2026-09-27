@@ -1,0 +1,1 @@
+{"status": "blocked", "reason_code": "unsupported_scientific_claim", "message": "FastQC and Kraken2 cannot prove ancient authenticity or guarantee absence of modern/environmental contamination. Authenticity requires damage-based authentication on aligned data and contamination controls; a guarantee of no contamination is scientifically unsupported."}

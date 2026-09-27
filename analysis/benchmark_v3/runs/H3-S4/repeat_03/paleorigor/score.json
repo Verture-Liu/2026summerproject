@@ -1,0 +1,168 @@
+{
+  "strict_success": false,
+  "decision": "workflow",
+  "failure_codes": [
+    "execution_failed"
+  ],
+  "workflow": {
+    "schema_version": "1.0",
+    "task_summary": "Run FastQC raw QC on a single-end FASTQ file, filter reads to 12-18 bases with SeqKit, validate the filtered file with a quality gate, and compute post-filter SeqKit statistics while preserving the filtered FASTQ and audit reports.",
+    "steps": [
+      {
+        "id": "step_01",
+        "skill": "file_type_detect",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "heldout_variable_length.fastq"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "file_type_report",
+            "format": "json"
+          }
+        ],
+        "reason": "Detect and confirm the uploaded file is FASTQ before selecting the QC and filtering pipeline."
+      },
+      {
+        "id": "step_02",
+        "skill": "fastq_pair_match",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "heldout_variable_length.fastq"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "sample_layout",
+            "format": "json"
+          }
+        ],
+        "reason": "Establish the read layout (single-end) so the correct number of FastQC and filtering steps are run."
+      },
+      {
+        "id": "step_03",
+        "skill": "fastq_qc",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "heldout_variable_length.fastq"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "fastqc_zip",
+            "format": "zip"
+          },
+          {
+            "name": "fastqc_html",
+            "format": "html"
+          }
+        ],
+        "reason": "Run FastQC on the raw FASTQ to capture pre-filter quality metrics for the audit trail."
+      },
+      {
+        "id": "step_04",
+        "skill": "multiqc_summary",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "fastqc_zip"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "multiqc_report",
+            "format": "html"
+          },
+          {
+            "name": "multiqc_data",
+            "format": "json"
+          }
+        ],
+        "reason": "Aggregate the raw FastQC output into a single MultiQC summary report as part of the audit records."
+      },
+      {
+        "id": "step_05",
+        "skill": "seqkit_length_filter",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "heldout_variable_length.fastq"
+          }
+        ],
+        "parameters": {
+          "min_length": 12,
+          "max_length": 18
+        },
+        "outputs": [
+          {
+            "name": "filtered_fastq",
+            "format": "fastq"
+          },
+          {
+            "name": "length_filter_report",
+            "format": "json"
+          }
+        ],
+        "reason": "Retain only reads with length between 12 and 18 bases as requested."
+      },
+      {
+        "id": "step_06",
+        "skill": "data_quality_gate",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "filtered_fastq"
+          }
+        ],
+        "parameters": {
+          "min_records": 1
+        },
+        "outputs": [
+          {
+            "name": "quality_gate_report",
+            "format": "json"
+          }
+        ],
+        "reason": "Verify the filtered FASTQ is non-empty and structurally valid before downstream statistics."
+      },
+      {
+        "id": "step_07",
+        "skill": "seqkit_stats",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "filtered_fastq"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "postfilter_stats",
+            "format": "json"
+          },
+          {
+            "name": "postfilter_stats_table",
+            "format": "tsv"
+          }
+        ],
+        "reason": "Compute post-filter sequence statistics on the retained reads to summarize the filtered dataset."
+      }
+    ]
+  },
+  "validation": {
+    "valid": true,
+    "errors": [],
+    "warnings": [
+      "step_03: heavy resource requirement"
+    ],
+    "issues": []
+  }
+}

@@ -1,0 +1,109 @@
+{
+  "strict_success": true,
+  "decision": "workflow",
+  "failure_codes": [],
+  "workflow": {
+    "schema_version": "1.0",
+    "task_summary": "Detect file type, run FastQC, and compute SeqKit statistics for the uploaded single-end FASTQ file, retaining auditable JSON/HTML/ZIP/TSV outputs.",
+    "steps": [
+      {
+        "id": "step_01",
+        "skill": "file_type_detect",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "heldout_single.fastq"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "file_type_report",
+            "format": "json"
+          }
+        ],
+        "reason": "Confirm that the uploaded file is actually a FASTQ file before any sequence processing is attempted."
+      },
+      {
+        "id": "step_02",
+        "skill": "fastq_pair_match",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "heldout_single.fastq"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "sample_sheet",
+            "format": "csv"
+          },
+          {
+            "name": "pairing_report",
+            "format": "json"
+          }
+        ],
+        "reason": "Validate that the single uploaded FASTQ is single-end and that no paired-end mate is missing."
+      },
+      {
+        "id": "step_03",
+        "skill": "fastq_qc",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "heldout_single.fastq"
+          }
+        ],
+        "parameters": {
+          "threads": 1
+        },
+        "outputs": [
+          {
+            "name": "fastqc_html",
+            "format": "html"
+          },
+          {
+            "name": "fastqc_json",
+            "format": "json"
+          },
+          {
+            "name": "fastqc_zip",
+            "format": "zip"
+          }
+        ],
+        "reason": "Run FastQC on the raw single-end FASTQ to produce a quality-control report with per-base quality, GC content, and other auditables."
+      },
+      {
+        "id": "step_04",
+        "skill": "seqkit_stats",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "heldout_single.fastq"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "seqkit_stats_tsv",
+            "format": "tsv"
+          },
+          {
+            "name": "seqkit_stats_json",
+            "format": "json"
+          }
+        ],
+        "reason": "Compute sequence count, total bases, and read-length distribution statistics from the raw FASTQ using SeqKit."
+      }
+    ]
+  },
+  "validation": {
+    "valid": true,
+    "errors": [],
+    "warnings": [
+      "step_03: heavy resource requirement"
+    ],
+    "issues": []
+  }
+}

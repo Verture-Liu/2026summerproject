@@ -1,0 +1,73 @@
+{
+  "strict_success": false,
+  "decision": "workflow",
+  "failure_codes": [
+    "execution_failed"
+  ],
+  "workflow": {
+    "schema_version": "1.0",
+    "task_summary": "Normalize the uploaded SRA RunInfo TSV into a FASTQ sample sheet preserving run, sample, layout, file-path, and organism fields, then validate the sheet.",
+    "steps": [
+      {
+        "id": "step_01",
+        "skill": "file_type_detect",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "archive_runinfo.tsv"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "detected_types",
+            "format": "json"
+          }
+        ],
+        "reason": "Confirm the uploaded RunInfo table is detected as TSV before normalization."
+      },
+      {
+        "id": "step_02",
+        "skill": "sample_sheet_prepare",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "archive_runinfo.tsv"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "fastq_sample_sheet",
+            "format": "csv"
+          }
+        ],
+        "reason": "Normalize the SRA RunInfo TSV into a standardized FASTQ sample sheet, carrying run, sample, layout, file-path, and organism fields for paired and single runs."
+      },
+      {
+        "id": "step_03",
+        "skill": "sample_sheet_validate",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "fastq_sample_sheet"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "sample_sheet_validation",
+            "format": "json"
+          }
+        ],
+        "reason": "Validate the normalized sample sheet to ensure paired and single runs have correct layout, file paths, and organism fields before downstream use."
+      }
+    ]
+  },
+  "validation": {
+    "valid": true,
+    "errors": [],
+    "warnings": [],
+    "issues": []
+  }
+}

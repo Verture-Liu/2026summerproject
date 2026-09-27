@@ -1,0 +1,16 @@
+{
+  "rows": 2,
+  "columns": [
+    "sample_id",
+    "run_accession",
+    "layout",
+    "fastq_1",
+    "fastq_2",
+    "organism"
+  ],
+  "errors": [
+    "Missing file in fastq_1: ERR900001_1.fastq.gz",
+    "Missing file in fastq_1: ERR900002.fastq.gz",
+    "Missing file in fastq_2: ERR900001_2.fastq.gz"
+  ]
+}

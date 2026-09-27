@@ -1,0 +1,146 @@
+{
+  "strict_success": false,
+  "decision": "workflow",
+  "failure_codes": [
+    "execution_failed"
+  ],
+  "workflow": {
+    "schema_version": "1.0",
+    "task_summary": "Normalize a headerless peptide CSV to label/sequence columns, validate canonical amino acids, deduplicate sequences, run a cleaned-data quality gate, calculate peptide statistics, and export the cleaned CSV.",
+    "steps": [
+      {
+        "id": "step_01",
+        "skill": "peptide_csv_normalize",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "heldout_peptides_no_header.csv"
+          }
+        ],
+        "parameters": {
+          "delimiter": "auto",
+          "drop_empty_rows": true
+        },
+        "outputs": [
+          {
+            "name": "normalized_peptides",
+            "format": "csv"
+          }
+        ],
+        "reason": "Convert the headerless uploaded CSV into canonical label and sequence columns so downstream peptide operations can be applied consistently."
+      },
+      {
+        "id": "step_02",
+        "skill": "peptide_validate",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "normalized_peptides"
+          }
+        ],
+        "parameters": {
+          "allowed_alphabet": "ACDEFGHIKLMNPQRSTVWY",
+          "invalid_row_policy": "reject"
+        },
+        "outputs": [
+          {
+            "name": "validated_peptides",
+            "format": "csv"
+          }
+        ],
+        "reason": "Validate that all rows contain canonical amino-acid sequences and valid binary labels before any filtering, deduplication, or further analysis."
+      },
+      {
+        "id": "step_03",
+        "skill": "peptide_deduplicate",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "validated_peptides"
+          }
+        ],
+        "parameters": {
+          "conflict_policy": "keep_first"
+        },
+        "outputs": [
+          {
+            "name": "deduplicated_peptides",
+            "format": "csv"
+          }
+        ],
+        "reason": "Remove duplicate peptide sequences to create a non-redundant cleaned table before statistics and export."
+      },
+      {
+        "id": "step_04",
+        "skill": "data_quality_gate",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "deduplicated_peptides"
+          }
+        ],
+        "parameters": {
+          "sequence_column": "sequence",
+          "label_column": "label",
+          "min_rows": 1,
+          "fail_on_error": true
+        },
+        "outputs": [
+          {
+            "name": "quality_gate_report",
+            "format": "json"
+          }
+        ],
+        "reason": "Run a cleaned-data quality gate after deduplication to confirm the table is non-empty and structurally valid before computing statistics or exporting."
+      },
+      {
+        "id": "step_05",
+        "skill": "peptide_statistics",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "deduplicated_peptides"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "peptide_statistics",
+            "format": "csv"
+          }
+        ],
+        "reason": "Calculate descriptive peptide statistics from the cleaned, validated, and deduplicated table as requested."
+      },
+      {
+        "id": "step_06",
+        "skill": "peptide_csv_export",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "deduplicated_peptides"
+          }
+        ],
+        "parameters": {
+          "filename": "cleaned_peptides.csv",
+          "columns": [
+            "label",
+            "sequence"
+          ]
+        },
+        "outputs": [
+          {
+            "name": "cleaned_peptides_export",
+            "format": "csv"
+          }
+        ],
+        "reason": "Export the cleaned deduplicated peptide table as a reusable CSV file for the user."
+      }
+    ]
+  },
+  "validation": {
+    "valid": true,
+    "errors": [],
+    "warnings": [],
+    "issues": []
+  }
+}

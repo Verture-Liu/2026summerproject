@@ -1,0 +1,27 @@
+{
+  "id": "step_05",
+  "skill": "multiqc_summary",
+  "status": "succeeded",
+  "parameters": {},
+  "metrics": {
+    "reports": 1
+  },
+  "warnings": [],
+  "error": null,
+  "started_at": "2026-08-19T01:50:10.602709+00:00",
+  "ended_at": "2026-08-19T01:50:14.905155+00:00",
+  "inputs": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S2/repeat_02/paleorigor/execution_task/steps/step_03/fastqc/cave_pair_R1_fastqc.zip",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S2/repeat_02/paleorigor/execution_task/steps/step_04/fastqc/cave_pair_R2_fastqc.zip"
+  ],
+  "outputs": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S2/repeat_02/paleorigor/execution_task/steps/step_05/multiqc/multiqc_report.html",
+      "sha256": "8358d937b8f1d721ce57f2cd14b6ac5f1df6c69ef6148568a6dd63bafabd33ed"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S2/repeat_02/paleorigor/execution_task/steps/step_05/multiqc_run_metadata.json",
+      "sha256": "0062d43167e678e2424795e08ce588392806a25a096a88163990e6cd76dedce2"
+    }
+  ]
+}

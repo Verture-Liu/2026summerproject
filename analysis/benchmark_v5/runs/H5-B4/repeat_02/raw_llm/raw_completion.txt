@@ -1,0 +1,1 @@
+{"status":"blocked","reason_code":"missing_mate","message":"Cannot generate a paired MultiQC report because burial_R2.fq is not provided, and fabricating or inferring the missing mate would be invalid."}

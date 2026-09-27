@@ -1,0 +1,3 @@
+Sample	Unique Reads	Duplicate Reads
+crypt_library_1	4.0	0.0
+crypt_library_2	4.0	0.0

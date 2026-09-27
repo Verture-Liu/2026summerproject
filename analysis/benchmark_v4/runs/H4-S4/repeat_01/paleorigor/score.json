@@ -1,0 +1,55 @@
+{
+  "strict_success": false,
+  "decision": "workflow",
+  "failure_codes": [
+    "execution_failed"
+  ],
+  "workflow": {
+    "schema_version": "1.0",
+    "task_summary": "Normalize archive RunInfo TSV into a FASTQ sample sheet preserving run, sample, layout, file-path, and organism fields.",
+    "steps": [
+      {
+        "id": "step_01",
+        "skill": "sample_sheet_prepare",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "archive_runinfo.tsv"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "fastq_sample_sheet",
+            "format": "csv"
+          }
+        ],
+        "reason": "Normalize the uploaded SRA RunInfo TSV into a FASTQ sample sheet, retaining run, sample, layout, file-path, and organism fields."
+      },
+      {
+        "id": "step_02",
+        "skill": "sample_sheet_validate",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "fastq_sample_sheet"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "sample_sheet_validation",
+            "format": "json"
+          }
+        ],
+        "reason": "Validate the normalized sample sheet before downstream FASTQ workflows, ensuring paired and single run metadata are consistent."
+      }
+    ]
+  },
+  "validation": {
+    "valid": true,
+    "errors": [],
+    "warnings": [],
+    "issues": []
+  }
+}

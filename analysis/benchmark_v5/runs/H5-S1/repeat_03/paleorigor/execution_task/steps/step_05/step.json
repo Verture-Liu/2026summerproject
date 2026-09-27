@@ -1,0 +1,26 @@
+{
+  "id": "step_05",
+  "skill": "seqkit_stats",
+  "status": "succeeded",
+  "parameters": {},
+  "metrics": {
+    "input_files": 1
+  },
+  "warnings": [],
+  "error": null,
+  "started_at": "2026-08-19T02:37:55.571466+00:00",
+  "ended_at": "2026-08-19T02:37:55.584613+00:00",
+  "inputs": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v5/runs/H5-S1/repeat_03/paleorigor/execution_task/steps/step_03/length_filtered.fasta"
+  ],
+  "outputs": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v5/runs/H5-S1/repeat_03/paleorigor/execution_task/steps/step_05/seqkit_stats.tsv",
+      "sha256": "e4c475ad43f3b221b1119e9591ec2d4dc7f19c5dd5f7e7358c4fe4d010f15a87"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v5/runs/H5-S1/repeat_03/paleorigor/execution_task/steps/step_05/seqkit_stats_metadata.json",
+      "sha256": "0488963351acc6693c203958a2b49e328e9f6f452ce9851a8d1726d9578c31fd"
+    }
+  ]
+}

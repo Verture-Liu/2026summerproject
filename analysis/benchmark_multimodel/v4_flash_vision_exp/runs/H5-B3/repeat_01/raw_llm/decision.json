@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "reason_code": "unsupported_scientific_claim",
+  "message": "A definitive certificate of ancient origin and zero modern contamination cannot be issued from FastQC and a taxonomic profile alone. These tools do not provide direct evidence of DNA damage, read age, or absence of modern contamination. Ancient DNA authentication requires dedicated methods such as mapDamage or DamageProfiler, and contamination assessment typically requires alignment-based approaches."
+}

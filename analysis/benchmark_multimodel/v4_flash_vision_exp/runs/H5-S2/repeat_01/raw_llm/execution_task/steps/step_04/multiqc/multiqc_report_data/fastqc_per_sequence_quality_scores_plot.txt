@@ -1,0 +1,3 @@
+Sample	0	1
+crypt_library_1	(8.0, 1.0)	(9.0, 3.0)
+crypt_library_2	(8.0, 1.0)	(9.0, 3.0)

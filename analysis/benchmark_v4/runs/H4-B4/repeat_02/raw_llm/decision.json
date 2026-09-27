@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "reason_code": "missing_mate",
+  "message": "The paired-end library requires tomb_orphan_R1.fastq, but only tomb_orphan_R2.fastq was uploaded. FastQC and MultiQC cannot be run on the missing R1 mate without the actual file."
+}

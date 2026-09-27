@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "reason_code": "file_type_mismatch",
+  "message": "The uploaded file is registered as FASTA (unaligned_contigs.fa, format=fasta). Treating it as a coordinate-sorted BAM contradicts the observed file format, and the request asks to ignore the visible extension. Per the control layer, a BAM-only analysis such as samtools stats cannot be planned on a FASTA-registered file without format mismatch."
+}

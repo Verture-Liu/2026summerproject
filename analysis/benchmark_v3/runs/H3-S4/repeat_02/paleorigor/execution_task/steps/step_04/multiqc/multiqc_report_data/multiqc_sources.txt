@@ -1,0 +1,2 @@
+Module	Section	Sample Name	Source
+FastQC	all_sections	heldout_variable_length	/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/runs/H3-S4/repeat_02/paleorigor/execution_task/steps/step_03/fastqc/heldout_variable_length_fastqc.zip

@@ -1,0 +1,10 @@
+{
+  "samples": [
+    {
+      "sample_id": "heldout_variable_length",
+      "layout": "single",
+      "fastq_1": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/fixtures/heldout_variable_length.fastq",
+      "fastq_2": ""
+    }
+  ]
+}

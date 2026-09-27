@@ -1,0 +1,1 @@
+{"status": "blocked", "reason_code": "missing_mate", "message": "orphan_sample_R2.fastq is not present among uploaded files; cannot assume or invent the missing paired-end mate."}

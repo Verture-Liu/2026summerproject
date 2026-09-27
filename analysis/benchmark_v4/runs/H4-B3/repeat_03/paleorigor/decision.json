@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "reason_code": "unsupported_scientific_claim",
+  "message": "FastQC and Kraken2 cannot prove ancient DNA authenticity or guarantee the absence of modern or environmental contamination. Such proof requires authenticated alignment-based damage profiles (e.g., mapDamage/DamageProfiler on an appropriately mapped BAM) and appropriate controls; this request is not supported."
+}

@@ -1,0 +1,108 @@
+{
+  "strict_success": true,
+  "decision": "workflow",
+  "failure_codes": [],
+  "workflow": {
+    "schema_version": "1.0",
+    "task_summary": "Check that the two crypt-library FASTQ files are paired mates, run independent FastQC on each, and produce a combined MultiQC report.",
+    "steps": [
+      {
+        "id": "step_01",
+        "skill": "fastq_pair_match",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "crypt_library_1.fq"
+          },
+          {
+            "source": "uploaded",
+            "ref": "crypt_library_2.fq"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "pairing_check",
+            "format": "json"
+          }
+        ],
+        "reason": "Determine whether the two crypt-library FASTQ files are paired-end mates before processing."
+      },
+      {
+        "id": "step_02",
+        "skill": "fastq_qc",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "crypt_library_1.fq"
+          }
+        ],
+        "parameters": {
+          "threads": 4
+        },
+        "outputs": [
+          {
+            "name": "crypt_library_1_fastqc_zip",
+            "format": "zip"
+          }
+        ],
+        "reason": "Generate an independent FastQC report/archive for the first crypt-library file."
+      },
+      {
+        "id": "step_03",
+        "skill": "fastq_qc",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "crypt_library_2.fq"
+          }
+        ],
+        "parameters": {
+          "threads": 4
+        },
+        "outputs": [
+          {
+            "name": "crypt_library_2_fastqc_zip",
+            "format": "zip"
+          }
+        ],
+        "reason": "Generate an independent FastQC report/archive for the second crypt-library file."
+      },
+      {
+        "id": "step_04",
+        "skill": "multiqc_summary",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "step_02"
+          },
+          {
+            "source": "step",
+            "ref": "step_03"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "multiqc_report",
+            "format": "html"
+          },
+          {
+            "name": "multiqc_data",
+            "format": "json"
+          }
+        ],
+        "reason": "Combine both FastQC ZIP archives into a single MultiQC HTML report and JSON data."
+      }
+    ]
+  },
+  "validation": {
+    "valid": true,
+    "errors": [],
+    "warnings": [
+      "step_02: heavy resource requirement",
+      "step_03: heavy resource requirement"
+    ],
+    "issues": []
+  }
+}

@@ -1,0 +1,2 @@
+Sample	Top overrepresented sequence	Sum of remaining overrepresented sequences
+heldout_variable_length	20.0	80.0

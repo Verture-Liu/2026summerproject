@@ -1,0 +1,25 @@
+{
+  "id": "step_01",
+  "skill": "file_type_detect",
+  "status": "succeeded",
+  "parameters": {},
+  "metrics": {
+    "files": 1,
+    "formats": [
+      "fasta"
+    ]
+  },
+  "warnings": [],
+  "error": null,
+  "started_at": "2026-08-19T01:47:30.084085+00:00",
+  "ended_at": "2026-08-19T01:47:30.084604+00:00",
+  "inputs": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/fixtures/ancient_fragments.fasta"
+  ],
+  "outputs": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S1/repeat_02/paleorigor/execution_task/steps/step_01/file_type_report.json",
+      "sha256": "035af59cd2207c06497f8f645d0799d5b1ab7b2531d4dd3614638c7e59225aca"
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+{"status": "blocked", "reason_code": "missing_mate", "message": "The paired-end workflow requires orphan_sample_R2.fastq, but only orphan_sample_R1.fastq is present in the available files. I cannot invent or reference a file that was not provided."}

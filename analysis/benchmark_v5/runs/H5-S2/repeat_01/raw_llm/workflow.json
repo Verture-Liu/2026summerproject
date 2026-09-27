@@ -1,0 +1,110 @@
+{
+  "schema_version": "1.0",
+  "task_summary": "Verify that crypt_library_1.fq and crypt_library_2.fq are paired-end mates, run an independent FastQC report for each file, and aggregate both FastQC ZIP archives into a single MultiQC report while retaining all QC evidence.",
+  "steps": [
+    {
+      "id": "step_01",
+      "skill": "fastq_pair_match",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "crypt_library_1.fq"
+        },
+        {
+          "source": "uploaded",
+          "ref": "crypt_library_2.fq"
+        }
+      ],
+      "parameters": {},
+      "outputs": [
+        {
+          "name": "crypt_library_mates.csv",
+          "format": "csv"
+        },
+        {
+          "name": "crypt_library_mates.json",
+          "format": "json"
+        }
+      ],
+      "reason": "Check that crypt_library_1.fq and crypt_library_2.fq are paired-end mates and retain the matching evidence."
+    },
+    {
+      "id": "step_02",
+      "skill": "fastq_qc",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "crypt_library_1.fq"
+        }
+      ],
+      "parameters": {},
+      "outputs": [
+        {
+          "name": "crypt_library_1_fastqc.zip",
+          "format": "zip"
+        },
+        {
+          "name": "crypt_library_1_fastqc.html",
+          "format": "html"
+        },
+        {
+          "name": "crypt_library_1_fastqc.json",
+          "format": "json"
+        }
+      ],
+      "reason": "Generate an independent FastQC report for crypt_library_1.fq and preserve all raw QC outputs."
+    },
+    {
+      "id": "step_03",
+      "skill": "fastq_qc",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "crypt_library_2.fq"
+        }
+      ],
+      "parameters": {},
+      "outputs": [
+        {
+          "name": "crypt_library_2_fastqc.zip",
+          "format": "zip"
+        },
+        {
+          "name": "crypt_library_2_fastqc.html",
+          "format": "html"
+        },
+        {
+          "name": "crypt_library_2_fastqc.json",
+          "format": "json"
+        }
+      ],
+      "reason": "Generate an independent FastQC report for crypt_library_2.fq and preserve all raw QC outputs."
+    },
+    {
+      "id": "step_04",
+      "skill": "multiqc_summary",
+      "inputs": [
+        {
+          "source": "step",
+          "ref": "crypt_library_1_fastqc.zip"
+        },
+        {
+          "source": "step",
+          "ref": "crypt_library_2_fastqc.zip"
+        }
+      ],
+      "parameters": {},
+      "outputs": [
+        {
+          "name": "multiqc_report.html",
+          "format": "html"
+        },
+        {
+          "name": "multiqc_report.json",
+          "format": "json"
+        }
+      ],
+      "reason": "Aggregate both FastQC ZIP archives into a single MultiQC report while retaining the prior FastQC evidence."
+    }
+  ]
+}

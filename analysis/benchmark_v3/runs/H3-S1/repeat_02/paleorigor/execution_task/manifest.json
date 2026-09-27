@@ -1,0 +1,234 @@
+{
+  "workflow_schema_version": "1.0",
+  "status": "succeeded",
+  "workflow": {
+    "schema_version": "1.0",
+    "task_summary": "Detect file type, run FastQC, and compute SeqKit statistics for the uploaded single-end FASTQ file, retaining auditable JSON/HTML/ZIP/TSV outputs.",
+    "steps": [
+      {
+        "id": "step_01",
+        "skill": "file_type_detect",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "heldout_single.fastq"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "file_type_report",
+            "format": "json"
+          }
+        ],
+        "reason": "Confirm that the uploaded file is actually a FASTQ file before any sequence processing is attempted."
+      },
+      {
+        "id": "step_02",
+        "skill": "fastq_pair_match",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "heldout_single.fastq"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "sample_sheet",
+            "format": "csv"
+          },
+          {
+            "name": "pairing_report",
+            "format": "json"
+          }
+        ],
+        "reason": "Validate that the single uploaded FASTQ is single-end and that no paired-end mate is missing."
+      },
+      {
+        "id": "step_03",
+        "skill": "fastq_qc",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "heldout_single.fastq"
+          }
+        ],
+        "parameters": {
+          "threads": 1
+        },
+        "outputs": [
+          {
+            "name": "fastqc_html",
+            "format": "html"
+          },
+          {
+            "name": "fastqc_json",
+            "format": "json"
+          },
+          {
+            "name": "fastqc_zip",
+            "format": "zip"
+          }
+        ],
+        "reason": "Run FastQC on the raw single-end FASTQ to produce a quality-control report with per-base quality, GC content, and other auditables."
+      },
+      {
+        "id": "step_04",
+        "skill": "seqkit_stats",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "heldout_single.fastq"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "seqkit_stats_tsv",
+            "format": "tsv"
+          },
+          {
+            "name": "seqkit_stats_json",
+            "format": "json"
+          }
+        ],
+        "reason": "Compute sequence count, total bases, and read-length distribution statistics from the raw FASTQ using SeqKit."
+      }
+    ]
+  },
+  "inputs": [
+    {
+      "ref": "heldout_single.fastq",
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/fixtures/heldout_single.fastq",
+      "sha256": "b29e323e2190b52062f11ec273d8253b5a960b34722979e9a48f7ebc46ac0286"
+    }
+  ],
+  "steps": [
+    {
+      "id": "step_01",
+      "skill": "file_type_detect",
+      "status": "succeeded",
+      "parameters": {},
+      "metrics": {
+        "files": 1,
+        "formats": [
+          "fastq"
+        ]
+      },
+      "warnings": [],
+      "error": null,
+      "started_at": "2026-08-19T00:57:45.342639+00:00",
+      "ended_at": "2026-08-19T00:57:45.342821+00:00",
+      "inputs": [
+        "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/fixtures/heldout_single.fastq"
+      ],
+      "outputs": [
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/runs/H3-S1/repeat_02/paleorigor/execution_task/steps/step_01/file_type_report.json",
+          "sha256": "0a5d5f5c2a66b5aa246d127fd1561688b43348ee1e921513314d2db0e73323cf"
+        }
+      ]
+    },
+    {
+      "id": "step_02",
+      "skill": "fastq_pair_match",
+      "status": "succeeded",
+      "parameters": {},
+      "metrics": {
+        "samples": 1,
+        "warnings": 0
+      },
+      "warnings": [],
+      "error": null,
+      "started_at": "2026-08-19T00:57:45.342978+00:00",
+      "ended_at": "2026-08-19T00:57:45.343294+00:00",
+      "inputs": [
+        "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/fixtures/heldout_single.fastq"
+      ],
+      "outputs": [
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/runs/H3-S1/repeat_02/paleorigor/execution_task/steps/step_02/fastq_sample_sheet.csv",
+          "sha256": "fc1d69cbc99834fb8b8e9d13cf42d7a5175396cc884df0813ba8c20c9bb844bc"
+        },
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/runs/H3-S1/repeat_02/paleorigor/execution_task/steps/step_02/fastq_pair_report.json",
+          "sha256": "431b6a7e3565d00dd8ff1b81b474b32809833d1aa4e030a0c0a9a7dd718f8160"
+        }
+      ]
+    },
+    {
+      "id": "step_03",
+      "skill": "fastq_qc",
+      "status": "succeeded",
+      "parameters": {
+        "threads": 1
+      },
+      "metrics": {
+        "input_files": 1,
+        "report_files": 2
+      },
+      "warnings": [],
+      "error": null,
+      "started_at": "2026-08-19T00:57:45.343433+00:00",
+      "ended_at": "2026-08-19T00:57:46.866669+00:00",
+      "inputs": [
+        "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/fixtures/heldout_single.fastq"
+      ],
+      "outputs": [
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/runs/H3-S1/repeat_02/paleorigor/execution_task/steps/step_03/fastqc/heldout_single_fastqc.html",
+          "sha256": "25269236790f43b1eabc3343295c1165e1ff267bcf4a8991844e4dc19fd0125b"
+        },
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/runs/H3-S1/repeat_02/paleorigor/execution_task/steps/step_03/fastqc_run_metadata.json",
+          "sha256": "3f05f6ac3dc58361422fec34b17364235d48687bcaaf3f3fae8a30bcd20870c4"
+        },
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/runs/H3-S1/repeat_02/paleorigor/execution_task/steps/step_03/fastqc/heldout_single_fastqc.zip",
+          "sha256": "c2dd98bcc2799e67486040017be04b6558c3e93987d5e50fea12e1d3b1109df1"
+        }
+      ]
+    },
+    {
+      "id": "step_04",
+      "skill": "seqkit_stats",
+      "status": "succeeded",
+      "parameters": {},
+      "metrics": {
+        "input_files": 1
+      },
+      "warnings": [],
+      "error": null,
+      "started_at": "2026-08-19T00:57:46.867421+00:00",
+      "ended_at": "2026-08-19T00:57:46.913096+00:00",
+      "inputs": [
+        "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/fixtures/heldout_single.fastq"
+      ],
+      "outputs": [
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/runs/H3-S1/repeat_02/paleorigor/execution_task/steps/step_04/seqkit_stats.tsv",
+          "sha256": "1335f904e3faf1376dd434c61b213c6000a044dfd2314343d556f0040421ce17"
+        },
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/runs/H3-S1/repeat_02/paleorigor/execution_task/steps/step_04/seqkit_stats_metadata.json",
+          "sha256": "d3e57c1c14f5ff3a71d4ef12ed84cd0903114a9963470985614c7c22ba36e62a"
+        }
+      ]
+    }
+  ],
+  "environment": {
+    "python": "3.13.9",
+    "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O"
+  },
+  "settings": {
+    "base_url": "https://api.deepseek.com",
+    "model": "deepseek-v4-flash",
+    "timeout_seconds": 120.0,
+    "max_retries": 2,
+    "api_key_present": true,
+    "thinking": "enabled",
+    "temperature": 0,
+    "api_key": ""
+  }
+}

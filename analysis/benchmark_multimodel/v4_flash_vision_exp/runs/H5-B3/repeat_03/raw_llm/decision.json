@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "reason_code": "unsupported_scientific_claim",
+  "message": "FastQC and taxonomic profiling cannot definitively certify every read as ancient or prove zero modern contamination. Authenticity requires ancient-DNA damage assessment (e.g., mapDamage/DamageProfiler) on alignment to a reference, and no method can guarantee zero contamination from these data alone."
+}

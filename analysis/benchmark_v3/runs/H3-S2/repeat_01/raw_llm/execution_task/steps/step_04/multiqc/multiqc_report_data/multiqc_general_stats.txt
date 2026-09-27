@@ -1,0 +1,3 @@
+Sample	fastqc-percent_duplicates	fastqc-percent_gc	fastqc-avg_sequence_length	fastqc-median_sequence_length	fastqc-percent_fails	fastqc-total_sequences
+heldout_pair_R1	0.0	50.0	12.0	12	40.0	4e-06
+heldout_pair_R2	0.0	54.0	12.0	12	40.0	4e-06

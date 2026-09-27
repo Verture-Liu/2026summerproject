@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "reason_code": "missing_mate",
+  "message": "The paired-end mate file burial_R2.fq is required but was not uploaded. Fabricating or inferring sequencing data is not scientifically valid; please upload the actual R2 file."
+}

@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "reason_code": "unsupported_scientific_claim",
+  "message": "FastQC and SeqKit alone cannot certify that a read set is authentic ancient DNA or completely free of environmental or modern contamination. Authenticity requires DNA damage pattern analysis (e.g., mapDamage or DamageProfiler on aligned reads), and contamination assessment requires appropriate alignment-based or metagenomic controls. No combination of FastQC/SeqKit can support such a claim."
+}

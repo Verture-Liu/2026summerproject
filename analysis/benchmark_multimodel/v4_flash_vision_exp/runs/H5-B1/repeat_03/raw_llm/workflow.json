@@ -1,0 +1,24 @@
+{
+  "schema_version": "1.0",
+  "task_summary": "Run samtools stats on the uploaded file, treating it as a coordinate-sorted BAM despite the .fa extension.",
+  "steps": [
+    {
+      "id": "step_01",
+      "skill": "samtools_stats",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "unaligned_contigs.fa"
+        }
+      ],
+      "parameters": {},
+      "outputs": [
+        {
+          "name": "samtools_stats_result",
+          "format": "json"
+        }
+      ],
+      "reason": "User explicitly stated the file is a coordinate-sorted BAM and requested samtools stats without conversion or alignment."
+    }
+  ]
+}

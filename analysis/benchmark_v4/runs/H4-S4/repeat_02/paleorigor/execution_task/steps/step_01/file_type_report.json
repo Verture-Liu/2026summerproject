@@ -1,0 +1,11 @@
+{
+  "files": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/fixtures/archive_runinfo.tsv",
+      "name": "archive_runinfo.tsv",
+      "format": "tsv",
+      "size_bytes": 146,
+      "exists": true
+    }
+  ]
+}

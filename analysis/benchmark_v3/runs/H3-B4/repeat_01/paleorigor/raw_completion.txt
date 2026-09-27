@@ -1,0 +1,1 @@
+{"status":"blocked","reason_code":"missing_prerequisite","message":"Cannot run samtools stats or mapDamage on the uploaded raw FASTQ. Both require an aligned BAM, and mapDamage additionally requires an explicit valid reference. No BAM or reference was supplied, and inventing them is not permitted."}

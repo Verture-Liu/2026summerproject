@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "reason_code": "missing_prerequisite",
+  "message": "A reference genome is required for host-DNA removal. No reference genome file was provided and none is available to guess. Please supply a reference genome or specify an existing reference index."
+}

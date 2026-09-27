@@ -1,0 +1,1 @@
+{"status":"blocked","reason_code":"file_type_mismatch","message":"The uploaded file is heldout_metadata.tsv (TSV format), which is not raw FASTQ data. FastQC and cutadapt require FASTQ input, so the requested workflow cannot be executed on this file."}

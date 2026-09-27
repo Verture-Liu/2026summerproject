@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "reason_code": "missing_mate",
+  "message": "Only burial_R1.fq was uploaded; burial_R2.fq is required for paired-end QC. Fabricating or inferring the R2 mate would create invalid scientific data, so the workflow cannot proceed. Please upload the real burial_R2.fq file."
+}

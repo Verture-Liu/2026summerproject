@@ -1,0 +1,8 @@
+{
+  "tool": "seqkit",
+  "tool_source": "path",
+  "official_url": "https://bioinf.shenwei.me/seqkit/",
+  "input": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/fixtures/ancient_fragments.fasta",
+  "output": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S1/repeat_02/raw_llm/execution_task/steps/step_02/deduplicated.fasta",
+  "by_sequence": true
+}

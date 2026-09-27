@@ -1,0 +1,18 @@
+{
+  "id": "step_05",
+  "skill": "seqkit_length_filter",
+  "status": "failed",
+  "parameters": {
+    "min_length": 12,
+    "max_length": 18
+  },
+  "metrics": {},
+  "warnings": [],
+  "error": "seqkit_length_filter did not produce declared output filtered_reads (fastq)",
+  "started_at": "2026-08-19T01:17:35.029759+00:00",
+  "ended_at": "2026-08-19T01:17:35.080800+00:00",
+  "inputs": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/fixtures/heldout_variable_length.fastq"
+  ],
+  "outputs": []
+}

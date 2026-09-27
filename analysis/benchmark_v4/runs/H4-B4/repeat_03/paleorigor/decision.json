@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "reason_code": "missing_mate",
+  "message": "tomb_orphan_R1.fastq is absent, so the paired-end library is incomplete. I cannot invent or substitute the missing mate."
+}

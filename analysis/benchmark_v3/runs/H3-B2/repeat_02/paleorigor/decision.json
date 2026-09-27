@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "reason_code": "missing_mate",
+  "message": "The paired-end mate orphan_sample_R2.fastq is not present in the uploaded files; a complete read pair is required for paired FastQC and MultiQC."
+}

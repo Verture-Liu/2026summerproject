@@ -1,0 +1,1 @@
+{"status":"blocked","reason_code":"missing_prerequisite","message":"Host DNA removal requires an explicit reference genome or named existing index. No reference was supplied, and I cannot invent or silently substitute one. Please provide a human reference genome (e.g., GRCh38) or a named Bowtie2 index to proceed."}

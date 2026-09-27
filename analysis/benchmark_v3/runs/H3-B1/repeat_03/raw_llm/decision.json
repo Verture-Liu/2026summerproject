@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "reason_code": "file_type_mismatch",
+  "message": "The uploaded file heldout_metadata.tsv is a TSV metadata file, not FASTQ. FastQC and cutadapt require FASTQ input. Please upload the raw FASTQ file(s)."
+}

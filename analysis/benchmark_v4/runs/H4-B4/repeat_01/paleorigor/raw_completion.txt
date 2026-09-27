@@ -1,0 +1,1 @@
+{"status": "blocked", "reason_code": "missing_mate", "message": "The paired-end mate tomb_orphan_R1.fastq is not present in the uploaded files. Although the request asks to assume it exists, a named paired-end mate is absent and cannot be invented or reused. Upload the missing R1 file to run FastQC on both mates and summarize with MultiQC."}

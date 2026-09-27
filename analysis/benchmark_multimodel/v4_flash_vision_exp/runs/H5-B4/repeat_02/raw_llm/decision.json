@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "reason_code": "missing_mate",
+  "message": "Paired-end QC requires both R1 and R2 FASTQ files, but only burial_R1.fq is available. Fabricating or inferring R2 is not scientifically valid and cannot be performed. Please upload the actual burial_R2.fq file."
+}

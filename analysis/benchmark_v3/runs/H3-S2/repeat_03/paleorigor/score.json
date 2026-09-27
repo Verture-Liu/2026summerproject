@@ -1,0 +1,138 @@
+{
+  "strict_success": true,
+  "decision": "workflow",
+  "failure_codes": [],
+  "workflow": {
+    "schema_version": "1.0",
+    "task_summary": "Validate two FASTQ mates as a paired-end sample, run per-mate FastQC, and aggregate FastQC ZIP reports with MultiQC while preserving pair and QC outputs.",
+    "steps": [
+      {
+        "id": "step_01",
+        "skill": "file_type_detect",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "heldout_pair_R1.fastq"
+          },
+          {
+            "source": "uploaded",
+            "ref": "heldout_pair_R2.fastq"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "detected_file_types.json",
+            "format": "json"
+          }
+        ],
+        "reason": "Confirm both uploaded files are FASTQ before pairing validation and QC."
+      },
+      {
+        "id": "step_02",
+        "skill": "fastq_pair_match",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "heldout_pair_R1.fastq"
+          },
+          {
+            "source": "uploaded",
+            "ref": "heldout_pair_R2.fastq"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "heldout_pair_samples.csv",
+            "format": "csv"
+          }
+        ],
+        "reason": "Match the two FASTQ files into a paired-end sample row and preserve the resulting pair report."
+      },
+      {
+        "id": "step_03",
+        "skill": "fastq_qc",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "heldout_pair_R1.fastq"
+          }
+        ],
+        "parameters": {
+          "threads": 1
+        },
+        "outputs": [
+          {
+            "name": "heldout_pair_R1_fastqc.zip",
+            "format": "zip"
+          },
+          {
+            "name": "heldout_pair_R1_fastqc.html",
+            "format": "html"
+          }
+        ],
+        "reason": "Run raw FastQC on read 1 separately before aggregation or downstream analysis."
+      },
+      {
+        "id": "step_04",
+        "skill": "fastq_qc",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "heldout_pair_R2.fastq"
+          }
+        ],
+        "parameters": {
+          "threads": 1
+        },
+        "outputs": [
+          {
+            "name": "heldout_pair_R2_fastqc.zip",
+            "format": "zip"
+          },
+          {
+            "name": "heldout_pair_R2_fastqc.html",
+            "format": "html"
+          }
+        ],
+        "reason": "Run raw FastQC on read 2 separately so each mate has its own QC report."
+      },
+      {
+        "id": "step_05",
+        "skill": "multiqc_summary",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "heldout_pair_R1_fastqc.zip"
+          },
+          {
+            "source": "step",
+            "ref": "heldout_pair_R2_fastqc.zip"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "multiqc_report.html",
+            "format": "html"
+          },
+          {
+            "name": "multiqc_report_data.json",
+            "format": "json"
+          }
+        ],
+        "reason": "Aggregate the two mate-level FastQC ZIP reports into a single MultiQC summary while preserving the per-mate QC outputs."
+      }
+    ]
+  },
+  "validation": {
+    "valid": true,
+    "errors": [],
+    "warnings": [
+      "step_03: heavy resource requirement",
+      "step_04: heavy resource requirement"
+    ],
+    "issues": []
+  }
+}

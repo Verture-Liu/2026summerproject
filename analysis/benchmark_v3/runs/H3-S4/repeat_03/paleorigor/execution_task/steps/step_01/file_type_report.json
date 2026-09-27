@@ -1,0 +1,11 @@
+{
+  "files": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/fixtures/heldout_variable_length.fastq",
+      "name": "heldout_variable_length.fastq",
+      "format": "fastq",
+      "size_bytes": 227,
+      "exists": true
+    }
+  ]
+}

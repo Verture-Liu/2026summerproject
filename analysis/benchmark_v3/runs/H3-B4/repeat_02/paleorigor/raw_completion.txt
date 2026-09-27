@@ -1,0 +1,1 @@
+{"status": "blocked", "reason_code": "missing_prerequisite", "message": "mapDamage requires an aligned BAM and an explicit valid reference, and samtools stats requires BAM/SAM input. No BAM was uploaded and inventing a reference or BAM is not allowed. Provide aligned BAM data and a valid reference before these analyses can run."}

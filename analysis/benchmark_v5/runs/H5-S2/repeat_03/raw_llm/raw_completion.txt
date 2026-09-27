@@ -1,0 +1,58 @@
+{
+  "schema_version": "1.0",
+  "task_summary": "Validate paired-end status of crypt_library_1.fq and crypt_library_2.fq, run FastQC independently on each FASTQ file, then aggregate both FastQC ZIP archives into a single MultiQC report while preserving all QC evidence.",
+  "steps": [
+    {
+      "id": "step_01",
+      "skill": "fastq_pair_match",
+      "inputs": [
+        {"source": "uploaded", "ref": "crypt_library_1.fq"},
+        {"source": "uploaded", "ref": "crypt_library_2.fq"}
+      ],
+      "outputs": [
+        {"name": "paired_match_results.csv", "format": "csv"},
+        {"name": "paired_match_results.json", "format": "json"}
+      ],
+      "reason": "Check whether the two crypt-library FASTQ files are valid paired-end mates by matching read identifiers and sample rows before downstream QC."
+    },
+    {
+      "id": "step_02",
+      "skill": "fastq_qc",
+      "inputs": [
+        {"source": "uploaded", "ref": "crypt_library_1.fq"}
+      ],
+      "outputs": [
+        {"name": "crypt_library_1_fastqc.zip", "format": "zip"},
+        {"name": "crypt_library_1_fastqc.html", "format": "html"},
+        {"name": "crypt_library_1_fastqc.json", "format": "json"}
+      ],
+      "reason": "Generate an independent FastQC report for the first crypt-library FASTQ file, retaining all QC evidence as ZIP, HTML, and JSON."
+    },
+    {
+      "id": "step_03",
+      "skill": "fastq_qc",
+      "inputs": [
+        {"source": "uploaded", "ref": "crypt_library_2.fq"}
+      ],
+      "outputs": [
+        {"name": "crypt_library_2_fastqc.zip", "format": "zip"},
+        {"name": "crypt_library_2_fastqc.html", "format": "html"},
+        {"name": "crypt_library_2_fastqc.json", "format": "json"}
+      ],
+      "reason": "Generate an independent FastQC report for the second crypt-library FASTQ file, retaining all QC evidence as ZIP, HTML, and JSON."
+    },
+    {
+      "id": "step_04",
+      "skill": "multiqc_summary",
+      "inputs": [
+        {"source": "step", "ref": "crypt_library_1_fastqc.zip"},
+        {"source": "step", "ref": "crypt_library_2_fastqc.zip"}
+      ],
+      "outputs": [
+        {"name": "multiqc_report.html", "format": "html"},
+        {"name": "multiqc_report.json", "format": "json"}
+      ],
+      "reason": "Aggregate both FastQC ZIP archives into one MultiQC report, preserving the underlying FastQC evidence."
+    }
+  ]
+}

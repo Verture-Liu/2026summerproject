@@ -1,0 +1,8 @@
+{
+  "tool": "seqkit",
+  "tool_source": "path",
+  "official_url": "https://bioinf.shenwei.me/seqkit/",
+  "inputs": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/fixtures/heldout_single.fastq"
+  ]
+}

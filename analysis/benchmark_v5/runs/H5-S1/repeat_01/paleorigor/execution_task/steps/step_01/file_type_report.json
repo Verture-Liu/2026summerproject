@@ -1,0 +1,11 @@
+{
+  "files": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v5/fixtures/sediment_amplicons.fna",
+      "name": "sediment_amplicons.fna",
+      "format": "fasta",
+      "size_bytes": 154,
+      "exists": true
+    }
+  ]
+}

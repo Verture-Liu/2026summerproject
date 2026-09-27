@@ -1,0 +1,10 @@
+{
+  "samples": [
+    {
+      "sample_id": "heldout_pair",
+      "layout": "paired",
+      "fastq_1": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/fixtures/heldout_pair_R1.fastq",
+      "fastq_2": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/fixtures/heldout_pair_R2.fastq"
+    }
+  ]
+}

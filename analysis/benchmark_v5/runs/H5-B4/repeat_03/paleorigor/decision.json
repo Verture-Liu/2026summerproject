@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "reason_code": "missing_mate",
+  "message": "burial_R2.fq was referenced for paired-end QC but was not uploaded. Paired-end analysis cannot proceed without the actual R2 file; it must not be fabricated or inferred."
+}

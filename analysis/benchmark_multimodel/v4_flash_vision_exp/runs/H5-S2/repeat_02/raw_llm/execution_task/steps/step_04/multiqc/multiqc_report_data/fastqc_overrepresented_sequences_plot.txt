@@ -1,0 +1,3 @@
+Sample	Top overrepresented sequence	Sum of remaining overrepresented sequences
+crypt_library_1	25.0	75.0
+crypt_library_2	25.0	75.0

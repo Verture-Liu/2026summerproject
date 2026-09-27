@@ -1,0 +1,27 @@
+{
+  "id": "step_02",
+  "skill": "fastq_pair_match",
+  "status": "succeeded",
+  "parameters": {},
+  "metrics": {
+    "samples": 1,
+    "warnings": 0
+  },
+  "warnings": [],
+  "error": null,
+  "started_at": "2026-08-19T00:57:45.342978+00:00",
+  "ended_at": "2026-08-19T00:57:45.343294+00:00",
+  "inputs": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/fixtures/heldout_single.fastq"
+  ],
+  "outputs": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/runs/H3-S1/repeat_02/paleorigor/execution_task/steps/step_02/fastq_sample_sheet.csv",
+      "sha256": "fc1d69cbc99834fb8b8e9d13cf42d7a5175396cc884df0813ba8c20c9bb844bc"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/runs/H3-S1/repeat_02/paleorigor/execution_task/steps/step_02/fastq_pair_report.json",
+      "sha256": "431b6a7e3565d00dd8ff1b81b474b32809833d1aa4e030a0c0a9a7dd718f8160"
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+{"status":"blocked","reason_code":"missing_mate","message":"Only tomb_orphan_R2.fastq is available; the required mate tomb_orphan_R1.fastq is not among the provided files. Without inventing files, FastQC cannot be run on both paired-end mates, nor can the requested MultiQC summary be produced."}

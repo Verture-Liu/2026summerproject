@@ -1,0 +1,1 @@
+{"status":"blocked","reason_code":"unsupported_scientific_claim","message":"FastQC and SeqKit are general QC tools and cannot certify ancient authenticity or prove absence of environmental/modern contamination. Authentication requires dedicated methods such as damage-pattern analysis on aligned data and contamination estimation with proper controls."}

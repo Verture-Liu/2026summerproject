@@ -1,0 +1,83 @@
+{
+  "schema_version": "1.0",
+  "task_summary": "Inspect the uploaded ancient-sediment FASTA, remove duplicate sequences, keep records between 15 and 22 nucleotides, and report SeqKit statistics for the retained sequences while preserving intermediate FASTA files.",
+  "steps": [
+    {
+      "id": "step_01",
+      "skill": "seqkit_stats",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "sediment_amplicons.fna"
+        }
+      ],
+      "parameters": {},
+      "outputs": [
+        {
+          "name": "original_stats_json",
+          "format": "json"
+        }
+      ],
+      "reason": "Inspect the uploaded ancient-sediment FASTA and capture its initial SeqKit statistics before filtering."
+    },
+    {
+      "id": "step_02",
+      "skill": "seqkit_deduplicate",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "sediment_amplicons.fna"
+        }
+      ],
+      "parameters": {
+        "by_sequence": true
+      },
+      "outputs": [
+        {
+          "name": "deduplicated_fasta",
+          "format": "fasta"
+        }
+      ],
+      "reason": "Remove duplicate FASTA records by sequence content, producing an intermediate non-redundant FASTA."
+    },
+    {
+      "id": "step_03",
+      "skill": "seqkit_length_filter",
+      "inputs": [
+        {
+          "source": "step",
+          "ref": "deduplicated_fasta"
+        }
+      ],
+      "parameters": {
+        "min_length": 15,
+        "max_length": 22
+      },
+      "outputs": [
+        {
+          "name": "filtered_fasta",
+          "format": "fasta"
+        }
+      ],
+      "reason": "Retain only nucleotide records between 15 and 22 nucleotides, producing the filtered intermediate FASTA."
+    },
+    {
+      "id": "step_04",
+      "skill": "seqkit_stats",
+      "inputs": [
+        {
+          "source": "step",
+          "ref": "filtered_fasta"
+        }
+      ],
+      "parameters": {},
+      "outputs": [
+        {
+          "name": "retained_stats_json",
+          "format": "json"
+        }
+      ],
+      "reason": "Generate machine-readable SeqKit statistics for the retained length-filtered, de-duplicated sequences."
+    }
+  ]
+}

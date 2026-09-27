@@ -1,0 +1,168 @@
+{
+  "strict_success": false,
+  "decision": "workflow",
+  "failure_codes": [
+    "execution_failed"
+  ],
+  "workflow": {
+    "schema_version": "1.0",
+    "task_summary": "Run raw FastQC, filter FASTQ reads to 12-18 bases with SeqKit, quality-gate the filtered reads, then generate post-filter SeqKit statistics and audit reports.",
+    "steps": [
+      {
+        "id": "step_01",
+        "skill": "file_type_detect",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "heldout_variable_length.fastq"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "file_type_report",
+            "format": "json"
+          }
+        ],
+        "reason": "Confirm the uploaded file is FASTQ and not a mismatch before running FastQC or SeqKit."
+      },
+      {
+        "id": "step_02",
+        "skill": "fastq_pair_match",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "heldout_variable_length.fastq"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "pairing_report",
+            "format": "json"
+          }
+        ],
+        "reason": "Determine whether the sample is single-end or paired-end so the correct FastQC and filtering layout is used."
+      },
+      {
+        "id": "step_03",
+        "skill": "fastq_qc",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "heldout_variable_length.fastq"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "raw_fastqc_html",
+            "format": "html"
+          },
+          {
+            "name": "raw_fastqc_zip",
+            "format": "zip"
+          }
+        ],
+        "reason": "Run raw FastQC on the unfiltered FASTQ file to establish baseline read quality and enable audit reporting."
+      },
+      {
+        "id": "step_04",
+        "skill": "multiqc_summary",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "raw_fastqc_zip"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "multiqc_report_html",
+            "format": "html"
+          },
+          {
+            "name": "multiqc_report_json",
+            "format": "json"
+          }
+        ],
+        "reason": "Aggregate the raw FastQC output into a single MultiQC audit report for convenient inspection."
+      },
+      {
+        "id": "step_05",
+        "skill": "seqkit_length_filter",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "heldout_variable_length.fastq"
+          }
+        ],
+        "parameters": {
+          "min_length": 12,
+          "max_length": 18
+        },
+        "outputs": [
+          {
+            "name": "filtered_reads",
+            "format": "fastq"
+          },
+          {
+            "name": "length_filter_report",
+            "format": "json"
+          }
+        ],
+        "reason": "Retain only reads between 12 and 18 bases using SeqKit, producing the requested filtered FASTQ and an audit report."
+      },
+      {
+        "id": "step_06",
+        "skill": "data_quality_gate",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "filtered_reads"
+          }
+        ],
+        "parameters": {
+          "min_records": 1
+        },
+        "outputs": [
+          {
+            "name": "quality_gate_report",
+            "format": "json"
+          }
+        ],
+        "reason": "Apply a post-filtering quality gate to verify the filtered FASTQ is non-empty and structurally valid before downstream statistics."
+      },
+      {
+        "id": "step_07",
+        "skill": "seqkit_stats",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "filtered_reads"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "post_filter_stats_tsv",
+            "format": "tsv"
+          },
+          {
+            "name": "post_filter_stats_json",
+            "format": "json"
+          }
+        ],
+        "reason": "Calculate post-filter SeqKit statistics on the quality-gated FASTQ to summarize the final read count and length distribution."
+      }
+    ]
+  },
+  "validation": {
+    "valid": true,
+    "errors": [],
+    "warnings": [
+      "step_03: heavy resource requirement"
+    ],
+    "issues": []
+  }
+}

@@ -1,0 +1,29 @@
+{
+  "id": "step_01",
+  "skill": "peptide_csv_normalize",
+  "status": "succeeded",
+  "parameters": {
+    "delimiter": "auto"
+  },
+  "metrics": {
+    "input_rows": 6,
+    "normalized_rows": 6,
+    "empty_rows_removed": 0,
+    "header_detected": true,
+    "label_column": "label",
+    "sequence_column": "sequence"
+  },
+  "warnings": [],
+  "error": null,
+  "started_at": "2026-08-19T01:52:14.837456+00:00",
+  "ended_at": "2026-08-19T01:52:14.853926+00:00",
+  "inputs": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/fixtures/curated_candidates.csv"
+  ],
+  "outputs": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S3/repeat_01/raw_llm/execution_task/steps/step_01/normalized_peptides.csv",
+      "sha256": "e95939d190d180bae95c793607af71b800bca1179836b4e54329e392242f646d"
+    }
+  ]
+}

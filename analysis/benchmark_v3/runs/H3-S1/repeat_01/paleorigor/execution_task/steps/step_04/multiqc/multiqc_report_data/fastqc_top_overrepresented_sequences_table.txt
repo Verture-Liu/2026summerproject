@@ -1,0 +1,5 @@
+Sample	Reports	Occurrences	% of all reads
+ACGTACGTACGT	1	1	25.0
+CGTACGTACGTA	1	1	25.0
+GGCCAATTGGCC	1	1	25.0
+TTAACCGGTTAA	1	1	25.0

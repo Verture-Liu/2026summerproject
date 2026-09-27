@@ -1,0 +1,276 @@
+{
+  "workflow_schema_version": "1.0",
+  "status": "succeeded",
+  "workflow": {
+    "schema_version": "1.0",
+    "task_summary": "Detect file type, deduplicate FASTA sequences with SeqKit, retain sequences 14-22 bases, run a quality gate, and compute SeqKit statistics.",
+    "steps": [
+      {
+        "id": "step_01",
+        "skill": "file_type_detect",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "ancient_fragments.fasta"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "file_type_detection.json",
+            "format": "json"
+          }
+        ],
+        "reason": "Confirm the uploaded file is FASTA before running sequence operations."
+      },
+      {
+        "id": "step_02",
+        "skill": "seqkit_deduplicate",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "ancient_fragments.fasta"
+          }
+        ],
+        "parameters": {
+          "by_sequence": true
+        },
+        "outputs": [
+          {
+            "name": "ancient_fragments_dedup.fasta",
+            "format": "fasta"
+          },
+          {
+            "name": "ancient_fragments_dedup_audit.json",
+            "format": "json"
+          }
+        ],
+        "reason": "Remove duplicate sequences with SeqKit while preserving the deduplicated FASTA and an audit record."
+      },
+      {
+        "id": "step_03",
+        "skill": "seqkit_length_filter",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "ancient_fragments_dedup.fasta"
+          }
+        ],
+        "parameters": {
+          "min_length": 14,
+          "max_length": 22
+        },
+        "outputs": [
+          {
+            "name": "ancient_fragments_filtered.fasta",
+            "format": "fasta"
+          },
+          {
+            "name": "ancient_fragments_length_filter_audit.json",
+            "format": "json"
+          }
+        ],
+        "reason": "Retain only sequences between 14 and 22 bases after deduplication, preserving the filtered FASTA and audit JSON."
+      },
+      {
+        "id": "step_04",
+        "skill": "data_quality_gate",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "ancient_fragments_filtered.fasta"
+          }
+        ],
+        "parameters": {
+          "min_records": 1,
+          "fail_on_error": true
+        },
+        "outputs": [
+          {
+            "name": "filtered_fasta_quality_gate.json",
+            "format": "json"
+          }
+        ],
+        "reason": "Quality gate the filtered FASTA before calculating statistics to ensure the downstream table is not empty."
+      },
+      {
+        "id": "step_05",
+        "skill": "seqkit_stats",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "ancient_fragments_filtered.fasta"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "ancient_fragments_filtered_stats.json",
+            "format": "json"
+          },
+          {
+            "name": "ancient_fragments_filtered_stats.tsv",
+            "format": "tsv"
+          }
+        ],
+        "reason": "Compute final SeqKit statistics for the deduplicated and length-filtered FASTA file."
+      }
+    ]
+  },
+  "inputs": [
+    {
+      "ref": "ancient_fragments.fasta",
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/fixtures/ancient_fragments.fasta",
+      "sha256": "46415abf0ae4aafd744c85572895ee2dcfede6dbc7467b4092667770e5df5188"
+    }
+  ],
+  "steps": [
+    {
+      "id": "step_01",
+      "skill": "file_type_detect",
+      "status": "succeeded",
+      "parameters": {},
+      "metrics": {
+        "files": 1,
+        "formats": [
+          "fasta"
+        ]
+      },
+      "warnings": [],
+      "error": null,
+      "started_at": "2026-08-19T01:47:11.092554+00:00",
+      "ended_at": "2026-08-19T01:47:11.092819+00:00",
+      "inputs": [
+        "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/fixtures/ancient_fragments.fasta"
+      ],
+      "outputs": [
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S1/repeat_01/paleorigor/execution_task/steps/step_01/file_type_report.json",
+          "sha256": "035af59cd2207c06497f8f645d0799d5b1ab7b2531d4dd3614638c7e59225aca"
+        }
+      ]
+    },
+    {
+      "id": "step_02",
+      "skill": "seqkit_deduplicate",
+      "status": "succeeded",
+      "parameters": {
+        "by_sequence": true
+      },
+      "metrics": {},
+      "warnings": [],
+      "error": null,
+      "started_at": "2026-08-19T01:47:11.092997+00:00",
+      "ended_at": "2026-08-19T01:47:11.147302+00:00",
+      "inputs": [
+        "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/fixtures/ancient_fragments.fasta"
+      ],
+      "outputs": [
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S1/repeat_01/paleorigor/execution_task/steps/step_02/deduplicated.fasta",
+          "sha256": "605764fc894ea6119259e413b00c63de711b90e59cadf3aa2780835183602641"
+        },
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S1/repeat_01/paleorigor/execution_task/steps/step_02/seqkit_deduplicate_metadata.json",
+          "sha256": "c1fb354db6fd3e94710b02079c9a33cd6036987682c88fa97bfb2394e95d7af5"
+        }
+      ]
+    },
+    {
+      "id": "step_03",
+      "skill": "seqkit_length_filter",
+      "status": "succeeded",
+      "parameters": {
+        "min_length": 14,
+        "max_length": 22
+      },
+      "metrics": {
+        "output_sequences": null
+      },
+      "warnings": [],
+      "error": null,
+      "started_at": "2026-08-19T01:47:11.147575+00:00",
+      "ended_at": "2026-08-19T01:47:11.170291+00:00",
+      "inputs": [
+        "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S1/repeat_01/paleorigor/execution_task/steps/step_02/deduplicated.fasta"
+      ],
+      "outputs": [
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S1/repeat_01/paleorigor/execution_task/steps/step_03/length_filtered.fasta",
+          "sha256": "d3d523bfcb5fe9a0df95b7f8603a113ff2e65161efe05951f3d6051950f6bc07"
+        },
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S1/repeat_01/paleorigor/execution_task/steps/step_03/seqkit_length_filter_metadata.json",
+          "sha256": "35bb37e8ed6d9a6ced0bcec4e12e5b96565c2ab832a305027cc26893893703d2"
+        }
+      ]
+    },
+    {
+      "id": "step_04",
+      "skill": "data_quality_gate",
+      "status": "succeeded",
+      "parameters": {
+        "min_records": 1,
+        "fail_on_error": true
+      },
+      "metrics": {
+        "gate_passed": true,
+        "files": 1,
+        "warnings": 0
+      },
+      "warnings": [],
+      "error": null,
+      "started_at": "2026-08-19T01:47:11.170517+00:00",
+      "ended_at": "2026-08-19T01:47:11.170750+00:00",
+      "inputs": [
+        "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S1/repeat_01/paleorigor/execution_task/steps/step_03/length_filtered.fasta"
+      ],
+      "outputs": [
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S1/repeat_01/paleorigor/execution_task/steps/step_04/data_quality_gate_report.json",
+          "sha256": "743e5d65538ed069765288b24871645736a4889c89c9d6e93eae5d4bf459d9a6"
+        }
+      ]
+    },
+    {
+      "id": "step_05",
+      "skill": "seqkit_stats",
+      "status": "succeeded",
+      "parameters": {},
+      "metrics": {
+        "input_files": 1
+      },
+      "warnings": [],
+      "error": null,
+      "started_at": "2026-08-19T01:47:11.170884+00:00",
+      "ended_at": "2026-08-19T01:47:11.187233+00:00",
+      "inputs": [
+        "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S1/repeat_01/paleorigor/execution_task/steps/step_03/length_filtered.fasta"
+      ],
+      "outputs": [
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S1/repeat_01/paleorigor/execution_task/steps/step_05/seqkit_stats.tsv",
+          "sha256": "398d94dfdb73d1e04ff58851ba25c322ca6ec8ea700e380b111751347d61de5b"
+        },
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S1/repeat_01/paleorigor/execution_task/steps/step_05/seqkit_stats_metadata.json",
+          "sha256": "ad28e273c2005ab5c1d924f435f29063189c59536a5e2e4eee945f53d063a4ae"
+        }
+      ]
+    }
+  ],
+  "environment": {
+    "python": "3.13.9",
+    "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O"
+  },
+  "settings": {
+    "base_url": "https://api.deepseek.com",
+    "model": "deepseek-v4-flash",
+    "timeout_seconds": 120.0,
+    "max_retries": 2,
+    "api_key_present": true,
+    "thinking": "enabled",
+    "temperature": 0,
+    "api_key": ""
+  }
+}

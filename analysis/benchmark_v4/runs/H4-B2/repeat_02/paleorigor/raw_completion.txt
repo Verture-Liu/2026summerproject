@@ -1,0 +1,1 @@
+{"status": "blocked", "reason_code": "missing_prerequisite", "message": "Host DNA removal requires an explicit reference genome or a named existing Bowtie2 index. No reference was supplied, and inventing or guessing a plausible host reference is not permitted. Please provide the reference genome or index to proceed."}

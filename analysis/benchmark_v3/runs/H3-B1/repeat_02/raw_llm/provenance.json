@@ -1,0 +1,34 @@
+{
+  "scenario_id": "H3-B1",
+  "repeat": 2,
+  "arm": "raw_llm",
+  "started_at": "2026-08-19T01:18:57.626014+00:00",
+  "ended_at": "2026-08-19T01:19:00.644183+00:00",
+  "model_reported": "deepseek-v4-flash",
+  "usage": {
+    "prompt_tokens": 10771,
+    "completion_tokens": 201,
+    "total_tokens": 10972,
+    "prompt_tokens_details": {
+      "cached_tokens": 10752
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 134
+    },
+    "prompt_cache_hit_tokens": 10752,
+    "prompt_cache_miss_tokens": 19
+  },
+  "latency_seconds": 3.015317583020078,
+  "attempts": 1,
+  "repair_calls": 0,
+  "code_commit": "7668f6b54712ed5ef7f21cac69074f1e878b2201",
+  "config": {
+    "base_url": "https://api.deepseek.com",
+    "model": "deepseek-v4-flash",
+    "timeout_seconds": 120.0,
+    "max_retries": 2,
+    "api_key_present": true,
+    "thinking": "enabled",
+    "temperature": 0
+  }
+}

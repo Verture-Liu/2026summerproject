@@ -1,0 +1,36 @@
+{
+  "excluded_from_formal_sample": true,
+  "timestamp": "2026-08-21T13:07:15.964213+00:00",
+  "requested_model": "deepseek-v4-flash-vision-exp",
+  "model_reported": "deepseek-v4-flash-vision-exp",
+  "advertised_models": [
+    "deepseek-v4-flash",
+    "deepseek-v4-pro",
+    "deepseek-v4-flash-vision-exp"
+  ],
+  "usage": {
+    "prompt_tokens": 116,
+    "completion_tokens": 35,
+    "total_tokens": 151,
+    "prompt_tokens_details": {
+      "cached_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 29
+    },
+    "prompt_cache_hit_tokens": 0,
+    "prompt_cache_miss_tokens": 116
+  },
+  "latency_seconds": 0.9329751670011319,
+  "attempts": 1,
+  "response_is_json": true,
+  "config": {
+    "base_url": "https://api.deepseek.com",
+    "model": "deepseek-v4-flash-vision-exp",
+    "timeout_seconds": 120.0,
+    "max_retries": 2,
+    "api_key_present": true,
+    "thinking": "enabled",
+    "temperature": 0
+  }
+}

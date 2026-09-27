@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "reason_code": "missing_prerequisite",
+  "message": "Host DNA removal requires a reference genome/index, but no reference file was provided. The user asked to choose a plausible reference automatically, but no reference genome file is listed, and inventing a reference path would violate constraints. Please supply a host reference genome/index or configure the required 'reference' parameter."
+}

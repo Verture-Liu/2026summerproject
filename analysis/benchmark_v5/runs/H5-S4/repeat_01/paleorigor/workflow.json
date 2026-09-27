@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "task_summary": "Transform public-repository metadata TSV into a normalized FASTQ sample-sheet CSV, preserving sample/run identifiers, single-versus-paired layout, predicted FASTQ paths, and organism metadata, without path validation because reads were not uploaded.",
+  "steps": [
+    {
+      "id": "step_01",
+      "skill": "file_type_detect",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "depository_metadata"
+        }
+      ],
+      "parameters": {},
+      "outputs": [
+        {
+          "name": "metadata_type_detection",
+          "format": "json"
+        }
+      ],
+      "reason": "Confirm the uploaded depository file is TSV before normalization, guarding against a file-type mismatch before sample-sheet preparation."
+    },
+    {
+      "id": "step_02",
+      "skill": "sample_sheet_prepare",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "depository_metadata"
+        }
+      ],
+      "parameters": {},
+      "outputs": [
+        {
+          "name": "normalized_fastq_sample_sheet",
+          "format": "csv"
+        }
+      ],
+      "reason": "Normalize the repository metadata TSV into a FASTQ sample sheet preserving sample/run IDs, single-versus-paired layout, predicted FASTQ paths, and organism metadata; sample-sheet validation is intentionally not run because the referenced reads were not uploaded."
+    }
+  ]
+}

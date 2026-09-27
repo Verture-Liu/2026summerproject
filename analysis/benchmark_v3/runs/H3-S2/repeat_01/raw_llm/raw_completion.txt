@@ -1,0 +1,58 @@
+{
+  "schema_version": "1.0",
+  "task_summary": "Validate heldout_pair_R1.fastq and heldout_pair_R2.fastq as a paired-end sample, run separate FastQC steps for each mate, and aggregate both FastQC ZIP reports with MultiQC while preserving the pair report and QC outputs.",
+  "steps": [
+    {
+      "id": "step_01",
+      "skill": "fastq_pair_match",
+      "inputs": [
+        {"source": "uploaded", "ref": "heldout_pair_R1.fastq"},
+        {"source": "uploaded", "ref": "heldout_pair_R2.fastq"}
+      ],
+      "outputs": [
+        {"name": "pair_report_csv", "format": "csv"},
+        {"name": "pair_report_json", "format": "json"}
+      ],
+      "reason": "Validate that the two uploaded FASTQ files form a valid paired-end sample and preserve the pair report."
+    },
+    {
+      "id": "step_02",
+      "skill": "fastq_qc",
+      "inputs": [
+        {"source": "uploaded", "ref": "heldout_pair_R1.fastq"}
+      ],
+      "outputs": [
+        {"name": "r1_fastqc_zip", "format": "zip"},
+        {"name": "r1_fastqc_html", "format": "html"},
+        {"name": "r1_fastqc_json", "format": "json"}
+      ],
+      "reason": "Run a separate FastQC quality-control step for the first paired-end mate (R1)."
+    },
+    {
+      "id": "step_03",
+      "skill": "fastq_qc",
+      "inputs": [
+        {"source": "uploaded", "ref": "heldout_pair_R2.fastq"}
+      ],
+      "outputs": [
+        {"name": "r2_fastqc_zip", "format": "zip"},
+        {"name": "r2_fastqc_html", "format": "html"},
+        {"name": "r2_fastqc_json", "format": "json"}
+      ],
+      "reason": "Run a separate FastQC quality-control step for the second paired-end mate (R2)."
+    },
+    {
+      "id": "step_04",
+      "skill": "multiqc_summary",
+      "inputs": [
+        {"source": "step", "ref": "r1_fastqc_zip"},
+        {"source": "step", "ref": "r2_fastqc_zip"}
+      ],
+      "outputs": [
+        {"name": "multiqc_report", "format": "html"},
+        {"name": "multiqc_data", "format": "json"}
+      ],
+      "reason": "Aggregate the two FastQC ZIP reports into a single MultiQC report."
+    }
+  ]
+}

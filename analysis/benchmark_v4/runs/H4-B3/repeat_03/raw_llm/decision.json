@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "reason_code": "unsupported_scientific_claim",
+  "message": "The requested analysis cannot be performed with only FastQC and Kraken2. FastQC only reports raw sequencing quality metrics, and Kraken2 only provides taxonomic classification of reads. Neither tool can establish ancient-DNA authenticity (e.g., characteristic terminal damage, deamination patterns, fragment-length profiles) nor guarantee the complete absence of modern or environmental contamination. A defensible ancient-DNA authentication workflow requires dedicated tools such as mapDamage/DamageProfiler on reference-aligned BAM files, along with appropriate contamination estimation, and no analysis can provide an absolute guarantee of zero contamination."
+}

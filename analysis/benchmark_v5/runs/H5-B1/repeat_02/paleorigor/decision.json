@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "reason_code": "file_type_mismatch",
+  "message": "The uploaded file unaligned_contigs.fa is declared and observed as FASTA, not BAM. Running samtools_stats would require treating it as a BAM despite the visible extension, which conflicts with the observed file format. Please upload an actual BAM file."
+}

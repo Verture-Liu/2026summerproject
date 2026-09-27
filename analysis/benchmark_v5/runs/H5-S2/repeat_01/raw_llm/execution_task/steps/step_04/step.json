@@ -1,0 +1,27 @@
+{
+  "id": "step_04",
+  "skill": "multiqc_summary",
+  "status": "succeeded",
+  "parameters": {},
+  "metrics": {
+    "reports": 1
+  },
+  "warnings": [],
+  "error": null,
+  "started_at": "2026-08-19T02:38:55.478066+00:00",
+  "ended_at": "2026-08-19T02:38:59.579663+00:00",
+  "inputs": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v5/runs/H5-S2/repeat_01/raw_llm/execution_task/steps/step_02/fastqc/crypt_library_1_fastqc.zip",
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v5/runs/H5-S2/repeat_01/raw_llm/execution_task/steps/step_03/fastqc/crypt_library_2_fastqc.zip"
+  ],
+  "outputs": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v5/runs/H5-S2/repeat_01/raw_llm/execution_task/steps/step_04/multiqc/multiqc_report.html",
+      "sha256": "bdfee0b9e70fe19b9ec507a73d2d20e6e74b24fb6434a0d629d4779596c1a487"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v5/runs/H5-S2/repeat_01/raw_llm/execution_task/steps/step_04/multiqc_run_metadata.json",
+      "sha256": "8ad0b9c97b2fc2ea57f4adfd0297166fabb7d8a4227c66ae210ea98034124371"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "task_summary": "Detect file type of the uploaded single-end FASTQ, run FastQC quality control, compute SeqKit statistics, and preserve JSON/HTML/ZIP/TSV outputs.",
+  "steps": [
+    {
+      "id": "step_01",
+      "skill": "file_type_detect",
+      "inputs": [
+        {"source": "uploaded", "ref": "heldout_single.fastq"}
+      ],
+      "outputs": [
+        {"name": "file_type_detection.json", "format": "json"}
+      ],
+      "reason": "Verify the uploaded file type before running FASTQ-specific QC and statistics steps."
+    },
+    {
+      "id": "step_02",
+      "skill": "fastq_qc",
+      "inputs": [
+        {"source": "uploaded", "ref": "heldout_single.fastq"}
+      ],
+      "outputs": [
+        {"name": "fastqc_report.html", "format": "html"},
+        {"name": "fastqc_data.json", "format": "json"},
+        {"name": "fastqc_archive.zip", "format": "zip"}
+      ],
+      "reason": "Run FastQC on the single-end FASTQ to produce the auditable HTML, JSON, and ZIP QC outputs."
+    },
+    {
+      "id": "step_03",
+      "skill": "seqkit_stats",
+      "inputs": [
+        {"source": "uploaded", "ref": "heldout_single.fastq"}
+      ],
+      "outputs": [
+        {"name": "seqkit_stats.json", "format": "json"},
+        {"name": "seqkit_stats.tsv", "format": "tsv"}
+      ],
+      "reason": "Compute sequence statistics with SeqKit and retain both JSON and TSV summary outputs."
+    }
+  ]
+}

@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "reason_code": "file_type_mismatch",
+  "message": "The uploaded file not_a_bam.fasta is registered as FASTA format, not BAM. samtools_stats requires BAM or SAM input, so it cannot be run on this file. No FASTA-based analysis will be substituted."
+}

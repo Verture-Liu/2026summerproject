@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "reason_code": "missing_prerequisite",
+  "message": "Cannot run samtools stats or mapDamage because both require an existing BAM/SAM alignment, and ancient_dna_authentication additionally requires a reference. Only a raw FASTQ file was provided, and no reference genome or BAM file is registered. Fabricating a reference or BAM is not allowed. Please provide the missing alignment and reference files."
+}

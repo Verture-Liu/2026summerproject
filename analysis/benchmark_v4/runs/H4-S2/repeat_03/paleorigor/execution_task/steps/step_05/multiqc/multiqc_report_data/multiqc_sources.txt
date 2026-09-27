@@ -1,0 +1,3 @@
+Module	Section	Sample Name	Source
+FastQC	all_sections	cave_pair_R1	/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S2/repeat_03/paleorigor/execution_task/steps/step_03/fastqc/cave_pair_R1_fastqc.zip
+FastQC	all_sections	cave_pair_R2	/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S2/repeat_03/paleorigor/execution_task/steps/step_04/fastqc/cave_pair_R2_fastqc.zip

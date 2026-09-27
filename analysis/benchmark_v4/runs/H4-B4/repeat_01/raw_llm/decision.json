@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "reason_code": "missing_mate",
+  "message": "The requested workflow requires tomb_orphan_R1.fastq as the paired-end mate for tomb_orphan_R2.fastq, but only tomb_orphan_R2.fastq is available. I cannot invent or reference an uploaded file that is not listed, so FastQC cannot be run on both mates and MultiQC cannot summarize the completed paired-end library."
+}

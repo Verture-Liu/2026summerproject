@@ -1,0 +1,78 @@
+{
+  "pairs": 0,
+  "arms": {
+    "raw_llm": {
+      "successes": 17,
+      "total": 24,
+      "rate": 0.7083333333333334,
+      "wilson_95": [
+        0.5083230633550337,
+        0.8508535180303913
+      ]
+    }
+  },
+  "paired_rate_difference": NaN,
+  "discordant": {
+    "paleorigor_only": 0,
+    "raw_only": 0
+  },
+  "mcnemar_exact_two_sided_p": 1.0,
+  "by_scenario": {
+    "H5-B1": {
+      "raw_llm": {
+        "successes": 1,
+        "total": 3,
+        "rate": 0.3333333333333333
+      }
+    },
+    "H5-B2": {
+      "raw_llm": {
+        "successes": 3,
+        "total": 3,
+        "rate": 1.0
+      }
+    },
+    "H5-B3": {
+      "raw_llm": {
+        "successes": 3,
+        "total": 3,
+        "rate": 1.0
+      }
+    },
+    "H5-B4": {
+      "raw_llm": {
+        "successes": 3,
+        "total": 3,
+        "rate": 1.0
+      }
+    },
+    "H5-S1": {
+      "raw_llm": {
+        "successes": 0,
+        "total": 3,
+        "rate": 0.0
+      }
+    },
+    "H5-S2": {
+      "raw_llm": {
+        "successes": 3,
+        "total": 3,
+        "rate": 1.0
+      }
+    },
+    "H5-S3": {
+      "raw_llm": {
+        "successes": 1,
+        "total": 3,
+        "rate": 0.3333333333333333
+      }
+    },
+    "H5-S4": {
+      "raw_llm": {
+        "successes": 3,
+        "total": 3,
+        "rate": 1.0
+      }
+    }
+  }
+}

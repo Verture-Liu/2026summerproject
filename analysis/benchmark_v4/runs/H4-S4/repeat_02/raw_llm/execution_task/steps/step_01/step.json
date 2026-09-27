@@ -1,0 +1,25 @@
+{
+  "id": "step_01",
+  "skill": "sample_sheet_prepare",
+  "status": "succeeded",
+  "parameters": {},
+  "metrics": {
+    "samples": 2,
+    "runs": 2,
+    "paired_runs": 1,
+    "single_runs": 1
+  },
+  "warnings": [],
+  "error": null,
+  "started_at": "2026-08-19T01:58:35.158332+00:00",
+  "ended_at": "2026-08-19T01:58:35.161205+00:00",
+  "inputs": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/fixtures/archive_runinfo.tsv"
+  ],
+  "outputs": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S4/repeat_02/raw_llm/execution_task/steps/step_01/samplesheet.csv",
+      "sha256": "8f40afbe55ec8648769026cf5b59906370ec2e7e3eba4b73d4c660251f78228c"
+    }
+  ]
+}

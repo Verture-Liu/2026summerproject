@@ -1,0 +1,114 @@
+{
+  "schema_version": "1.0",
+  "task_summary": "Inspect an ancient-sediment FASTA, remove duplicate sequences, retain records 15-22 nucleotides, and generate SeqKit statistics for the retained sequences while preserving intermediate FASTA outputs.",
+  "steps": [
+    {
+      "id": "step_01",
+      "skill": "file_type_detect",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "sediment_amplicons.fna"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "input_type_report.json",
+          "format": "json"
+        }
+      ],
+      "reason": "Verify the uploaded file is FASTA before selecting FASTA-appropriate deduplication, length-filtering, and statistics skills."
+    },
+    {
+      "id": "step_02",
+      "skill": "seqkit_deduplicate",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "sediment_amplicons.fna"
+        }
+      ],
+      "parameters": {
+        "by_sequence": true
+      },
+      "outputs": [
+        {
+          "name": "deduplicated.fasta",
+          "format": "fasta"
+        },
+        {
+          "name": "deduplicated_report.json",
+          "format": "json"
+        }
+      ],
+      "reason": "Remove duplicate sequences from the amplicon FASTA, preserving a non-redundant FASTA for subsequent length filtering."
+    },
+    {
+      "id": "step_03",
+      "skill": "seqkit_length_filter",
+      "inputs": [
+        {
+          "source": "step",
+          "ref": "deduplicated.fasta"
+        }
+      ],
+      "parameters": {
+        "min_length": 15,
+        "max_length": 22
+      },
+      "outputs": [
+        {
+          "name": "length_filtered.fasta",
+          "format": "fasta"
+        },
+        {
+          "name": "length_filter_report.json",
+          "format": "json"
+        }
+      ],
+      "reason": "Retain only deduplicated amplicon records between 15 and 22 nucleotides as requested."
+    },
+    {
+      "id": "step_04",
+      "skill": "data_quality_gate",
+      "inputs": [
+        {
+          "source": "step",
+          "ref": "length_filtered.fasta"
+        }
+      ],
+      "parameters": {
+        "min_records": 1,
+        "fail_on_error": false
+      },
+      "outputs": [
+        {
+          "name": "quality_gate.json",
+          "format": "json"
+        }
+      ],
+      "reason": "Perform a post-filtering quality check on the retained FASTA before computing final SeqKit statistics."
+    },
+    {
+      "id": "step_05",
+      "skill": "seqkit_stats",
+      "inputs": [
+        {
+          "source": "step",
+          "ref": "length_filtered.fasta"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "retained_seqkit_stats.json",
+          "format": "json"
+        },
+        {
+          "name": "retained_seqkit_stats.tsv",
+          "format": "tsv"
+        }
+      ],
+      "reason": "Generate machine-readable SeqKit statistics for the retained 15-22 nt deduplicated sequences."
+    }
+  ]
+}

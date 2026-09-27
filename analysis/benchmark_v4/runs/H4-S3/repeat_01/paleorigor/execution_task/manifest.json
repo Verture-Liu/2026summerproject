@@ -1,0 +1,378 @@
+{
+  "workflow_schema_version": "1.0",
+  "status": "failed",
+  "workflow": {
+    "schema_version": "1.0",
+    "task_summary": "Normalize, validate, deduplicate, quality-gate, summarize, chart, and export a labelled peptide CSV, preserving rejected rows.",
+    "steps": [
+      {
+        "id": "step_01",
+        "skill": "peptide_csv_normalize",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "curated_candidates.csv"
+          }
+        ],
+        "parameters": {
+          "delimiter": "auto",
+          "drop_empty_rows": true
+        },
+        "outputs": [
+          {
+            "name": "normalized_candidates.csv",
+            "format": "csv"
+          }
+        ],
+        "reason": "Normalize the raw CSV to canonical label and sequence columns before validation."
+      },
+      {
+        "id": "step_02",
+        "skill": "peptide_validate",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "normalized_candidates.csv"
+          }
+        ],
+        "parameters": {
+          "invalid_row_policy": "reject"
+        },
+        "outputs": [
+          {
+            "name": "validated_candidates.csv",
+            "format": "csv"
+          },
+          {
+            "name": "rejected_candidates.csv",
+            "format": "csv"
+          }
+        ],
+        "reason": "Validate canonical amino-acid sequences and binary labels, rejecting invalid rows to an audit file."
+      },
+      {
+        "id": "step_03",
+        "skill": "peptide_deduplicate",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "validated_candidates.csv"
+          }
+        ],
+        "parameters": {
+          "conflict_policy": "keep_first"
+        },
+        "outputs": [
+          {
+            "name": "deduplicated_candidates.csv",
+            "format": "csv"
+          }
+        ],
+        "reason": "Remove duplicate peptide sequences, retaining the first occurrence and avoiding label conflicts."
+      },
+      {
+        "id": "step_04",
+        "skill": "data_quality_gate",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "deduplicated_candidates.csv"
+          }
+        ],
+        "parameters": {
+          "sequence_column": "sequence",
+          "label_column": "label",
+          "min_rows": 1,
+          "fail_on_error": true
+        },
+        "outputs": [
+          {
+            "name": "candidate_quality_gate.json",
+            "format": "json"
+          }
+        ],
+        "reason": "Verify the cleaned, deduplicated peptide table has the required columns and at least one row before downstream summaries and exports."
+      },
+      {
+        "id": "step_05",
+        "skill": "peptide_statistics",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "deduplicated_candidates.csv"
+          }
+        ],
+        "parameters": {
+          "group_by_label": true
+        },
+        "outputs": [
+          {
+            "name": "statistics.json",
+            "format": "json"
+          },
+          {
+            "name": "statistics.csv",
+            "format": "csv"
+          }
+        ],
+        "reason": "Calculate summary statistics for the validated, deduplicated peptide set, optionally grouped by label."
+      },
+      {
+        "id": "step_06",
+        "skill": "peptide_chart",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "deduplicated_candidates.csv"
+          }
+        ],
+        "parameters": {
+          "charts": [
+            "length"
+          ]
+        },
+        "outputs": [
+          {
+            "name": "peptide_length_histogram.png",
+            "format": "png"
+          }
+        ],
+        "reason": "Create the requested peptide-length histogram from the cleaned peptide table."
+      },
+      {
+        "id": "step_07",
+        "skill": "peptide_csv_export",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "deduplicated_candidates.csv"
+          }
+        ],
+        "parameters": {
+          "filename": "cleaned_candidates.csv"
+        },
+        "outputs": [
+          {
+            "name": "cleaned_candidates.csv",
+            "format": "csv"
+          }
+        ],
+        "reason": "Export the cleaned, deduplicated peptide table as a safely named CSV for reuse."
+      }
+    ]
+  },
+  "inputs": [
+    {
+      "ref": "curated_candidates.csv",
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/fixtures/curated_candidates.csv",
+      "sha256": "e95939d190d180bae95c793607af71b800bca1179836b4e54329e392242f646d"
+    }
+  ],
+  "steps": [
+    {
+      "id": "step_01",
+      "skill": "peptide_csv_normalize",
+      "status": "succeeded",
+      "parameters": {
+        "delimiter": "auto",
+        "drop_empty_rows": true
+      },
+      "metrics": {
+        "input_rows": 6,
+        "normalized_rows": 6,
+        "empty_rows_removed": 0,
+        "header_detected": true,
+        "label_column": "label",
+        "sequence_column": "sequence"
+      },
+      "warnings": [],
+      "error": null,
+      "started_at": "2026-08-19T01:53:08.591467+00:00",
+      "ended_at": "2026-08-19T01:53:08.594758+00:00",
+      "inputs": [
+        "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/fixtures/curated_candidates.csv"
+      ],
+      "outputs": [
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S3/repeat_01/paleorigor/execution_task/steps/step_01/normalized_peptides.csv",
+          "sha256": "e95939d190d180bae95c793607af71b800bca1179836b4e54329e392242f646d"
+        }
+      ]
+    },
+    {
+      "id": "step_02",
+      "skill": "peptide_validate",
+      "status": "succeeded",
+      "parameters": {
+        "invalid_row_policy": "reject"
+      },
+      "metrics": {
+        "input_rows": 6,
+        "valid_rows": 6,
+        "rejected_rows": 0,
+        "rejection_reasons": {}
+      },
+      "warnings": [],
+      "error": null,
+      "started_at": "2026-08-19T01:53:08.595024+00:00",
+      "ended_at": "2026-08-19T01:53:08.597109+00:00",
+      "inputs": [
+        "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S3/repeat_01/paleorigor/execution_task/steps/step_01/normalized_peptides.csv"
+      ],
+      "outputs": [
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S3/repeat_01/paleorigor/execution_task/steps/step_02/valid_peptides.csv",
+          "sha256": "e95939d190d180bae95c793607af71b800bca1179836b4e54329e392242f646d"
+        },
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S3/repeat_01/paleorigor/execution_task/steps/step_02/rejected_peptides.csv",
+          "sha256": "df139950c133df2a8e94e902643889a11a023abdee65d0215107499aa31a866c"
+        }
+      ]
+    },
+    {
+      "id": "step_03",
+      "skill": "peptide_deduplicate",
+      "status": "succeeded",
+      "parameters": {
+        "conflict_policy": "keep_first"
+      },
+      "metrics": {
+        "input_rows": 6,
+        "unique_sequences": 5,
+        "duplicate_rows_removed": 1,
+        "conflicting_sequences": 0
+      },
+      "warnings": [],
+      "error": null,
+      "started_at": "2026-08-19T01:53:08.597338+00:00",
+      "ended_at": "2026-08-19T01:53:08.598918+00:00",
+      "inputs": [
+        "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S3/repeat_01/paleorigor/execution_task/steps/step_02/valid_peptides.csv"
+      ],
+      "outputs": [
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S3/repeat_01/paleorigor/execution_task/steps/step_03/deduplicated_peptides.csv",
+          "sha256": "4a42f8402a62863e7949232bb3a192119cfd6931b9d43c206894da97728f97d2"
+        },
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S3/repeat_01/paleorigor/execution_task/steps/step_03/duplicate_report.csv",
+          "sha256": "c345aa0b732aabefa5ff7b3bbb3232af6ac68696ab1c8067831d88e4c6c9b7bd"
+        }
+      ]
+    },
+    {
+      "id": "step_04",
+      "skill": "data_quality_gate",
+      "status": "succeeded",
+      "parameters": {
+        "sequence_column": "sequence",
+        "label_column": "label",
+        "min_rows": 1,
+        "fail_on_error": true
+      },
+      "metrics": {
+        "gate_passed": true,
+        "files": 1,
+        "warnings": 0
+      },
+      "warnings": [],
+      "error": null,
+      "started_at": "2026-08-19T01:53:08.599154+00:00",
+      "ended_at": "2026-08-19T01:53:08.601228+00:00",
+      "inputs": [
+        "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S3/repeat_01/paleorigor/execution_task/steps/step_03/deduplicated_peptides.csv"
+      ],
+      "outputs": [
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S3/repeat_01/paleorigor/execution_task/steps/step_04/data_quality_gate_report.json",
+          "sha256": "bfbeef21a6d5a14a7f2312fb4e3e6a4d1b592b2eea040fda00e87dcdd77b4ac5"
+        }
+      ]
+    },
+    {
+      "id": "step_05",
+      "skill": "peptide_statistics",
+      "status": "succeeded",
+      "parameters": {
+        "group_by_label": true
+      },
+      "metrics": {
+        "total_rows": 5,
+        "unique_sequences": 5,
+        "length": {
+          "min": 19,
+          "median": 24.0,
+          "mean": 25.2,
+          "max": 37
+        },
+        "label_counts": {
+          "0": 2,
+          "1": 3
+        },
+        "label_proportions": {
+          "0": 0.4,
+          "1": 0.6
+        }
+      },
+      "warnings": [],
+      "error": null,
+      "started_at": "2026-08-19T01:53:08.601430+00:00",
+      "ended_at": "2026-08-19T01:53:08.603605+00:00",
+      "inputs": [
+        "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S3/repeat_01/paleorigor/execution_task/steps/step_03/deduplicated_peptides.csv"
+      ],
+      "outputs": [
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S3/repeat_01/paleorigor/execution_task/steps/step_05/peptide_statistics.json",
+          "sha256": "40183d313d736d349946eaf51b4bb25a0b15179843415e7c54a33412d81377cf"
+        },
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S3/repeat_01/paleorigor/execution_task/steps/step_05/peptide_statistics.csv",
+          "sha256": "25d5740c5143ce23d4a7a368693f6c47aa87ffc47321206646333e01c601a02f"
+        },
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S3/repeat_01/paleorigor/execution_task/steps/step_05/length_distribution.csv",
+          "sha256": "d1fee260a9a91ea16256b0815aa5f27753884c7b2d08368e6850e9958bc74f21"
+        },
+        {
+          "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S3/repeat_01/paleorigor/execution_task/steps/step_05/amino_acid_composition.csv",
+          "sha256": "8374f4bdb089d3ef4f5b2f08b0cacfb5454f7b0557598e6094c16eb0fa1465f7"
+        }
+      ]
+    },
+    {
+      "id": "step_06",
+      "skill": "peptide_chart",
+      "status": "failed",
+      "parameters": {
+        "charts": [
+          "length"
+        ]
+      },
+      "metrics": {},
+      "warnings": [],
+      "error": "charts must contain supported chart names",
+      "started_at": "2026-08-19T01:53:08.603871+00:00",
+      "ended_at": "2026-08-19T01:53:08.603973+00:00",
+      "inputs": [
+        "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S3/repeat_01/paleorigor/execution_task/steps/step_03/deduplicated_peptides.csv"
+      ],
+      "outputs": []
+    }
+  ],
+  "environment": {
+    "python": "3.13.9",
+    "platform": "macOS-26.5.2-arm64-arm-64bit-Mach-O"
+  },
+  "settings": {
+    "base_url": "https://api.deepseek.com",
+    "model": "deepseek-v4-flash",
+    "timeout_seconds": 120.0,
+    "max_retries": 2,
+    "api_key_present": true,
+    "thinking": "enabled",
+    "temperature": 0,
+    "api_key": ""
+  }
+}

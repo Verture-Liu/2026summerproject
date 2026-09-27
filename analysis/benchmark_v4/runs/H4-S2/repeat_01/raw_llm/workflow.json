@@ -1,0 +1,90 @@
+{
+  "schema_version": "1.0",
+  "task_summary": "Validate the paired-end cave-library FASTQ pair, run FastQC independently for R1 and R2, and aggregate the FastQC ZIP reports in one MultiQC summary.",
+  "steps": [
+    {
+      "id": "step_01",
+      "skill": "fastq_pair_match",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "cave_pair_R1.fastq"
+        },
+        {
+          "source": "uploaded",
+          "ref": "cave_pair_R2.fastq"
+        }
+      ],
+      "parameters": {},
+      "outputs": [
+        {
+          "name": "pair_report",
+          "format": "json"
+        }
+      ],
+      "reason": "Confirm that the two uploaded cave-library FASTQ files form a valid paired-end pair."
+    },
+    {
+      "id": "step_02",
+      "skill": "fastq_qc",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "cave_pair_R1.fastq"
+        }
+      ],
+      "parameters": {},
+      "outputs": [
+        {
+          "name": "R1_fastqc_zip",
+          "format": "zip"
+        }
+      ],
+      "reason": "Run FastQC separately on the R1 mate to produce its per-mate QC report."
+    },
+    {
+      "id": "step_03",
+      "skill": "fastq_qc",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "cave_pair_R2.fastq"
+        }
+      ],
+      "parameters": {},
+      "outputs": [
+        {
+          "name": "R2_fastqc_zip",
+          "format": "zip"
+        }
+      ],
+      "reason": "Run FastQC separately on the R2 mate to produce its per-mate QC report."
+    },
+    {
+      "id": "step_04",
+      "skill": "multiqc_summary",
+      "inputs": [
+        {
+          "source": "step",
+          "ref": "step_02.R1_fastqc_zip"
+        },
+        {
+          "source": "step",
+          "ref": "step_03.R2_fastqc_zip"
+        }
+      ],
+      "parameters": {},
+      "outputs": [
+        {
+          "name": "multiqc_report",
+          "format": "html"
+        },
+        {
+          "name": "multiqc_data",
+          "format": "json"
+        }
+      ],
+      "reason": "Combine both FastQC ZIP reports into one aggregate MultiQC summary."
+    }
+  ]
+}

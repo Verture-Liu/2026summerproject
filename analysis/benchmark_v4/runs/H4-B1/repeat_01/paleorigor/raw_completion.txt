@@ -1,0 +1,1 @@
+{"status":"blocked","reason_code":"file_type_mismatch","message":"Uploaded file not_a_bam.fasta is FASTA format, not an aligned BAM. Cannot run samtools stats on a FASTA; a BAM input is required."}

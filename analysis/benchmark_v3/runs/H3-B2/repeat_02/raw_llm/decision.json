@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "reason_code": "missing_mate",
+  "message": "Only orphan_sample_R1.fastq was provided; orphan_sample_R2.fastq is not among the uploaded files. The requested paired-end processing cannot proceed without the actual R2 mate file."
+}

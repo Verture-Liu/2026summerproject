@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "reason_code": "file_type_mismatch",
+  "message": "The uploaded file not_a_bam.fasta is FASTA format, not the claimed aligned BAM file. The samtools_stats skill requires BAM or SAM input, so it cannot be run on this file. A FASTA analysis was specifically disallowed by the request, so the workflow is blocked."
+}

@@ -1,0 +1,1 @@
+{"status":"blocked","reason_code":"missing_prerequisite","message":"Host DNA removal requires a reference genome or Bowtie2 index to align and remove human reads. No reference or index is provided in the available files, and I cannot invent one. Please supply the appropriate host reference (e.g., human reference genome) or index before proceeding."}

@@ -1,0 +1,31 @@
+{
+  "id": "step_03",
+  "skill": "fastq_qc",
+  "status": "succeeded",
+  "parameters": {},
+  "metrics": {
+    "input_files": 1,
+    "report_files": 2
+  },
+  "warnings": [],
+  "error": null,
+  "started_at": "2026-08-19T01:11:28.352321+00:00",
+  "ended_at": "2026-08-19T01:11:29.758776+00:00",
+  "inputs": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/fixtures/heldout_pair_R2.fastq"
+  ],
+  "outputs": [
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/runs/H3-S2/repeat_02/raw_llm/execution_task/steps/step_03/fastqc/heldout_pair_R2_fastqc.html",
+      "sha256": "a5dfe204a894864bd5c85c86b430b03ff7584d2f23680981349e593b208390e7"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/runs/H3-S2/repeat_02/raw_llm/execution_task/steps/step_03/fastqc_run_metadata.json",
+      "sha256": "4ee8f1641581b0df17cbf069ed4556935ce152883cd2336b13aff0399b392eec"
+    },
+    {
+      "path": "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v3/runs/H3-S2/repeat_02/raw_llm/execution_task/steps/step_03/fastqc/heldout_pair_R2_fastqc.zip",
+      "sha256": "fd90349f879096c13a0addc057e1a97f71ed5dd6823085946da4add718de8a17"
+    }
+  ]
+}

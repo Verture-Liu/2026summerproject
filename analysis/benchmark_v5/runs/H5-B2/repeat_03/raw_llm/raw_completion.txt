@@ -1,0 +1,1 @@
+{"status":"blocked","reason_code":"missing_prerequisite","message":"Host-DNA removal requires a reference genome or index, but no reference was supplied or named. A guessed host cannot be used because no local reference file is available and no skill is provided to create a reference index from one."}

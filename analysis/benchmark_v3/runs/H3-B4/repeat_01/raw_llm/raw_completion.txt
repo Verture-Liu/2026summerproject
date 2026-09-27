@@ -1,0 +1,1 @@
+{"status":"blocked","reason_code":"missing_prerequisite","message":"The requested analysis (samtools stats and mapDamage) requires an aligned BAM file, but only raw FASTQ is provided. Generating the BAM requires a reference genome that is not available, and I cannot invent the missing BAM or reference files."}

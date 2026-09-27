@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "reason_code": "missing_mate",
+  "message": "The requested paired-end processing requires orphan_sample_R2.fastq, but only orphan_sample_R1.fastq was provided. Refusing to invent the missing mate."
+}

@@ -1,0 +1,98 @@
+{
+  "schema_version": "1.0",
+  "task_summary": "Detect file type, run FastQC raw QC, compute SeqKit statistics, and produce an aggregated MultiQC report for the single-end FASTQ upload.",
+  "steps": [
+    {
+      "id": "step_01",
+      "skill": "file_type_detect",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "heldout_single.fastq"
+        }
+      ],
+      "parameters": {},
+      "outputs": [
+        {
+          "name": "file_type_report",
+          "format": "json"
+        }
+      ],
+      "reason": "Confirm the uploaded file is FASTQ before running FASTQ-specific QC and statistics."
+    },
+    {
+      "id": "step_02",
+      "skill": "fastq_qc",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "heldout_single.fastq"
+        }
+      ],
+      "parameters": {},
+      "outputs": [
+        {
+          "name": "fastqc_html",
+          "format": "html"
+        },
+        {
+          "name": "fastqc_json",
+          "format": "json"
+        },
+        {
+          "name": "fastqc_zip",
+          "format": "zip"
+        }
+      ],
+      "reason": "Run raw FastQC quality control on the single-end FASTQ before any downstream processing and retain HTML/JSON/ZIP audit outputs."
+    },
+    {
+      "id": "step_03",
+      "skill": "seqkit_stats",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "heldout_single.fastq"
+        }
+      ],
+      "parameters": {},
+      "outputs": [
+        {
+          "name": "seqkit_stats_json",
+          "format": "json"
+        },
+        {
+          "name": "seqkit_stats_tsv",
+          "format": "tsv"
+        }
+      ],
+      "reason": "Compute basic read count and length statistics with SeqKit to provide auditable TSV and JSON summaries."
+    },
+    {
+      "id": "step_04",
+      "skill": "multiqc_summary",
+      "inputs": [
+        {
+          "source": "step",
+          "ref": "fastqc_zip"
+        },
+        {
+          "source": "step",
+          "ref": "seqkit_stats_json"
+        }
+      ],
+      "parameters": {},
+      "outputs": [
+        {
+          "name": "multiqc_html",
+          "format": "html"
+        },
+        {
+          "name": "multiqc_json",
+          "format": "json"
+        }
+      ],
+      "reason": "Aggregate FastQC and SeqKit outputs into a single MultiQC HTML/JSON report for a consolidated audit trail."
+    }
+  ]
+}

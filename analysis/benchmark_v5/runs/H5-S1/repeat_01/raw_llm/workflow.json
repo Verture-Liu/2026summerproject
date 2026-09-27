@@ -1,0 +1,87 @@
+{
+  "schema_version": "1.0",
+  "task_summary": "Inspect the uploaded ancient-sediment FASTA, remove duplicate sequences, retain records of 15–22 nucleotides, keep intermediate FASTA outputs, and report SeqKit statistics for the retained sequences.",
+  "steps": [
+    {
+      "id": "step_01",
+      "skill": "file_type_detect",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "sediment_amplicons.fna"
+        }
+      ],
+      "parameters": {},
+      "outputs": [
+        {
+          "name": "sediment_amplicons.filetype.json",
+          "format": "json"
+        }
+      ],
+      "reason": "Inspect and verify the uploaded ancient-sediment FASTA file type before downstream processing."
+    },
+    {
+      "id": "step_02",
+      "skill": "seqkit_deduplicate",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "sediment_amplicons.fna"
+        }
+      ],
+      "parameters": {
+        "by_sequence": true
+      },
+      "outputs": [
+        {
+          "name": "sediment_amplicons.dedup.fna",
+          "format": "fasta"
+        }
+      ],
+      "reason": "Remove duplicate sequences from the FASTA using seqkit rmdup with by_sequence, keeping the deduplicated FASTA as an intermediate."
+    },
+    {
+      "id": "step_03",
+      "skill": "seqkit_length_filter",
+      "inputs": [
+        {
+          "source": "step",
+          "ref": "sediment_amplicons.dedup.fna"
+        }
+      ],
+      "parameters": {
+        "min_length": 15,
+        "max_length": 22
+      },
+      "outputs": [
+        {
+          "name": "sediment_amplicons.len15_22.fna",
+          "format": "fasta"
+        }
+      ],
+      "reason": "Filter the deduplicated FASTA to keep only records between 15 and 22 nucleotides, preserving the filtered intermediate FASTA."
+    },
+    {
+      "id": "step_04",
+      "skill": "seqkit_stats",
+      "inputs": [
+        {
+          "source": "step",
+          "ref": "sediment_amplicons.len15_22.fna"
+        }
+      ],
+      "parameters": {},
+      "outputs": [
+        {
+          "name": "sediment_amplicons.retained.stats.json",
+          "format": "json"
+        },
+        {
+          "name": "sediment_amplicons.retained.stats.tsv",
+          "format": "tsv"
+        }
+      ],
+      "reason": "Generate SeqKit statistics for the retained filtered sequences in machine-readable JSON and TSV formats."
+    }
+  ]
+}

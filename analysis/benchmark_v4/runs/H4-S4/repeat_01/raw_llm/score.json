@@ -1,0 +1,37 @@
+{
+  "strict_success": true,
+  "decision": "workflow",
+  "failure_codes": [],
+  "workflow": {
+    "schema_version": "1.0",
+    "task_summary": "Normalize the uploaded SRA RunInfo TSV into a FASTQ sample sheet, preserving run, sample, layout, file-path, and organism fields for paired and single runs, and export as CSV.",
+    "steps": [
+      {
+        "id": "step_01",
+        "skill": "sample_sheet_prepare",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "archive_runinfo.tsv"
+          }
+        ],
+        "parameters": {
+          "fastq_directory": ""
+        },
+        "outputs": [
+          {
+            "name": "fastq_sample_sheet",
+            "format": "csv"
+          }
+        ],
+        "reason": "sample_sheet_prepare accepts the TSV RunInfo file as input and outputs a normalized FASTQ sample sheet CSV containing the required run, sample, layout, file-path, and organism fields."
+      }
+    ]
+  },
+  "validation": {
+    "valid": true,
+    "errors": [],
+    "warnings": [],
+    "issues": []
+  }
+}

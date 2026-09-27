@@ -1,0 +1,1 @@
+{"status":"blocked","reason_code":"file_type_mismatch","message":"The uploaded file not_a_bam.fasta is FASTA, not an aligned BAM file. samtools_stats requires BAM or SAM input, and no valid BAM file is available; refusing to substitute a FASTA analysis."}

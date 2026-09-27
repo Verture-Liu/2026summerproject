@@ -1,0 +1,4 @@
+sample_id,run_accession,layout,fastq_1,fastq_2,organism
+SAMN880001,SRR880001,paired,SRR880001_1.fastq.gz,SRR880001_2.fastq.gz,Homo sapiens
+SAMN880002,SRR880002,single,SRR880002.fastq.gz,,Homo sapiens
+SAMN880003,SRR880003,paired,SRR880003_1.fastq.gz,SRR880003_2.fastq.gz,soil metagenome

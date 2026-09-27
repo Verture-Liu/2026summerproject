@@ -1,0 +1,112 @@
+{
+  "strict_success": true,
+  "decision": "workflow",
+  "failure_codes": [],
+  "workflow": {
+    "schema_version": "1.0",
+    "task_summary": "Confirm that the two uploaded cave-library FASTQ files form a valid paired-end pair, run FastQC separately on R1 and R2, and combine both FastQC ZIP reports in one MultiQC summary while keeping the pairing, per-mate QC, and aggregate reports.",
+    "steps": [
+      {
+        "id": "step_01",
+        "skill": "fastq_pair_match",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "cave_pair_R1.fastq"
+          },
+          {
+            "source": "uploaded",
+            "ref": "cave_pair_R2.fastq"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "cave_library_paired_samples.csv",
+            "format": "csv"
+          }
+        ],
+        "reason": "Validate that cave_pair_R1.fastq and cave_pair_R2.fastq form a valid paired-end pair and capture the pairing information for downstream reporting."
+      },
+      {
+        "id": "step_02",
+        "skill": "fastq_qc",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "cave_pair_R1.fastq"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "cave_pair_R1_fastqc.zip",
+            "format": "zip"
+          },
+          {
+            "name": "cave_pair_R1_fastqc.html",
+            "format": "html"
+          }
+        ],
+        "reason": "Run FastQC independently on the forward read file cave_pair_R1.fastq and preserve the per-mate QC report."
+      },
+      {
+        "id": "step_03",
+        "skill": "fastq_qc",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "cave_pair_R2.fastq"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "cave_pair_R2_fastqc.zip",
+            "format": "zip"
+          },
+          {
+            "name": "cave_pair_R2_fastqc.html",
+            "format": "html"
+          }
+        ],
+        "reason": "Run FastQC independently on the reverse read file cave_pair_R2.fastq and preserve the per-mate QC report."
+      },
+      {
+        "id": "step_04",
+        "skill": "multiqc_summary",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "cave_pair_R1_fastqc.zip"
+          },
+          {
+            "source": "step",
+            "ref": "cave_pair_R2_fastqc.zip"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "cave_library_multiqc.html",
+            "format": "html"
+          },
+          {
+            "name": "cave_library_multiqc.json",
+            "format": "json"
+          }
+        ],
+        "reason": "Combine both per-mate FastQC ZIP reports into one MultiQC aggregate summary, keeping the pairing context and per-mate QC outputs available."
+      }
+    ]
+  },
+  "validation": {
+    "valid": true,
+    "errors": [],
+    "warnings": [
+      "step_02: heavy resource requirement",
+      "step_03: heavy resource requirement"
+    ],
+    "issues": []
+  }
+}

@@ -1,0 +1,1 @@
+{"status": "blocked", "reason_code": "missing_prerequisite", "message": "Host-DNA removal requires a reference genome (e.g., human) to build a Bowtie2 index, but no reference genome file was provided. I cannot guess or create a reference index from the given FASTQ file alone. Please supply a reference genome FASTA file or specify an existing reference index."}

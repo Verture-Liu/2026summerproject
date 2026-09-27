@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "reason_code": "missing_mate",
+  "message": "burial_R2.fq is not among uploaded files; cannot fabricate or infer the missing mate for paired-end QC."
+}

@@ -1,0 +1,102 @@
+{
+  "schema_version": "1.0",
+  "task_summary": "Inspect ancient-sediment FASTA, remove duplicate sequences, retain records 15-22 nucleotides, and report SeqKit statistics while keeping intermediate FASTA files.",
+  "steps": [
+    {
+      "id": "step_01",
+      "skill": "file_type_detect",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "sediment_amplicons.fna"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "file_type_detection",
+          "format": "json"
+        }
+      ],
+      "reason": "Confirm the uploaded file is FASTA before sequence processing."
+    },
+    {
+      "id": "step_02",
+      "skill": "seqkit_deduplicate",
+      "inputs": [
+        {
+          "source": "uploaded",
+          "ref": "sediment_amplicons.fna"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "deduplicated_amplicons",
+          "format": "fasta"
+        }
+      ],
+      "reason": "Remove duplicate sequences from the FASTA and keep the non-redundant intermediate file."
+    },
+    {
+      "id": "step_03",
+      "skill": "seqkit_length_filter",
+      "inputs": [
+        {
+          "source": "step",
+          "ref": "deduplicated_amplicons"
+        }
+      ],
+      "parameters": {
+        "min_length": 15,
+        "max_length": 22
+      },
+      "outputs": [
+        {
+          "name": "length_filtered_amplicons",
+          "format": "fasta"
+        }
+      ],
+      "reason": "Retain only sequences between 15 and 22 nucleotides and save the filtered FASTA."
+    },
+    {
+      "id": "step_04",
+      "skill": "data_quality_gate",
+      "inputs": [
+        {
+          "source": "step",
+          "ref": "length_filtered_amplicons"
+        }
+      ],
+      "parameters": {
+        "min_records": 1
+      },
+      "outputs": [
+        {
+          "name": "filtered_data_quality",
+          "format": "json"
+        }
+      ],
+      "reason": "Run a post-filtering quality gate before generating retained-sequence statistics."
+    },
+    {
+      "id": "step_05",
+      "skill": "seqkit_stats",
+      "inputs": [
+        {
+          "source": "step",
+          "ref": "length_filtered_amplicons"
+        }
+      ],
+      "outputs": [
+        {
+          "name": "retained_sequence_stats_json",
+          "format": "json"
+        },
+        {
+          "name": "retained_sequence_stats_tsv",
+          "format": "tsv"
+        }
+      ],
+      "reason": "Produce machine-readable SeqKit statistics for the length-filtered, deduplicated retained sequences."
+    }
+  ]
+}

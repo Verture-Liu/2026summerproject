@@ -1,0 +1,134 @@
+{
+  "strict_success": true,
+  "decision": "workflow",
+  "failure_codes": [],
+  "workflow": {
+    "schema_version": "1.0",
+    "task_summary": "Validate the cave-library FASTQ pair, run FastQC separately on R1 and R2, and aggregate per-mate QC reports with MultiQC.",
+    "steps": [
+      {
+        "id": "step_01",
+        "skill": "file_type_detect",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "cave_pair_R1.fastq"
+          },
+          {
+            "source": "uploaded",
+            "ref": "cave_pair_R2.fastq"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "file_type_report",
+            "format": "json"
+          }
+        ],
+        "reason": "Detect the true file types of the uploaded cave-library FASTQ files before pairing and QC."
+      },
+      {
+        "id": "step_02",
+        "skill": "fastq_pair_match",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "cave_pair_R1.fastq"
+          },
+          {
+            "source": "uploaded",
+            "ref": "cave_pair_R2.fastq"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "pairing_manifest",
+            "format": "json"
+          }
+        ],
+        "reason": "Confirm that cave_pair_R1.fastq and cave_pair_R2.fastq form a valid paired-end mate set before running per-mate QC."
+      },
+      {
+        "id": "step_03",
+        "skill": "fastq_qc",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "cave_pair_R1.fastq"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "cave_pair_R1_fastqc_zip",
+            "format": "zip"
+          },
+          {
+            "name": "cave_pair_R1_fastqc_html",
+            "format": "html"
+          }
+        ],
+        "reason": "Run FastQC on R1 alone to assess the raw quality of the first mate."
+      },
+      {
+        "id": "step_04",
+        "skill": "fastq_qc",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "cave_pair_R2.fastq"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "cave_pair_R2_fastqc_zip",
+            "format": "zip"
+          },
+          {
+            "name": "cave_pair_R2_fastqc_html",
+            "format": "html"
+          }
+        ],
+        "reason": "Run FastQC on R2 alone to assess the raw quality of the second mate."
+      },
+      {
+        "id": "step_05",
+        "skill": "multiqc_summary",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "cave_pair_R1_fastqc_zip"
+          },
+          {
+            "source": "step",
+            "ref": "cave_pair_R2_fastqc_zip"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "multiqc_report",
+            "format": "html"
+          },
+          {
+            "name": "multiqc_summary_json",
+            "format": "json"
+          }
+        ],
+        "reason": "Combine both per-mate FastQC ZIP reports into one MultiQC summary for the paired cave-library sample."
+      }
+    ]
+  },
+  "validation": {
+    "valid": true,
+    "errors": [],
+    "warnings": [
+      "step_03: heavy resource requirement",
+      "step_04: heavy resource requirement"
+    ],
+    "issues": []
+  }
+}

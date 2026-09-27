@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "reason_code": "file_type_mismatch",
+  "message": "The uploaded file is TSV, not raw FASTQ; cannot run FastQC or cutadapt."
+}

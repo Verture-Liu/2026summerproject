@@ -1,0 +1,75 @@
+{
+  "schema_version": "1.0",
+  "task_summary": "Validate the two FASTQ files as a paired-end sample, run FastQC on each mate separately, and aggregate with MultiQC.",
+  "steps": [
+    {
+      "id": "step_01",
+      "skill": "file_type_detect",
+      "inputs": [
+        {"source": "uploaded", "ref": "heldout_pair_R1.fastq"},
+        {"source": "uploaded", "ref": "heldout_pair_R2.fastq"}
+      ],
+      "parameters": {},
+      "outputs": [
+        {"name": "file_types", "format": "json"}
+      ],
+      "reason": "Confirm both uploaded files are FASTQ before attempting pair matching and QC."
+    },
+    {
+      "id": "step_02",
+      "skill": "fastq_pair_match",
+      "inputs": [
+        {"source": "uploaded", "ref": "heldout_pair_R1.fastq"},
+        {"source": "uploaded", "ref": "heldout_pair_R2.fastq"}
+      ],
+      "parameters": {},
+      "outputs": [
+        {"name": "pair_report", "format": "csv"},
+        {"name": "pair_report_json", "format": "json"}
+      ],
+      "reason": "Match the R1 and R2 files into a single paired-end sample row and validate that the mates belong together."
+    },
+    {
+      "id": "step_03",
+      "skill": "fastq_qc",
+      "inputs": [
+        {"source": "uploaded", "ref": "heldout_pair_R1.fastq"}
+      ],
+      "parameters": {"threads": 2},
+      "outputs": [
+        {"name": "r1_fastqc_html", "format": "html"},
+        {"name": "r1_fastqc_json", "format": "json"},
+        {"name": "r1_fastqc_zip", "format": "zip"}
+      ],
+      "reason": "Run raw FastQC on read 1 separately so each mate's quality metrics are preserved."
+    },
+    {
+      "id": "step_04",
+      "skill": "fastq_qc",
+      "inputs": [
+        {"source": "uploaded", "ref": "heldout_pair_R2.fastq"}
+      ],
+      "parameters": {"threads": 2},
+      "outputs": [
+        {"name": "r2_fastqc_html", "format": "html"},
+        {"name": "r2_fastqc_json", "format": "json"},
+        {"name": "r2_fastqc_zip", "format": "zip"}
+      ],
+      "reason": "Run raw FastQC on read 2 separately so each mate's quality metrics are preserved."
+    },
+    {
+      "id": "step_05",
+      "skill": "multiqc_summary",
+      "inputs": [
+        {"source": "step", "ref": "r1_fastqc_zip"},
+        {"source": "step", "ref": "r2_fastqc_zip"}
+      ],
+      "parameters": {},
+      "outputs": [
+        {"name": "multiqc_report", "format": "html"},
+        {"name": "multiqc_data", "format": "json"}
+      ],
+      "reason": "Aggregate both FastQC ZIP reports into one MultiQC HTML summary while retaining the individual QC outputs."
+    }
+  ]
+}

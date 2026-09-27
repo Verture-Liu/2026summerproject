@@ -1,0 +1,3 @@
+Sample	Top overrepresented sequence	Sum of remaining overrepresented sequences
+cave_pair_R1	25.0	75.0
+cave_pair_R2	25.0	75.0

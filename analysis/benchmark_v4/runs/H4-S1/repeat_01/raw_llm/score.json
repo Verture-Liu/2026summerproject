@@ -1,0 +1,102 @@
+{
+  "strict_success": true,
+  "decision": "workflow",
+  "failure_codes": [],
+  "workflow": {
+    "schema_version": "1.0",
+    "task_summary": "Detect file type of ancient_fragments.fasta, deduplicate sequences with SeqKit, retain sequences 14-22 bases long, and compute SeqKit statistics on the final FASTA while preserving intermediate sequence files and audit outputs.",
+    "steps": [
+      {
+        "id": "step_01",
+        "skill": "file_type_detect",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "ancient_fragments.fasta"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "detected_file_type",
+            "format": "json"
+          }
+        ],
+        "reason": "Confirm the uploaded file is a FASTA before proceeding with sequence operations."
+      },
+      {
+        "id": "step_02",
+        "skill": "seqkit_deduplicate",
+        "inputs": [
+          {
+            "source": "uploaded",
+            "ref": "ancient_fragments.fasta"
+          }
+        ],
+        "parameters": {
+          "by_sequence": true
+        },
+        "outputs": [
+          {
+            "name": "deduplicated_sequences.fasta",
+            "format": "fasta"
+          },
+          {
+            "name": "deduplication_audit.json",
+            "format": "json"
+          }
+        ],
+        "reason": "Remove duplicate sequences from the ancient FASTA while producing an audit JSON for preservation."
+      },
+      {
+        "id": "step_03",
+        "skill": "seqkit_length_filter",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "deduplicated_sequences.fasta"
+          }
+        ],
+        "parameters": {
+          "min_length": 14,
+          "max_length": 22
+        },
+        "outputs": [
+          {
+            "name": "filtered_14_22.fasta",
+            "format": "fasta"
+          },
+          {
+            "name": "length_filter_audit.json",
+            "format": "json"
+          }
+        ],
+        "reason": "Retain only sequences between 14 and 22 bases inclusive from the deduplicated FASTA, preserving the filtered FASTA and audit JSON."
+      },
+      {
+        "id": "step_04",
+        "skill": "seqkit_stats",
+        "inputs": [
+          {
+            "source": "step",
+            "ref": "filtered_14_22.fasta"
+          }
+        ],
+        "parameters": {},
+        "outputs": [
+          {
+            "name": "final_seqkit_stats.json",
+            "format": "json"
+          }
+        ],
+        "reason": "Calculate SeqKit statistics for the final length-filtered and deduplicated FASTA."
+      }
+    ]
+  },
+  "validation": {
+    "valid": true,
+    "errors": [],
+    "warnings": [],
+    "issues": []
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "tool": "seqkit",
+  "tool_source": "path",
+  "official_url": "https://bioinf.shenwei.me/seqkit/",
+  "inputs": [
+    "/Users/tianaoliu/Documents/vscode/2026summerproject/analysis/benchmark_v4/runs/H4-S1/repeat_03/raw_llm/execution_task/steps/step_03/length_filtered.fasta"
+  ]
+}

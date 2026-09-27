@@ -1,0 +1,1 @@
+{"status": "blocked", "reason_code": "file_type_mismatch", "message": "The request is to run FastQC and cutadapt on raw FASTQ data, but the only uploaded file is heldout_metadata.tsv (TSV format). No FASTQ file is available for these steps."}

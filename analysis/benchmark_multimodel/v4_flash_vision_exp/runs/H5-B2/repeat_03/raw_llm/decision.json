@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "reason_code": "missing_prerequisite",
+  "message": "Host DNA removal requires a reference genome/index, but none was provided. The tool cannot guess a host or create a reference index."
+}

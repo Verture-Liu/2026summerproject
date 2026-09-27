@@ -1,0 +1,5 @@
+{
+  "status": "blocked",
+  "reason_code": "unsupported_scientific_claim",
+  "message": "FastQC and taxonomic profiling cannot prove that every read is ancient or that the library is entirely free of modern contamination. Such a definitive authenticity certificate is not scientifically supported by these data."
+}
