@@ -47,8 +47,10 @@
     macBundled: "内置 FastQC 0.12.1、MultiQC 1.35、SeqKit 2.13.0、SeqTk 1.5-r133、Samtools 1.23.1、BWA 0.7.19-r1273 和 Bowtie2 2.5.5 及其运行环境。不需要安装 Python、Conda、Java 或 Homebrew。",
     macLink: "打开下载文件夹 →",
     winKicker: "WINDOWS 10/11 X64", winTitle: "Windows 安装程序",
-    winText: "由单独的原生构建流程从同一份后端源码生成，内置同样的七个工具（Windows 上 Samtools 为 1.24）。凭据保存在 Windows 凭据管理器中。构建和验证步骤写在仓库里。",
-    winLink: "Windows 构建说明 →",
+    winText: "从 GitHub 的 paleorigor/windows 文件夹下载 PaleoRigor-Setup.exe 并运行。它和 macOS 版来自同一份源码，内置同样的七个工具（Windows 上 Samtools 为 1.24）。凭据保存在 Windows 凭据管理器中。安装程序没有代码签名，Windows SmartScreen 可能提示“未知发布者”。",
+    winCheck: "安装、工具、后台和卸载的原生检查结果记录在 verification.json 中，SHA256SUMS.txt 里是它的校验值。",
+    winLink: "打开下载文件夹 →",
+    winBuild: "安装程序是怎么构建的 →",
     srcKicker: "从源码运行", srcTitle: "Python 包",
     copy: "复制命令",
     srcNote: "工具来自你已配置的环境；缺少的工具只会报告，不会自动安装。",
@@ -332,7 +334,7 @@
       scn.plan.steps.forEach((s) => {
         const a = L.pos[s.id];
         if (!feeds.has(s.id)) edges += `<path class="g-edge drawn" d="${curve(a, S)}" style="stroke:color-mix(in srgb, var(--agent) 40%, white)"/>`;
-        if (USER_FACING.has(s.skill) && !feeds.has(s.id)) edges += `<path class="g-edge drawn" d="${curve(a, F)}" style="stroke:var(--repro)"/>`;
+        if (USER_FACING.has(s.skill)) edges += `<path class="g-edge drawn" d="${curve(a, F)}" style="stroke:var(--repro)"/>`;
       });
       extra += `<text class="g-lbl" style="fill:var(--constraint)" x="${R.x + R.w / 2}" y="${R.y - 8}" text-anchor="middle">${esc(t.recNote)}</text>`;
     }

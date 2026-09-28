@@ -229,8 +229,10 @@
         <article class="hw-card">
           <p class="card-kicker" data-i18n="winKicker">WINDOWS 10/11 X64</p>
           <h3 data-i18n="winTitle">Windows installer</h3>
-          <p class="hw-small" data-i18n="winText">Built by a separate native workflow from the same backend source, with the same seven tools (Samtools 1.24 on Windows). Credentials are kept in Windows Credential Manager. The build and its verification steps are documented in the repository.</p>
-          <a class="text-link" href="https://github.com/Verture-Liu/2026summerproject/tree/main/packaging/windows" data-i18n="winLink">Windows build guide →</a>
+          <p class="hw-small" data-i18n="winText">Download PaleoRigor-Setup.exe from the paleorigor/windows folder on GitHub and run it. It is built from the same source as the macOS app and bundles the same seven tools (Samtools 1.24 on Windows). Credentials are kept in Windows Credential Manager. The installer is not code signed, so Windows SmartScreen may warn about an unknown publisher.</p>
+          <p class="hw-small" data-i18n="winCheck">Its native install, tool, backend and uninstall checks are recorded in verification.json, and SHA256SUMS.txt holds its checksum.</p>
+          <a class="text-link" href="https://github.com/Verture-Liu/2026summerproject/tree/main/paleorigor/windows" data-i18n="winLink">Open the download folder →</a>
+          <a class="text-link" href="https://github.com/Verture-Liu/2026summerproject/tree/main/packaging/windows" data-i18n="winBuild">How the installer is built →</a>
         </article>
         <article class="hw-card hw-card-dark">
           <p class="card-kicker" data-i18n="srcKicker">FROM SOURCE</p>
