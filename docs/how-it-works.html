@@ -1,0 +1,322 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="description" content="How the PaleoRigor research agent plans, checks, runs and records an analysis, and how to use the desktop app.">
+  <title>How PaleoRigor works | PaleoRigor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&display=swap">
+  <link rel="stylesheet" href="assets/site.css">
+  <link rel="stylesheet" href="assets/how-it-works.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content" data-i18n="skip">Skip to content</a>
+
+  <header class="site-header">
+    <a class="brand" href="index.html" aria-label="PaleoRigor home">
+      <span class="brand-mark" aria-hidden="true">PR</span>
+      <span>PaleoRigor</span>
+    </a>
+    <button id="menu-toggle" class="menu-toggle" type="button" aria-expanded="false" aria-controls="site-nav">
+      <span class="sr-only">Toggle navigation</span>
+      <span aria-hidden="true"></span><span aria-hidden="true"></span><span aria-hidden="true"></span>
+    </button>
+    <nav id="site-nav" class="site-nav" aria-label="Primary navigation">
+      <a href="#walkthrough" data-i18n="navRun">How it runs</a>
+      <a href="#use" data-i18n="navUse">How to use it</a>
+      <a href="#install" data-i18n="navInstall">Install</a>
+      <a href="explorer.html" data-i18n="navExplorer">Benchmark explorer</a>
+      <a class="nav-github" href="https://github.com/Verture-Liu/2026summerproject">GitHub</a>
+      <div class="hw-lang" role="group" aria-label="Language">
+        <button type="button" id="lang-en" class="hw-lang-btn" data-lang="en" aria-pressed="true">EN</button>
+        <button type="button" id="lang-zh" class="hw-lang-btn" data-lang="zh" aria-pressed="false">中文</button>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main-content">
+    <section class="hw-hero">
+      <canvas id="seqField" class="hw-seq" aria-hidden="true"></canvas>
+      <div class="section-shell hw-hero-grid">
+        <div class="hw-hero-copy">
+          <p class="hw-eyebrow" data-i18n="heroEyebrow">HOW PALEORIGOR WORKS</p>
+          <h1 class="hw-h1" data-i18n="heroTitle">A research agent that shows its plan, stays inside its limits and keeps the evidence.</h1>
+          <p class="hw-lead" data-i18n="heroLead">You describe an analysis in plain language. A language model drafts the workflow; the app checks it, you approve it, and skills on your own computer run it. Every run leaves a folder you can audit later.</p>
+          <div class="hero-actions">
+            <a class="button hw-btn-glow" href="#walkthrough" data-i18n="heroTry">Step through an example</a>
+            <a class="button hw-btn-ghost" href="#install" data-i18n="heroInstall">Install the app</a>
+          </div>
+          <p class="hw-seq-key"><span class="b">ACGT</span> <span data-i18n="seqKey">In the background, bases next to a fragment break turn C→T and G→A, the damage pattern of ancient DNA.</span></p>
+        </div>
+        <dl class="hw-cores" aria-label="Three commitments">
+          <div class="hw-core" style="--c: var(--agent)">
+            <svg class="hw-ic" viewBox="0 0 32 32" aria-hidden="true"><circle cx="7" cy="16" r="3.2"/><circle cx="25" cy="8" r="3.2"/><circle cx="25" cy="24" r="3.2"/><path d="M10 15 22 9M10 17l12 6"/></svg>
+            <div><dt data-i18n="coreAgent">Agent</dt>
+            <dd data-i18n="coreAgentText">The model turns your request into an explicit, ordered workflow. It plans only; it never touches your files.</dd></div>
+          </div>
+          <div class="hw-core" style="--c: var(--constraint)">
+            <svg class="hw-ic" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 3 27 7v8c0 7-4.6 11.6-11 14C9.6 26.6 5 22 5 15V7z"/><path d="m11 16 3.5 3.5L21 12"/></svg>
+            <div><dt data-i18n="coreConstraint">Constraint</dt>
+            <dd data-i18n="coreConstraintText">A validator checks every file reference, format and step dependency. Only registered skills can run, and requests that cross a stated limit are refused with a reason code.</dd></div>
+          </div>
+          <div class="hw-core" style="--c: var(--repro)">
+            <svg class="hw-ic" viewBox="0 0 32 32" aria-hidden="true"><path d="M16 4 28 10 16 16 4 10z"/><path d="m4 16 12 6 12-6M4 22l12 6 12-6"/></svg>
+            <div><dt data-i18n="coreRepro">Reproducibility</dt>
+            <dd data-i18n="coreReproText">Final outputs, intermediate files, the report and SHA-256 checksums are kept together, so each run can be checked without calling the model again.</dd></div>
+          </div>
+        </dl>
+      </div>
+    </section>
+
+    <section id="walkthrough" class="hw-bench-section">
+      <div class="section-shell">
+        <div class="hw-head">
+          <p class="section-index" data-i18n="benchIndex">HOW IT RUNS</p>
+          <h2 data-i18n="benchTitle">Follow one request from question to record.</h2>
+          <p data-i18n="benchLead">Pick an example request, then step through the six stages. Supported requests go all the way to a results folder; requests that cross a limit stop early, and nothing runs.</p>
+        </div>
+
+        <div class="hw-scenarios" role="tablist" aria-label="Example requests" id="scenario-list"></div>
+
+        <div class="hw-window">
+          <div class="hw-titlebar">
+            <span class="dots" aria-hidden="true"><i></i><i></i><i></i></span>
+            <span class="hw-wtitle">PaleoRigor · <span data-i18n="winLocal">local research agent</span></span>
+            <span id="stage-count" class="hw-count"></span>
+          </div>
+          <ol class="hw-rail" id="stage-rail" aria-label="Stages"></ol>
+          <div class="hw-stage">
+            <div class="hw-panel" id="stage-panel" aria-live="polite"></div>
+            <div class="hw-graph-wrap">
+              <div class="hw-graph-legend" id="graph-legend"></div>
+              <div class="hw-graph" id="stage-graph"></div>
+            </div>
+          </div>
+          <div class="hw-controls">
+            <button type="button" id="prev-stage" class="hw-ctrl" data-i18n="prev">Back</button>
+            <button type="button" id="next-stage" class="hw-ctrl hw-ctrl-primary" data-i18n="next">Next stage</button>
+          </div>
+        </div>
+        <p class="hw-note" data-i18n="benchNote">Examples are illustrative: file names, parameters and planner messages are written for this page. Skill names, schema fields, reason codes, validator messages and folder names are the ones the app uses.</p>
+      </div>
+    </section>
+
+    <section id="use" class="section-shell hw-use">
+      <div class="hw-head hw-head-split">
+        <div>
+          <p class="section-index" data-i18n="useIndex">HOW TO USE IT</p>
+          <h2 data-i18n="useTitle">Five steps in the desktop app.</h2>
+        </div>
+        <p data-i18n="useLead">The steps match the progress bar at the top of the app. Button names are shown as they appear on screen.</p>
+      </div>
+      <ol class="hw-steps">
+        <li>
+          <span class="hw-step-n">1</span>
+          <div class="hw-step-body">
+            <h3 data-i18n="u1Title">Model API</h3>
+            <p data-i18n="u1Text">Enter the Base URL, Model and API Key of an OpenAI-compatible provider, then press <b>Save Configuration</b> and <b>Test Connection</b>. The key is stored in macOS Keychain (Windows Credential Manager on Windows) and is never shown again.</p>
+          </div>
+          <div class="hw-mock" aria-hidden="true">
+            <span class="f"><small>Base URL</small>https://api.example.com/v1</span>
+            <span class="f"><small>API Key</small>••••••••••••</span>
+            <span class="pill" data-i18n="mSave">Save Configuration</span>
+          </div>
+        </li>
+        <li>
+          <span class="hw-step-n">2</span>
+          <div class="hw-step-body">
+            <h3 data-i18n="u2Title">Upload files</h3>
+            <p data-i18n="u2Text">Describe the task in one or two sentences and add your files (FASTQ, FASTA, CSV, TSV and others), then press <b>Create Task and Upload</b>. The app inspects each file locally and records its format and SHA-256 checksum.</p>
+          </div>
+          <div class="hw-mock" aria-hidden="true">
+            <span class="file">lib01_R1.fastq.gz <em>fastq</em></span>
+            <span class="file">lib01_R2.fastq.gz <em>fastq</em></span>
+            <span class="pill" data-i18n="mUpload">Create Task and Upload</span>
+          </div>
+        </li>
+        <li>
+          <span class="hw-step-n">3</span>
+          <div class="hw-step-body">
+            <h3 data-i18n="u3Title">Plan workflow</h3>
+            <p data-i18n="u3Text">Press <b>Generate Workflow</b>. The model receives your request and a summary of each file (name, format, size, column names, record count), not the file contents. You get back either a validated dataflow or a refusal card with a reason code.</p>
+          </div>
+          <div class="hw-mock" aria-hidden="true">
+            <span class="node" style="--c: var(--m-workflow-utilities)">file_type_detect</span>
+            <span class="node" style="--c: var(--m-ancient-dna-core)">fastq_qc</span>
+            <span class="okline" data-i18n="mValid">✓ Validation passed</span>
+          </div>
+        </li>
+        <li>
+          <span class="hw-step-n">4</span>
+          <div class="hw-step-body">
+            <h3 data-i18n="u4Title">Choose output</h3>
+            <p data-i18n="u4Text">Read each step and its reason, then press <b>Select Results Folder</b> and tick <i>I reviewed the workflow and approve running these Skills locally.</i> Nothing runs until you do.</p>
+          </div>
+          <div class="hw-mock" aria-hidden="true">
+            <span class="check"><i>✓</i> <span data-i18n="mApprove">I reviewed the workflow and approve running these Skills locally.</span></span>
+          </div>
+        </li>
+        <li>
+          <span class="hw-step-n">5</span>
+          <div class="hw-step-body">
+            <h3 data-i18n="u5Title">Run locally</h3>
+            <p data-i18n="u5Text">Press <b>Run Workflow</b>. The app validates the plan once more, runs each skill on your computer and shows a step-by-step log. When it finishes, <b>Open Run Report</b> shows what ran and which files it produced.</p>
+          </div>
+          <div class="hw-mock" aria-hidden="true">
+            <span class="bar"><i></i></span>
+            <span class="pill pill-dark" data-i18n="mReport">Open Run Report</span>
+          </div>
+        </li>
+      </ol>
+      <div class="hw-tips">
+        <h3 data-i18n="tipsTitle">Writing requests that plan well</h3>
+        <ul>
+          <li data-i18n="tip1">Name the files and the output you want: "Run FastQC on both mates and give me one MultiQC report."</li>
+          <li data-i18n="tip2">State parameters you care about, such as a length range or a reference genome. Alignment and host removal need a named reference or index; the planner will not pick one for you.</li>
+          <li data-i18n="tip3">Ask for evidence, not verdicts. "Summarise read quality" is a task; "prove these reads are ancient" is a claim the app will refuse.</li>
+        </ul>
+      </div>
+    </section>
+
+    <section class="hw-record-section">
+      <div class="section-shell hw-record-grid">
+        <div>
+          <p class="section-index" data-i18n="recIndex">WHAT YOU GET</p>
+          <h2 data-i18n="recTitle">One folder per run, with the result and its history kept apart.</h2>
+          <p data-i18n="recLead">The files you asked for sit in final_outputs. Everything that explains how they were made sits next to them, so a colleague or reviewer can check the run without the app or the model.</p>
+          <div class="hw-folders" aria-hidden="true">
+            <div class="fd" style="--c: var(--repro)"><b>final_outputs</b><span data-i18n="fdFinal">the answer</span></div>
+            <div class="fd" style="--c: var(--agent)"><b>step_outputs</b><span data-i18n="fdStep">how you got there</span></div>
+            <div class="fd" style="--c: var(--constraint)"><b>ResearchAgent Records</b><span data-i18n="fdRec">proof it happened</span></div>
+          </div>
+        </div>
+        <div class="hw-tree" aria-label="Result folder layout">
+<pre><span class="t-dir">ResearchAgent_Result_20260928_101532_3f2a9c1e/</span>
+├── <span class="t-dir">final_outputs/</span>          <span class="t-c" data-i18n="treeFinal"># the files you asked for</span>
+├── <span class="t-dir">step_outputs/</span>           <span class="t-c" data-i18n="treeStep"># every intermediate file, per step</span>
+│   ├── step_01_file_type_detect/
+│   └── step_02_fastq_pair_match/ …
+└── <span class="t-dir">ResearchAgent Records/</span>
+    ├── report.html          <span class="t-c" data-i18n="treeReport"># what ran, in order</span>
+    ├── manifest.json        <span class="t-c" data-i18n="treeManifest"># workflow + SHA-256 per file</span>
+    └── logs/                <span class="t-c" data-i18n="treeLogs"># tool output and warnings</span></pre>
+          <p class="hw-tree-note" data-i18n="treeNote">Folder names are the app's own; the timestamp and task ID here are examples. A refused request writes planning_decision.json (your request and the reason code) in the task folder instead.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="install" class="section-shell hw-install">
+      <div class="hw-head">
+        <p class="section-index" data-i18n="insIndex">INSTALL</p>
+        <h2 data-i18n="insTitle">Three ways to run PaleoRigor.</h2>
+      </div>
+      <div class="hw-install-grid">
+        <article class="hw-card hw-card-feature">
+          <p class="card-kicker" data-i18n="macKicker">RECOMMENDED · APPLE SILICON</p>
+          <h3 data-i18n="macTitle">macOS app</h3>
+          <ol class="hw-mini">
+            <li data-i18n="mac1">Download PaleoRigor-dev-arm64.dmg from the paleorigor folder on GitHub (macOS 13 or later).</li>
+            <li data-i18n="mac2">Drag PaleoRigor.app into Applications.</li>
+            <li data-i18n="mac3">On first launch, Control-click the app and choose Open, because this development build is ad-hoc signed rather than notarized.</li>
+          </ol>
+          <div class="hw-toolchips" aria-label="Bundled tools">
+            <span>FastQC 0.12.1</span><span>MultiQC 1.35</span><span>SeqKit 2.13.0</span><span>SeqTk 1.5-r133</span><span>Samtools 1.23.1</span><span>BWA 0.7.19-r1273</span><span>Bowtie2 2.5.5</span>
+          </div>
+          <p class="hw-small" data-i18n="macBundled">All seven tools and their runtimes are bundled. No Python, Conda, Java or Homebrew needed.</p>
+          <a class="text-link" href="https://github.com/Verture-Liu/2026summerproject/tree/main/paleorigor" data-i18n="macLink">Open the download folder →</a>
+        </article>
+        <article class="hw-card">
+          <p class="card-kicker" data-i18n="winKicker">WINDOWS 10/11 X64</p>
+          <h3 data-i18n="winTitle">Windows installer</h3>
+          <p class="hw-small" data-i18n="winText">Built by a separate native workflow from the same backend source, with the same seven tools (Samtools 1.24 on Windows). Credentials are kept in Windows Credential Manager. The build and its verification steps are documented in the repository.</p>
+          <a class="text-link" href="https://github.com/Verture-Liu/2026summerproject/tree/main/packaging/windows" data-i18n="winLink">Windows build guide →</a>
+        </article>
+        <article class="hw-card hw-card-dark">
+          <p class="card-kicker" data-i18n="srcKicker">FROM SOURCE</p>
+          <h3 data-i18n="srcTitle">Python package</h3>
+          <pre class="hw-cmd" id="install-command"><code>git clone https://github.com/Verture-Liu/2026summerproject.git
+cd 2026summerproject
+python -m venv .venv
+source .venv/bin/activate
+pip install -e .
+research-agent</code></pre>
+          <button id="copy-command" class="copy-button" type="button" data-i18n="copy">Copy commands</button>
+          <p class="hw-small" data-i18n="srcNote">Tools are taken from your configured environments; a missing tool is reported, never installed automatically.</p>
+        </article>
+      </div>
+      <p class="hw-verify"><span data-i18n="verify">Check a downloaded image against SHA256SUMS.txt:</span> <code>shasum -a 256 PaleoRigor-dev-arm64.dmg</code></p>
+    </section>
+
+    <section class="hw-limits-section">
+      <div class="section-shell hw-limits-grid">
+        <div>
+          <p class="section-index" data-i18n="limIndex">LIMITS</p>
+          <h2 data-i18n="limTitle">What the agent refuses, and what it never does.</h2>
+          <p data-i18n="limLead">These limits are written into the planning contract before the model is called. A refusal is a result, not an error: the app shows the reason and runs nothing.</p>
+          <ul class="hw-never">
+            <li data-i18n="never1">It does not authenticate ancient DNA or identify contamination sources. That judgement stays with the paleobiologist.</li>
+            <li data-i18n="never2">It cannot write or run code outside the installed skill modules.</li>
+            <li data-i18n="never3">It does not install missing software or substitute a reference genome.</li>
+            <li data-i18n="never4">It does not run anything you have not approved.</li>
+          </ul>
+        </div>
+        <div class="hw-codes">
+          <div class="hw-code-row"><span class="stamp" aria-hidden="true">✕</span><div><code>unsupported_scientific_claim</code><p data-i18n="rc1">Quality-control output cannot show that reads are ancient or free of contamination.</p></div></div>
+          <div class="hw-code-row"><span class="stamp" aria-hidden="true">✕</span><div><code>missing_prerequisite</code><p data-i18n="rc2">A required input is missing, such as aligned data or a named reference genome or index.</p></div></div>
+          <div class="hw-code-row"><span class="stamp" aria-hidden="true">✕</span><div><code>file_type_mismatch</code><p data-i18n="rc3">The requested operation does not match the format of the uploaded files.</p></div></div>
+          <div class="hw-code-row"><span class="stamp" aria-hidden="true">✕</span><div><code>missing_mate</code><p data-i18n="rc4">The request names a paired-end mate that was not uploaded.</p></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-shell hw-modules">
+      <div class="hw-head hw-head-split">
+        <div>
+          <p class="section-index" data-i18n="modIndex">SKILL MODULES</p>
+          <h2 data-i18n="modTitle">67 skills in 7 modules. The plan can use nothing else.</h2>
+        </div>
+        <p data-i18n="modLead">The module list is fixed before the model is called. Tools that are not bundled with the app must be installed in your environment before their skills can run.</p>
+      </div>
+      <div class="hw-cubes" id="module-cubes"></div>
+      <div class="hw-mod-detail" id="module-detail" aria-live="polite"></div>
+    </section>
+
+    <section class="hw-evidence">
+      <div class="section-shell hw-evidence-grid">
+        <div>
+          <p class="section-index" data-i18n="evIndex">TESTED</p>
+          <h2 data-i18n="evTitle">Checked in a frozen, held-out evaluation.</h2>
+          <p data-i18n="evLead">The comparison removed the planning contract from the same model, with everything else unchanged. The paired differences did not reach statistical significance at 24 runs per arm.</p>
+          <a class="text-link" href="explorer.html" data-i18n="evLink">Inspect all 48 runs in the benchmark explorer →</a>
+        </div>
+        <div class="hw-bars">
+          <figure class="hw-barset">
+            <figcaption>deepseek-v4-flash · <span data-i18n="evFrozen">frozen v5 round</span></figcaption>
+            <div class="row"><span class="lab" data-i18n="evWith">With contract</span><span class="track"><i style="--v: 23"></i></span><b>23 / 24</b></div>
+            <div class="row abl"><span class="lab" data-i18n="evWithout">Contract removed</span><span class="track"><i style="--v: 19"></i></span><b>19 / 24</b></div>
+          </figure>
+          <figure class="hw-barset">
+            <figcaption>deepseek-v4-pro · <span data-i18n="evRepeat">preregistered repeat</span></figcaption>
+            <div class="row"><span class="lab" data-i18n="evWith">With contract</span><span class="track"><i style="--v: 24"></i></span><b>24 / 24</b></div>
+            <div class="row abl"><span class="lab" data-i18n="evWithout">Contract removed</span><span class="track"><i style="--v: 19"></i></span><b>19 / 24</b></div>
+          </figure>
+          <dl class="hw-ev-mini">
+            <div><dt>96 / 96</dt><dd data-i18n="ev3">run labels recomputed from the retained records, all matching</dd></div>
+            <div><dt>6 / 6</dt><dd data-i18n="ev4">public sequencing records matched repository read counts and compressed-file sizes</dd></div>
+          </dl>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer section-shell">
+    <div><a class="brand footer-brand" href="index.html"><span class="brand-mark" aria-hidden="true">PR</span><span>PaleoRigor</span></a><p data-i18n="footTag">Reviewable evidence preparation for paleomicrobiome research.</p></div>
+    <div class="footer-links"><a href="index.html" data-i18n="footHome">Project home</a><a href="https://github.com/Verture-Liu/2026summerproject" data-i18n="footRepo">GitHub repository</a><a href="explorer.html" data-i18n="footExplorer">Benchmark explorer</a></div>
+    <p class="footer-note" data-i18n="footNote">This page runs no analysis and accepts no data. Real analyses run in the local application after your approval.</p>
+  </footer>
+
+  <script src="assets/site.js"></script>
+  <script src="assets/how-it-works.js"></script>
+</body>
+</html>
