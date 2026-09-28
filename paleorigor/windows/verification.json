@@ -1,0 +1,10 @@
+﻿{
+    "platform":  "windows-x64",
+    "passed":  true,
+    "checks":  {
+                   "installer":  true,
+                   "seven_tools":  true,
+                   "backend_health":  true,
+                   "uninstall":  true
+               }
+}

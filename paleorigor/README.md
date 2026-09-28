@@ -9,8 +9,10 @@ preserved.
 ## Platforms
 
 - macOS: `PaleoRigor-dev-arm64.dmg` for Apple Silicon and macOS 13 or later.
-- Windows: `PaleoRigor-Setup.exe` for Windows 10/11 x64, produced by the
-  native Windows build workflow after verification.
+- Windows: `windows/PaleoRigor-Setup.exe` for Windows 10/11 x64, built from the
+  same 0.2.1 source by the native Windows build workflow (GitHub Actions run
+  36327764584, commit e09765e) and checked by its native smoke test
+  (`windows/verification.json`). Verify it against `windows/SHA256SUMS.txt`.
 
 ## Download
 
