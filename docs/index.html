@@ -117,14 +117,15 @@
         <div class="section-heading">
           <p class="section-index">04 / MEASURED EVIDENCE</p>
           <h2>Transparent about what worked—and what did not.</h2>
-          <p>The prototype was evaluated for supported-task repeatability, repository-to-local source correspondence and interpretation-boundary behaviour.</p>
+          <p>PaleoRigor was tested in a preregistered, frozen held-out benchmark against an ablation that removed its planning contract from the same model, and in dataset-level cases of source correspondence and table curation.</p>
         </div>
         <div class="metric-grid">
-          <article class="metric-primary"><strong>12/12</strong><h3>Supported benchmark runs passed</h3><p>Repeated supported requests produced concordant scientific outputs.</p></article>
-          <article class="metric-caution"><strong>1/4</strong><h3>Boundary requests correctly constrained</h3><p>The weak result shows why deterministic rejection rules and expert review remain necessary.</p></article>
-          <article><strong>6</strong><h3>Public records matched exactly</h3><p>Across six public sequencing records, local read counts and compressed-file sizes matched repository metadata.</p></article>
-          <article><strong>114</strong><h3>Duplicate records documented</h3><p>A compact curation test retained 5,696 non-redundant records from 5,810 input rows.</p></article>
+          <article class="metric-primary"><strong>23/24</strong><h3>Held-out runs passed with the planning contract</h3><p>Frozen v5 round with deepseek-v4-flash: 11 of 12 supported runs and all 12 boundary decisions. With the contract removed from the same model, 19 of 24 passed.</p></article>
+          <article><strong>24/24</strong><h3>Runs passed in the preregistered repeat</h3><p>The same frozen design with deepseek-v4-pro, against 19 of 24 for the ablated arm.</p></article>
+          <article><strong>96/96</strong><h3>Run labels recomputed from the records</h3><p>Every benchmark label across both model configurations was recomputed from the retained records without calling the model again, and all matched.</p></article>
+          <article><strong>6/6</strong><h3>Public records matched</h3><p>Local read counts and compressed-file sizes matched repository metadata for six public sequencing records.</p></article>
         </div>
+        <p class="footer-note" style="max-width:none;margin-top:18px">The paired differences were not statistically significant at 24 runs per arm (exact McNemar p = 0.219 and 0.0625). A peptide-table curation case documented the removal of 114 duplicate sequence entries, from 5,810 input rows to 5,696 retained records.</p>
         <div class="retraction-callout">
           <div><p class="card-kicker">INTERPRETATION STRESS TEST</p><h3>Technically reproducible does not mean biologically valid.</h3></div>
           <p>For a retraction-associated record, PaleoRigor reproduced source-level properties while preserving an explicit boundary: clean files and matching metadata did not validate the retracted biological interpretation.</p>
