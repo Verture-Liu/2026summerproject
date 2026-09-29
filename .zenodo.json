@@ -1,0 +1,35 @@
+{
+  "title": "PaleoRigor: expert-guided workflows for traceable paleomicrobiome data processing",
+  "upload_type": "software",
+  "description": "<p>PaleoRigor is a local, human-in-the-loop system that converts a natural-language research request into an explicit workflow built from predefined analysis skills. It validates file references, formats and step compatibility before execution, requires expert approval, restricts execution to registered skills, and retains final outputs, intermediate files and run records so that the path from request to result can be audited. It supports workflow review and traceable source-data preparation before specialist paleomicrobiome interpretation; it does not authenticate ancient DNA or perform biological interpretation.</p><p>Release v0.2.2 contains the code, data and run records of v0.2.1 (commit b1cc9c4) unchanged; it adds only archive metadata (.zenodo.json) and changelog text. The results reported in the manuscript were produced with code contained in v0.2.0 (10.5281/zenodo.22912729).</p>",
+  "creators": [
+    {
+      "name": "Liu, Tianao",
+      "orcid": "0009-0004-5563-2942",
+      "affiliation": "Huazhong University of Science and Technology; The University of Sydney"
+    },
+    {
+      "name": "Zhang, Haohong",
+      "orcid": "0000-0001-6267-4244",
+      "affiliation": "Huazhong University of Science and Technology"
+    },
+    {
+      "name": "Jia, Yiyang",
+      "affiliation": "Yunnan University"
+    },
+    {
+      "name": "Ning, Kang",
+      "orcid": "0000-0003-3325-5387",
+      "affiliation": "Huazhong University of Science and Technology"
+    }
+  ],
+  "license": "mit",
+  "keywords": [
+    "paleomicrobiome",
+    "ancient DNA",
+    "human-in-the-loop analysis",
+    "source-data verification",
+    "reproducible bioinformatics",
+    "workflow validation"
+  ]
+}

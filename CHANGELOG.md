@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.2.2 — 2026-09-30
+
+Archive-metadata release. Code, prompts, data and run records are identical to 0.2.1 (b1cc9c4).
+
+### Added
+- `.zenodo.json` with the author list, affiliations, ORCIDs, licence and keywords, so that the Zenodo
+  GitHub integration archives the release without converting `CITATION.cff` (the automatic archive of
+  0.2.1 failed during that conversion).
+
+### Changed
+- `CITATION.cff` version and release date.
+
 ## 0.2.1 — 2026-09-28
 
 Evaluation code, prompts and reported results are unchanged from 0.2.0: both
@@ -31,3 +43,6 @@ prompts and benchmark code were not changed between them and this release.
   a step-by-step run log and the refusal card.
 - `paleorigor/README.md` lists the macOS Samtools version correctly (1.23.1;
   the Windows build bundles 1.24).
+- The website home page reports the frozen-evaluation results (23/24 vs 19/24,
+  24/24 vs 19/24, 96/96 recomputed labels, 6/6 matched records) in place of
+  early development figures.
