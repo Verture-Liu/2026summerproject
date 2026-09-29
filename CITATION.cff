@@ -2,14 +2,24 @@ cff-version: 1.2.0
 title: "PaleoRigor: expert-guided workflows for traceable paleomicrobiome data processing"
 message: "If you use this software, please cite it using the metadata below."
 type: software
-# TODO before release: confirm the full author list, ORCIDs and affiliations,
-# and keep them identical to the manuscript title page.
 authors:
   - given-names: Tianao
     family-names: Liu
     email: tagoreliu@gmail.com
-    # orcid: "https://orcid.org/0000-0000-0000-0000"
-    # affiliation: "TODO"
+    orcid: "https://orcid.org/0009-0004-5563-2942"
+    affiliation: "Huazhong University of Science and Technology; The University of Sydney"
+  - given-names: Haohong
+    family-names: Zhang
+    orcid: "https://orcid.org/0000-0001-6267-4244"
+    affiliation: "Huazhong University of Science and Technology"
+  - given-names: Yiyang
+    family-names: Jia
+    affiliation: "Yunnan University Yunnan-Malaya Institute, Yunnan University"
+  - given-names: Kang
+    family-names: Ning
+    email: ningkang@hust.edu.cn
+    orcid: "https://orcid.org/0000-0003-3325-5387"
+    affiliation: "Huazhong University of Science and Technology"
 repository-code: "https://github.com/Verture-Liu/2026summerproject"
 url: "https://verture-liu.github.io/2026summerproject/"
 abstract: >-

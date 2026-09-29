@@ -1,4 +1,4 @@
-# Supplementary File 4 — Verbatim planning prompts for both benchmark arms
+# Supplementary File 1 — Verbatim planning prompts for both benchmark arms
 
 These files are extracted directly from the retained request records of the
 frozen v5 benchmark (`analysis/benchmark_v5/runs/H5-B1/repeat_01/*/request.json`).
